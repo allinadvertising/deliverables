@@ -183,9 +183,7 @@ export default async function Home() {
               >
                 Available Audits
               </h2>
-              <p className="mt-1 text-sm text-[#65718a]">
-                Static HTML deliverables synced from the audits folder.
-              </p>
+              
             </div>
             <div className="h-1 w-28 bg-[#f6b328]" aria-hidden="true" />
           </div>

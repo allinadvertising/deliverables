@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iTK9 — Technical &amp; Content SEO Audit | May 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-blue: #2f65a7;
+    --brand-blue-dark: #183b68;
+    --brand-blue-light: #eaf2fb;
+    --brand-gold: #f6b328;
+    --brand-gold-light: #fef7e8;
+    --brand-gold-dark: #d4950a;
+    --p0: #c62828; --p0-bg: #fff1f1; --p0-border: #ffc9c9;
+    --p1: #c75a12; --p1-bg: #fff5eb; --p1-border: #ffd9b7;
+    --p2: #9a6a00; --p2-bg: #fff9df; --p2-border: #f5df83;
+    --green: #16803d; --green-bg: #edf9f1;
+    --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b;
+    --gray-600: #475569; --gray-700: #334155; --gray-800: #1e293b; --gray-900: #0f172a;
+    --white: #ffffff;
+    --ink: #172033;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 18px 42px rgba(15, 23, 42, 0.10);
+    --radius: 8px;
+    --page-width: 1160px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: #edf2f7; scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background:
+      linear-gradient(180deg, #eef5fc 0, #f7f9fc 420px, #edf2f7 100%);
+    line-height: 1.62;
+    font-size: 18px;
+    letter-spacing: 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page {
+    max-width: var(--page-width);
+    margin: 32px auto;
+    background: var(--white);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 64px 72px;
+    page-break-after: always;
+    overflow: hidden;
+  }
+  .page.cover {
+    min-height: 660px;
+    background:
+      linear-gradient(160deg, rgba(12, 24, 45, 0.98) 0%, rgba(24, 59, 104, 0.98) 48%, rgba(47, 101, 167, 0.95) 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 92px 72px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  h1, h2, h3 {
+    color: var(--gray-900);
+    letter-spacing: 0;
+  }
+  h1 {
+    font-size: 48px;
+    line-height: 1.08;
+    font-weight: 900;
+  }
+  h2 {
+    font-size: 31px;
+    line-height: 1.16;
+    font-weight: 850;
+    margin: 54px 0 22px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gray-200);
+    position: relative;
+  }
+  h2:first-child { margin-top: 0; }
+  h2::before {
+    content: '';
+    display: block;
+    width: 56px;
+    height: 5px;
+    background: var(--brand-gold);
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h3 {
+    font-size: 22px;
+    line-height: 1.25;
+    font-weight: 800;
+    margin: 30px 0 12px;
+  }
+  p {
+    margin-bottom: 16px;
+    color: var(--gray-700);
+  }
+  a { color: var(--brand-blue); text-underline-offset: 3px; }
+  strong { color: var(--gray-900); font-weight: 750; }
+  code {
+    font-family: 'JetBrains Mono', Consolas, 'Liberation Mono', monospace;
+    background: #eef4fb;
+    border: 1px solid #d8e6f5;
+    border-radius: 6px;
+    color: #173b67;
+    padding: 0.12em 0.34em;
+    font-size: 0.9em;
+    white-space: normal;
+  }
+  .page.cover h1 { font-size: 48px; margin: 24px 0 10px; }
+  .page.cover h1,
+  .page.cover h2,
+  .page.cover h3 { color: var(--white); }
+  .page.cover .client-name {
+    font-size: 66px;
+    line-height: 1;
+    font-weight: 900;
+    margin-bottom: 10px;
+    letter-spacing: 0;
+  }
+  .page.cover .subtitle {
+    font-size: 22px;
+    color: rgba(255,255,255,0.78);
+    font-weight: 500;
+    margin-bottom: 38px;
+  }
+  .page.cover .meta {
+    font-size: 15px;
+    color: rgba(255,255,255,0.66);
+    font-weight: 500;
+  }
+  .page.cover .logo-wrap { margin-bottom: 20px; }
+  .page.cover .logo-wrap svg { height: 58px; width: auto; }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin: 34px 0 8px;
+  }
+  .metric-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border-radius: var(--radius);
+    padding: 26px 18px;
+    text-align: center;
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+  }
+  .metric-card .value {
+    font-size: 46px;
+    line-height: 0.95;
+    font-weight: 900;
+    color: var(--brand-blue);
+  }
+  .metric-card .label {
+    font-size: 13px;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 12px;
+    font-weight: 750;
+  }
+  .metric-card .change { font-size: 14px; margin-top: 6px; font-weight: 650; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-p0 { background: var(--p0-bg); color: var(--p0); border: 1px solid var(--p0-border); }
+  .badge-p1 { background: var(--p1-bg); color: var(--p1); border: 1px solid var(--p1-border); }
+  .badge-p2 { background: var(--p2-bg); color: var(--p2); border: 1px solid var(--p2-border); }
+  .badge-aia { background: var(--brand-blue-light); color: var(--brand-blue); border: 1px solid #bfd6f0; }
+  .badge-client { background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-300); }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+
+  .exec-summary {
+    background: linear-gradient(135deg, #f2f7fd 0%, #ffffff 100%);
+    border: 1px solid #cbdff4;
+    border-left: 7px solid var(--brand-blue);
+    border-radius: var(--radius);
+    padding: 34px 38px;
+    margin: 22px 0 30px;
+    box-shadow: var(--shadow-sm);
+  }
+  .exec-summary h3 {
+    margin-top: 0;
+    color: var(--brand-blue-dark);
+    font-size: 24px;
+  }
+  .exec-summary ul {
+    margin: 14px 0 0 24px;
+    color: var(--gray-700);
+  }
+  .exec-summary li {
+    margin-bottom: 13px;
+    font-size: 18px;
+    line-height: 1.58;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 24px 0;
+    font-size: 15.5px;
+    line-height: 1.5;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  th {
+    text-align: left;
+    padding: 16px 16px;
+    background: var(--brand-blue-dark);
+    color: var(--white);
+    font-weight: 800;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td {
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+    background: var(--white);
+    word-break: normal;
+  }
+  tbody tr:nth-child(even) td { background: #f9fbfe; }
+  tbody tr:hover td { background: #f1f7ff; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tr.row-p0 td:first-child { border-left: 5px solid var(--p0); }
+  tr.row-p1 td:first-child { border-left: 5px solid var(--p1); }
+  tr.row-p2 td:first-child { border-left: 5px solid var(--p2); }
+
+  .finding-card {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 30px 34px;
+    margin: 24px 0;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  .finding-card .finding-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .finding-card h3 {
+    margin: 0;
+    flex: 1;
+    font-size: 24px;
+    line-height: 1.18;
+  }
+  .finding-card .finding-desc {
+    font-size: 17px;
+    color: var(--gray-700);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .finding-card .what-this-means {
+    background: #f4f8fd;
+    border: 1px solid #d8e6f5;
+    border-left: 6px solid var(--brand-blue);
+    padding: 18px 20px;
+    border-radius: var(--radius);
+    margin: 20px 0;
+    font-size: 16.5px;
+    color: var(--gray-700);
+    line-height: 1.58;
+  }
+  .finding-card .what-this-means strong { color: var(--brand-blue); }
+  .finding-card .impact-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 18px;
+    font-size: 15px;
+  }
+  .finding-card .impact-item {
+    background: var(--gray-50);
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+  }
+  .finding-card .impact-item strong {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 6px;
+    letter-spacing: 0.08em;
+  }
+
+  .url-list {
+    background: #f8fafc;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin: 14px 0;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 14px;
+    color: var(--gray-700);
+    word-break: break-word;
+    line-height: 1.85;
+  }
+  .url-list a { color: var(--brand-blue); text-decoration: none; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .stat-item {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    padding: 18px 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    font-size: 15px;
+  }
+  .stat-item .stat-num {
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 900;
+    color: var(--brand-blue);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .chart-placeholder {
+    background: var(--gray-50);
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius);
+    padding: 38px;
+    text-align: center;
+    margin: 18px 0;
+    color: var(--gray-500);
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .chart-placeholder .icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 22px 0;
+  }
+  .comparison-col {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  .comparison-col .col-header {
+    padding: 16px 20px;
+    font-weight: 850;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .comparison-col .col-header.before { background: #fef2f2; color: var(--p0); border-bottom: 2px solid var(--p0); }
+  .comparison-col .col-header.after { background: #f0fdf4; color: var(--green); border-bottom: 2px solid var(--green); }
+  .comparison-col .col-body { padding: 24px; }
+
+  .solution-step {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .solution-step:last-child { border-bottom: none; }
+  .solution-step .step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--brand-blue);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 16px;
+    flex-shrink: 0;
+    box-shadow: 0 8px 18px rgba(47, 101, 167, 0.22);
+  }
+  .solution-step .step-body {
+    font-size: 17px;
+    color: var(--gray-700);
+    line-height: 1.58;
+  }
+  .solution-step .step-body strong {
+    display: block;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+    font-size: 18px;
+  }
+
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .glossary-item {
+    background: var(--white);
+    padding: 22px 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+  }
+  .glossary-item .term {
+    font-weight: 850;
+    font-size: 18px;
+    color: var(--brand-blue-dark);
+  }
+  .glossary-item .def {
+    font-size: 15.5px;
+    color: var(--gray-600);
+    margin-top: 9px;
+    line-height: 1.58;
+  }
+
+  .footer {
+    font-size: 14px;
+    color: var(--gray-500);
+    text-align: center;
+    margin-top: 52px;
+    padding-top: 24px;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  .page p[style*="font-size:14px"],
+  .page span[style*="font-size:14px"] { font-size: 16.5px !important; }
+  .page p[style*="font-size:13px"],
+  .page span[style*="font-size:13px"] { font-size: 15px !important; }
+  .page p[style*="font-size:12px"],
+  .page span[style*="font-size:12px"] { font-size: 14px !important; }
+  .page div[style*="font-family:monospace"] {
+    font-family: 'JetBrains Mono', Consolas, monospace !important;
+    font-size: 14px !important;
+    line-height: 1.85 !important;
+  }
+
+  @media (max-width: 980px) {
+    body { font-size: 17px; }
+    .page { padding: 44px 34px; margin: 16px; }
+    .page.cover { padding: 64px 34px; min-height: auto; }
+    .page.cover .client-name { font-size: 52px; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .comparison-grid, .glossary-grid, .stat-grid { grid-template-columns: 1fr; }
+    .finding-card .impact-row { grid-template-columns: 1fr; }
+    table { display: block; overflow-x: auto; white-space: normal; }
+  }
+
+  @media (max-width: 620px) {
+    body { font-size: 16px; }
+    .page { padding: 30px 20px; margin: 8px; border-radius: 0; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 26px; margin-top: 42px; }
+    h3, .finding-card h3 { font-size: 21px; }
+    .metrics { grid-template-columns: 1fr; }
+    .finding-card, .exec-summary { padding: 24px 20px; }
+    .finding-card .finding-header { align-items: flex-start; flex-direction: column; }
+  }
+
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; margin: 0; border-radius: 0; max-width: 100%; }
+    .page.cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .finding-card, .metric-card, .exec-summary { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== COVER ====== -->
+<div class="page cover">
+  <div class="logo-wrap">
+    <?xml version="1.0" encoding="UTF-8"?> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 564.59 114.53"><defs><style> .cls-1{fill:#ffffff} .cls-2{fill:#f6b328} .cls-1,.cls-2{stroke-width:0px} </style></defs><g><g><polygon class="cls-2" points="184.33 114.13 158.01 114.13 105.32 22.9 118.68 0 184.33 114.13"/><polygon class="cls-1" points="65.62 46.33 26.33 114.13 0 114.13 52.26 23.28 52.31 23.21 65.64 .03 72.31 11.62 105.04 68.52 78.5 68.52 65.62 46.33"/><polygon class="cls-1" points="131.28 114.13 52.88 114.13 66.38 91.61 91.96 91.73 91.89 91.61 118.32 91.61 131.28 114.13"/></g><g><path class="cls-1" d="M229.32,32.55h-16.41l-3.43,9.87h-7.65L217.82.04h6.61l16.04,42.38h-7.68l-3.46-9.87ZM214.97,26.62h12.28l-6.14-17.58-6.14,17.58Z"/><path class="cls-1" d="M252.63,36.54h19.24v5.88h-26.6V.04h7.36v36.5Z"/><path class="cls-1" d="M284.88,36.54h19.24v5.88h-26.6V.04h7.36v36.5Z"/><path class="cls-1" d="M332.37,42.42h-7.33V.04h7.33v42.38Z"/><path class="cls-1" d="M375.04,42.42h-7.36l-18.89-30.06v30.06h-7.36V.04h7.36l18.95,30.18V.04h7.3v42.38Z"/><path class="cls-2" d="M229.52,102.04h-19.24l-4.37,11.9h-3.75l16.04-42.38h3.41l16.04,42.38h-3.73l-4.39-11.9ZM211.39,99.01h17l-8.5-23.08-8.5,23.08Z"/><path class="cls-2" d="M243.87,113.94v-42.38h11.85c3.47,0,6.59.79,9.34,2.37,2.75,1.58,4.9,3.85,6.45,6.8,1.54,2.95,2.31,6.31,2.31,10.07v3.9c0,3.78-.77,7.14-2.3,10.07-1.53,2.93-3.69,5.19-6.48,6.78-2.78,1.59-5.98,2.39-9.59,2.39h-11.58ZM247.45,74.6v36.32h8.03c4.46,0,8.04-1.48,10.74-4.44s4.05-6.97,4.05-12.01v-3.73c0-4.87-1.33-8.78-3.99-11.71-2.66-2.93-6.16-4.41-10.51-4.43h-8.32Z"/><path class="cls-2" d="M295.67,108.71l.23.9.26-.9,13.33-37.14h3.93l-15.77,42.38h-3.43l-15.77-42.38h3.9l13.33,37.14Z"/><path class="cls-2" d="M343.05,93.63h-19.82v17.29h22.79v3.03h-26.37v-42.38h26.22v3.03h-22.64v16.01h19.82v3.03Z"/><path class="cls-2" d="M369.39,96.28h-12.31v17.67h-3.61v-42.38h13.77c4.52,0,8.05,1.1,10.59,3.29,2.54,2.19,3.81,5.25,3.81,9.19,0,2.71-.8,5.11-2.39,7.18-1.59,2.07-3.73,3.51-6.4,4.3l10.59,18.04v.38h-3.81l-10.24-17.67ZM357.08,93.25h10.97c3.01,0,5.42-.86,7.25-2.57,1.82-1.71,2.74-3.93,2.74-6.65,0-2.99-.95-5.31-2.85-6.97-1.9-1.65-4.57-2.48-8-2.48h-10.1v18.66Z"/><path class="cls-2" d="M417.82,74.6h-14.52v39.35h-3.58v-39.35h-14.49v-3.03h32.6v3.03Z"/><path class="cls-2" d="M429.03,113.94h-3.58v-42.38h3.58v42.38Z"/><path class="cls-2" d="M464.5,103.53c0-2.35-.83-4.21-2.47-5.57-1.65-1.37-4.67-2.67-9.05-3.9-4.38-1.23-7.59-2.58-9.6-4.03-2.87-2.06-4.31-4.75-4.31-8.09s1.33-5.87,4-7.9c2.67-2.03,6.08-3.04,10.23-3.04,2.81,0,5.33.54,7.55,1.63,2.22,1.09,3.94,2.6,5.17,4.54,1.22,1.94,1.83,4.1,1.83,6.49h-3.61c0-2.9-.99-5.23-2.97-6.99-1.98-1.76-4.64-2.64-7.97-2.64s-5.82.72-7.74,2.17c-1.92,1.45-2.88,3.34-2.88,5.67,0,2.16.86,3.92,2.59,5.28,1.73,1.36,4.49,2.56,8.29,3.6,3.8,1.04,6.68,2.12,8.64,3.23,1.96,1.12,3.43,2.45,4.42,4,.99,1.55,1.48,3.39,1.48,5.5,0,3.34-1.33,6.02-4,8.03s-6.18,3.03-10.55,3.03c-2.99,0-5.73-.53-8.22-1.6-2.49-1.07-4.38-2.56-5.67-4.48-1.29-1.92-1.94-4.12-1.94-6.61h3.58c0,2.99,1.12,5.35,3.35,7.07,2.23,1.73,5.2,2.59,8.91,2.59,3.3,0,5.95-.73,7.95-2.18,2-1.46,3-3.38,3-5.79Z"/><path class="cls-2" d="M480.19,113.94h-3.58v-42.38h3.58v42.38Z"/><path class="cls-2" d="M523.23,113.94h-3.58l-24.36-36.26v36.26h-3.61v-42.38h3.61l24.39,36.29v-36.29h3.55v42.38Z"/><path class="cls-2" d="M564.59,108.91c-1.24,1.77-3.19,3.14-5.84,4.13s-5.61,1.48-8.89,1.48-6.27-.79-8.85-2.39c-2.58-1.59-4.58-3.84-6-6.75-1.42-2.91-2.13-6.25-2.15-10.01v-5.35c0-5.88,1.48-10.52,4.45-13.93,2.97-3.4,6.96-5.11,11.96-5.11,4.37,0,7.88,1.11,10.54,3.33s4.24,5.28,4.74,9.18h-3.58c-.52-3.11-1.79-5.47-3.8-7.08s-4.63-2.41-7.87-2.41c-3.96,0-7.09,1.41-9.4,4.22-2.31,2.82-3.46,6.79-3.46,11.91v5.01c0,3.22.55,6.07,1.64,8.55,1.1,2.48,2.67,4.39,4.71,5.75,2.05,1.36,4.4,2.04,7.06,2.04,3.08,0,5.73-.49,7.95-1.46,1.44-.64,2.5-1.39,3.2-2.24v-10.94h-11.38v-3.03h14.96v15.08Z"/></g></g></svg>
+  </div>
+  <div style="font-size:13px;text-transform:uppercase;letter-spacing:3px;color:rgba(255,255,255,0.5);margin-bottom:28px;font-weight:500;">Technical &amp; Content SEO Audit</div>
+  <div class="client-name">iTK9</div>
+  <div class="subtitle">Q2 2026 · May 14, 2026</div>
+  <div class="meta">Prepared by All In Advertising · Confidential</div>
+  <div style="margin-top:52px;">
+    <div style="display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:7px 22px;font-size:13px;font-weight:300;">
+      <a style="color: #9ca3af;" href="https://docs.google.com/spreadsheets/d/1ZgJKIlRGedhsnfAT-iy0QjuyFOfwx3uIr8-DQqNB7zg/edit?usp=sharing">Client-facing &nbsp;·&nbsp; Supporting workbook</a>
+    </div>
+  </div>
+</div>
+
+<!-- ====== EXECUTIVE SUMMARY ====== -->
+<div class="page">
+  <h2>Executive Summary</h2>
+
+  <div class="exec-summary">
+    <h3>At a Glance</h3>
+    <ul>
+      <li><strong>Critical first fix:</strong> Patch the Webflow Collection template for Board &amp; Train location pages. The same template is creating duplicated H1s, multiple H1s, non-sequential headings, and 100% near-duplicate content across the entire <code>/board-and-train/</code> URL set.</li>
+      <li><strong>Sitemap-driven crawl waste:</strong> 102 indexable orphan URLs are discoverable through the XML sitemap but not supported by internal links. The largest group is 73 <code>/dog-training-tips/</code> URLs.</li>
+      <li><strong>Metadata normalized at the CMS level:</strong> 203 overlength meta descriptions, 20 duplicates, and 54 overlength page titles. Blog descriptions pull long dated excerpts; service pages reuse repeated fallback copy.</li>
+      <li><strong>62 internal redirect-chain URLs</strong> caused by separate non-www and trailing-slash normalization hops. Most are under <code>/dog-training-tips/</code>, with old non-www URLs redirecting twice before reaching the final canonical.</li>
+      <li><strong>74 near-duplicate indexable URLs:</strong> 49 <code>/board-and-train/</code> location pages share a closest near-duplicate match of 100%. Service variant pages also flagged.</li>
+    </ul>
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="value">5</div>
+      <div class="label">Issue Categories</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">102</div>
+      <div class="label">Orphan URLs</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">203</div>
+      <div class="label">Overlength Meta Descriptions</div>
+    </div>
+    <div class="metric-card">
+      <div class="value">74</div>
+      <div class="label">Near-Duplicate URLs</div>
+    </div>
+  </div>
+
+  
+</div>
+
+<!-- ====== PRIORITIZED ACTION ITEMS ====== -->
+<div class="page">
+  <h2>Immediate Action Items</h2>
+  <p style="color:var(--gray-600);font-size:14px;margin-bottom:8px;">Ordered by impact and dependency. Items 1 and 2 unblock the largest clusters of issues across headings, duplicates, and metadata simultaneously.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:60px;">Priority</th>
+        <th>Action</th>
+        <th>Scope</th>
+        <th>Impact</th>
+        <th style="width:84px;">Owner</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="row-p0">
+        <td><span class="badge badge-p0">P0</span></td>
+        <td><strong>Patch the Webflow Collection template for /board-and-train/</strong><br><span style="font-size:13px;color:var(--gray-500);">Output one unique city-specific H1, demote financing text from H1, demote repeated layout labels from H2.</span></td>
+        <td>48+ location pages</td>
+        <td>Resolves H1 duplicates, H2 duplicates, non-sequential headings, and 100% near-duplicate content in a single template change.</td>
+        <td><span class="badge badge-client">Client Dev</span></td>
+      </tr>
+      <tr class="row-p0">
+        <td><span class="badge badge-p0">P0</span></td>
+        <td><strong>Create and populate dedicated Webflow CMS SEO fields</strong><br><span style="font-size:13px;color:var(--gray-500);">SEO Title and Meta Description fields for Blog Posts, Board &amp; Train Locations, Service Variants, and Program collections. Bind Collection SEO settings to those fields.</span></td>
+        <td>4 CMS collections</td>
+        <td>Eliminates 203 overlength descriptions, 20 duplicate descriptions, and 54 overlength titles at the template level instead of one-off fixes.</td>
+        <td><span class="badge badge-aia">AIA</span></td>
+      </tr>
+      <tr class="row-p1">
+        <td><span class="badge badge-p1">P1</span></td>
+        <td><strong>Rewrite overlength metadata</strong><br><span style="font-size:13px;color:var(--gray-500);">Start with the 126 /dog-training-tips/ meta descriptions and longest blog titles. Target 120–155 character summaries.</span></td>
+        <td>203 descriptions + 54 titles</td>
+        <td>Clean, clickable SERP snippets across the highest-volume content set. Blog posts and tips pages represent the bulk of organic discovery surfaces.</td>
+        <td><span class="badge badge-aia">AIA</span></td>
+      </tr>
+      <tr class="row-p1">
+        <td><span class="badge badge-p1">P1</span></td>
+        <td><strong>Triage 102 sitemap orphan URLs</strong><br><span style="font-size:13px;color:var(--gray-500);">Assign each orphan one of: (1) internally link from a relevant hub, (2) remove from sitemap and apply noindex, or (3) 301 if a true replacement exists.</span></td>
+        <td>102 URLs</td>
+        <td>Recovers crawl budget, ensures only intentional URLs are indexed, and links high-value informational content into the site architecture.</td>
+        <td><span class="badge badge-aia">AIA</span></td>
+      </tr>
+      <tr class="row-p1">
+        <td><span class="badge badge-p1">P1</span></td>
+        <td><strong>Resolve 62 internal redirect-chain URLs</strong><br><span style="font-size:13px;color:var(--gray-500);">Update all internal references to point directly to the final canonical https://www.itraink9.ca/{path} URL without trailing slash. Use single-hop redirects in Webflow settings.</span></td>
+        <td>62 URLs, 57 under /dog-training-tips/</td>
+        <td>Removes unnecessary redirect hops, preserves link equity, and speeds up crawl efficiency across the highest-volume content cluster.</td>
+        <td><span class="badge badge-client">Client Dev</span></td>
+      </tr>
+      <tr class="row-p2">
+        <td><span class="badge badge-p2">P2</span></td>
+        <td><strong>Reduce near-duplicate location and service pages</strong><br><span style="font-size:13px;color:var(--gray-500);">Add unique city-level content where pages should rank locally. Consolidate pages lacking distinct intent. Avoid redirects unless a true successor URL exists.</span></td>
+        <td>74 URLs</td>
+        <td>Strengthens local ranking signals and removes thin-content pages that dilute crawl budget and topical relevance.</td>
+        <td><span class="badge badge-aia">AIA</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+</div>
+
+<!-- ====== ISSUES BY CATEGORY ====== -->
+<div class="page">
+  <h2>Key Findings by Category</h2>
+
+  <!-- HEADINGS -->
+  <h3 style="display:flex;align-items:center;gap:10px;">
+    Heading Structure
+    <span class="badge badge-p0">Critical</span>
+  </h3>
+
+  <div class="finding-card">
+    <div class="finding-header">
+      <span class="badge badge-p0">P0</span>
+      <h3>Duplicate H1s, Multiple H1s, Non-Sequential Headings Across 91+ URLs</h3>
+    </div>
+    <div class="finding-desc">
+      <strong>Root cause:</strong> The Webflow Collection template and reusable section headings are outputting block-level layout labels as semantic heading tags across dozens of location and content pages.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-item">
+        <span class="stat-num">91</span> URLs with duplicate H1s
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">89</span> URLs with multiple H1s
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">48</span> URLs with non-sequential H1 structure
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">204</span> URLs with duplicate H2s
+      </div>
+    </div>
+
+    <div class="what-this-means">
+      <strong>What This Means:</strong> <code>BOARD &amp; TRAIN PROGRAMS</code> appears as the H1 on 48 location pages. <code>0%</code> appears as a second H1 on the same 48 pages (the financing module uses an H1 tag for the APR value). <code>FOLLOW THE PACK</code> appears 101 times as an H2 because a reusable section block outputs a heading tag. Search engines cannot determine what any individual page is about when headings are duplicated across the entire site.
+    </div>
+
+    <div class="url-list">
+      <strong>Representative URLs:</strong><br>
+      https://www.itraink9.ca/board-and-train/milton<br>
+      https://www.itraink9.ca/board-and-train/oakville<br>
+      https://www.itraink9.ca/dog-training-tips/dog-behaviour-modification-tips
+    </div>
+  </div>
+
+  <!-- METADATA -->
+  <h3 style="display:flex;align-items:center;gap:10px;">
+    Metadata Quality
+    <span class="badge badge-p0">Critical</span>
+  </h3>
+
+  <div class="finding-card">
+    <div class="finding-header">
+      <span class="badge badge-p0">P0</span>
+      <h3>203 Overlength Meta Descriptions + 20 Duplicates + 54 Overlength Titles</h3>
+    </div>
+    <div class="finding-desc">
+      <strong>Root cause:</strong> Webflow SEO settings use long CMS excerpts, date-prefixed excerpts, and repeated fallback descriptions instead of purpose-built SEO fields.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-item">
+        <span class="stat-num">203</span> descriptions over 155 characters
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">126</span> affected in /dog-training-tips/ alone
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">20</span> duplicate meta descriptions
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">54</span> titles over 60 characters
+      </div>
+    </div>
+
+    <div class="what-this-means">
+      <strong>What This Means:</strong> Blog descriptions are pulling the full dated article excerpt (200+ characters, truncated by Google with unpredictable results). Service and confirmation pages reuse the same fallback copy. Long blog titles get cut off in SERPs after the pipe symbol. Legal, thank-you, and confirmation pages may not need to be indexable at all.
+    </div>
+
+    <div class="url-list">
+      <strong>Representative URLs:</strong><br>
+      https://www.itraink9.ca/dog-training-tips/training-a-dog-the-ultimate-guide-to-balanced-dog-training<br>
+      https://www.itraink9.ca/dog-training-services/sv/your-puppy-needs-a-solid-foundation<br>
+      https://www.itraink9.ca/terms-of-service
+    </div>
+  </div>
+</div>
+
+<!-- ====== ORPHAN URLs + NEAR DUPLICATES + REDIRECTS ====== -->
+<div class="page">
+  <h3 style="display:flex;align-items:center;gap:10px;">
+    Crawl &amp; Index Health
+    <span class="badge badge-p1">High</span>
+  </h3>
+
+  <div class="finding-card">
+    <div class="finding-header">
+      <span class="badge badge-p1">P1</span>
+      <h3>102 Orphan URLs Discoverable Only Through XML Sitemap</h3>
+    </div>
+    <div class="finding-desc">
+      <strong>Root cause:</strong> Webflow's generated sitemap includes published CMS and static URLs that are not reachable through the crawled internal link graph. These URLs return 200 and are indexable, but no page on the site links to them.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-item">
+        <span class="stat-num">102</span> indexable orphan URLs
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">73</span> under /dog-training-tips/
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">14</span> under /dog-training-services/
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4</span> under /board-train-programs/
+      </div>
+    </div>
+
+    <div class="what-this-means">
+      <strong>What This Means:</strong> These pages exist and are in Google's index, but they receive no internal link equity and are invisible to users navigating the site. The companion inlinks export confirms they are discovered from <code>sitemap.xml</code> only. High-value informational blog content is effectively stranded.
+    </div>
+
+    <div class="url-list">
+      <strong>Representative URLs:</strong><br>
+      https://www.itraink9.ca/dog-training-tips/dog-behaviour-modification-tips<br>
+      https://www.itraink9.ca/dog-training-services/lv/address-your-dogs-bad-behaviour
+    </div>
+  </div>
+
+  <div class="finding-card">
+    <div class="finding-header">
+      <span class="badge badge-p1">P1</span>
+      <h3>62 Internal Redirect-Chain URLs</h3>
+    </div>
+    <div class="finding-desc">
+      <strong>Root cause:</strong> Canonical host and trailing-slash normalization are applied in separate redirect steps. Old non-www, trailing-slash URLs redirect first to the non-www no-slash version, then again to the final <code>www</code> URL.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-item">
+        <span class="stat-num">62</span> redirect-chain URLs
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">57</span> under /dog-training-tips/
+      </div>
+    </div>
+
+    <div class="what-this-means">
+      <strong>What This Means:</strong> A live validation example: <code>https://itraink9.ca/dog-training-tips/common-dog-training-vocabulary/</code> redirects to the non-www no-slash URL, then redirects again to <code>https://www.itraink9.ca/dog-training-tips/common-dog-training-vocabulary</code>. Each hop wastes crawl budget and leaks link equity.
+    </div>
+
+    <div class="url-list">
+      <strong>Representative URLs:</strong><br>
+      https://itraink9.ca/dog-training-tips/common-dog-training-vocabulary/<br>
+      https://itraink9.ca/shop/<br>
+      https://itraink9.ca/contact-us/
+    </div>
+  </div>
+
+  <div class="finding-card">
+    <div class="finding-header">
+      <span class="badge badge-p2">P2</span>
+      <h3>74 Near-Duplicate Indexable URLs</h3>
+    </div>
+    <div class="finding-desc">
+      <strong>Root cause:</strong> Location and service variant templates rely on repeated boilerplate with too little unique page-level content. 49 <code>/board-and-train/</code> URLs show a closest near-duplicate match of 100%, meaning two location pages are identical in content.
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-item">
+        <span class="stat-num">74</span> near-duplicate URLs
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">49</span> /board-and-train/ locations
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">100%</span> closest match on location pages
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">47</span> duplicates per affected URL
+      </div>
+    </div>
+
+    <div class="what-this-means">
+      <strong>What This Means:</strong> Search engines see 49 near-identical pages competing for the same keywords. Only one is likely to rank. The fix is not more pages — it is unique, city-level content on each page that justifies its existence as a separate landing page.
+    </div>
+  </div>
+</div>
+
+<!-- ====== PROPOSED SOLUTIONS ====== -->
+<div class="page">
+  <h2>Proposed Solutions</h2>
+
+  <h3 style="color:var(--brand-blue);">1. Fix Webflow Heading Templates and Reusable Sections</h3>
+  <div class="solution-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Update the /board-and-train/ Collection template</strong> so each location page has one unique H1 such as Board and Train in {City}, instead of the static BOARD &amp; TRAIN PROGRAMS repeated across all locations.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>Demote the financing 0% text from H1</strong> to non-heading text. If the financing module needs a heading, use a single section-level H2 (Pay Over Time With Affirm) and keep the APR value as plain text.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>Change repeated layout labels</strong> such as FOLLOW THE PACK, About Our PROGRAMS, and program-card labels from H2 tags to non-heading elements unless they introduce a real content section.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>Enforce a sequential page outline:</strong> one H1, primary sections as H2s, subsections and cards as H3s only when they sit under a relevant H2.</div>
+  </div>
+
+  <h3 style="color:var(--brand-blue);margin-top:28px;">2. Normalize Webflow SEO Fields</h3>
+  <div class="solution-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Create dedicated CMS fields</strong> for SEO Title and Meta Description on Blog Posts, Board &amp; Train Locations, service variant collections, and program collections.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>Bind Collection page SEO settings</strong> to those fields instead of using full article excerpts, date-prefixed excerpts, or static fallback copy.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>Bulk rewrite the 203 overlength descriptions</strong> to unique 120–155 character summaries. Start with the 126 /dog-training-tips/ URLs — the largest affected set.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">4</div>
+    <div class="step-body"><strong>Shorten the 54 overlength titles.</strong> For long blog titles, write a shorter SEO title rather than reusing the full H1. Remove unnecessary phrasing before the brand suffix.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">5</div>
+    <div class="step-body"><strong>Give legal, confirmation, and thank-you pages unique metadata</strong> only if they should remain indexable. If they are conversion or utility pages, exclude them from the sitemap and apply noindex.</div>
+  </div>
+
+  <h3 style="color:var(--brand-blue);margin-top:28px;">3. Resolve Sitemap Orphaning</h3>
+  <div class="solution-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Audit every orphan URL</strong> and assign one of three outcomes: (1) keep and internally link it from a relevant hub, category page, blog index, or service page; (2) remove from the XML sitemap and apply noindex if it should not rank; (3) unpublish or 301 only when a true replacement exists.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>Prioritize orphaned /dog-training-tips/ URLs</strong> with informational intent by linking them from the blog hub, related article modules, and relevant service pages.</div>
+  </div>
+
+  <h3 style="color:var(--brand-blue);margin-top:28px;">4. Collapse Redirect Chains</h3>
+  <div class="solution-step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>Update all internal links, sitemap entries, and Webflow redirects</strong> so they point directly to the final canonical <code>https://www.itraink9.ca/{path}</code> URL without trailing slash.</div>
+  </div>
+  <div class="solution-step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>In Webflow hosting and redirect settings,</strong> use a single-hop rule for non-www and trailing-slash variants wherever possible. After publishing, re-crawl the 62 flagged URLs and confirm each old URL reaches the final URL in one 301 hop.</div>
+  </div>
+</div>
+
+<!-- ====== BEFORE & AFTER ====== -->
+<div class="page">
+  <h2>Before &amp; After: Heading Structure Fix</h2>
+  <p style="color:var(--gray-600);font-size:14px;">The highest-impact single change: patching the /board-and-train/ Webflow Collection template to output semantic, unique headings per location page.</p>
+
+  <div class="comparison-grid">
+    <div class="comparison-col">
+      <div class="col-header before">Current: Single Template, Repeated Headings</div>
+      <div class="col-body">
+        <p style="font-size:13px;color:var(--gray-600);margin-bottom:8px;font-weight:600;">Template outputs identical heading structure across all 48 location pages:</p>
+        <div style="background:var(--p0-bg);border:1px solid var(--p0-border);border-radius:6px;padding:12px;font-family:monospace;font-size:12px;line-height:1.8;color:var(--p0);">
+          &lt;h1&gt;BOARD &amp; TRAIN PROGRAMS&lt;/h1&gt;<br>
+          &lt;h1&gt;0%&lt;/h1&gt; ← Financing APR<br>
+          &lt;h2&gt;FOLLOW THE PACK&lt;/h2&gt;<br>
+          &lt;h2&gt;About Our PROGRAMS&lt;/h2&gt;
+        </div>
+        <p style="font-size:12px;color:var(--gray-500);margin-top:10px;">Result: 48 pages all look identical to search engines. Google cannot distinguish Milton from Oakville.</p>
+      </div>
+    </div>
+    <div class="comparison-col">
+      <div class="col-header after">Recommended: Semantic, Unique Headings</div>
+      <div class="col-body">
+        <p style="font-size:13px;color:var(--gray-600);margin-bottom:8px;font-weight:600;">Each location page gets a unique, logical heading outline:</p>
+        <div style="background:var(--green-bg);border:1px solid #bbf7d0;border-radius:6px;padding:12px;font-family:monospace;font-size:12px;line-height:1.8;color:var(--green);">
+          &lt;h1&gt;Board &amp; Train in Milton&lt;/h1&gt;<br>
+          &lt;h2&gt;Our Training Programs&lt;/h2&gt;<br>
+          &lt;h2&gt;Pay Over Time With Affirm&lt;/h2&gt;<br>
+          &lt;span&gt;0% APR&lt;/span&gt; ← Plain text
+        </div>
+        <p style="font-size:12px;color:var(--gray-500);margin-top:10px;">Result: Search engines see 48 unique pages, each targeting a different city. Duplicate H1s: zero. Duplicate H2s: fixed at template level.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:40px;">Before &amp; After: Redirect Chain</h2>
+
+  <div class="comparison-grid">
+    <div class="comparison-col">
+      <div class="col-header before">Current: 2-Hop Redirect</div>
+      <div class="col-body">
+        <div style="font-size:13px;color:var(--gray-700);line-height:2;">
+          <strong>Step 1:</strong> <span style="color:var(--p0);">301</span><br>
+          <code>itraink9.ca/dog-training-tips/example/</code><br>
+          ↓<br>
+          <code>itraink9.ca/dog-training-tips/example</code><br><br>
+          <strong>Step 2:</strong> <span style="color:var(--p0);">301</span><br>
+          <code>itraink9.ca/dog-training-tips/example</code><br>
+          ↓<br>
+          <code>www.itraink9.ca/dog-training-tips/example</code>
+        </div>
+        <p style="font-size:12px;color:var(--p0);margin-top:10px;">2 hops = wasted crawl budget, diluted equity. 62 URLs follow this pattern.</p>
+      </div>
+    </div>
+    <div class="comparison-col">
+      <div class="col-header after">Recommended: Single-Hop</div>
+      <div class="col-body">
+        <div style="font-size:13px;color:var(--gray-700);line-height:2;">
+          <strong>Single Step:</strong> <span style="color:var(--green);">301</span><br>
+          <code>itraink9.ca/dog-training-tips/example/</code><br>
+          ↓<br>
+          <code>www.itraink9.ca/dog-training-tips/example</code>
+        </div>
+        <p style="font-size:12px;color:var(--green);margin-top:10px;">1 hop = no wasted crawl budget, full equity transfer. Replace all 62 chains with single-hop rules.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== GLOSSARY ====== -->
+<div class="page">
+  <h2>Glossary: Technical Terms, Simplified</h2>
+
+  <div class="glossary-grid">
+    <div class="glossary-item">
+      <div class="term">H1 / Heading Tags</div>
+      <div class="def">The main headline search engines use to understand what a page is about. Every page should have exactly one unique H1. Multiple H1s or duplicate H1s across pages confuse search engines about which page should rank for what.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="term">Orphan URL</div>
+      <div class="def">A page on your site with no links pointing to it from any other page. It exists in the sitemap and Google's index, but users and link equity cannot reach it through normal navigation.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="term">Crawl Budget</div>
+      <div class="def">The number of pages Google scans on your site each day. Wasting it on duplicate URLs, redirect chains, or orphan pages means your important new content takes longer to appear in search results.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="term">301 Redirect Chain</div>
+      <div class="def">When a URL redirects to another URL, which then redirects again. Each hop consumes crawl budget and leaks a portion of the link equity. A single-hop redirect preserves full value.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="term">Meta Description</div>
+      <div class="def">The 1–2 sentence preview under your page title in Google results. It does not directly affect ranking, but a compelling, unique description earns more clicks. Google may rewrite descriptions over 155–160 characters.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="term">Near-Duplicate Content</div>
+      <div class="def">Pages that are so textually similar that search engines consider them interchangeable. When 48 location pages have identical content, only one is likely to rank — the others compete with it.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="term">Canonical URL</div>
+      <div class="def">The "official" version of a page you want Google to index. For iTK9, the canonical format is <code>https://www.itraink9.ca/{path}</code> without trailing slash.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="term">CMS Collection Template</div>
+      <div class="def">In Webflow, a reusable page layout that generates multiple pages from a single design. Fixing the template fixes every page that uses it — which is why patching the Board &amp; Train template is the highest-leverage action in this audit.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:36px;background:var(--brand-blue-light);border-radius:var(--radius);padding:24px 28px;">
+    <h3 style="margin-top:0;color:var(--brand-blue-dark);">Frequently Asked Questions</h3>
+    <p style="margin-bottom:10px;"><strong>Q: Which fix should we do first?</strong><br>
+    <span style="font-size:14px;color:var(--gray-700);">Patch the /board-and-train/ Webflow Collection template. It resolves H1 duplicates, H2 duplicates, non-sequential headings, and near-duplicate content across 48+ pages in a single template change. Everything else builds from there.</span></p>
+    <p style="margin-bottom:10px;"><strong>Q: How fast will we see results?</strong><br>
+    <span style="font-size:14px;color:var(--gray-700);">Once fixes are published, Google needs to re-crawl the affected pages. Template fixes (headings, metadata) should reflect within 2–3 weeks. Redirect chain fixes are visible on the next crawl. Full impact across all issue categories: 4–6 weeks.</span></p>
+    <p style="margin-bottom:10px;"><strong>Q: What should our internal dev team handle vs All In Advertising?</strong><br>
+    <span style="font-size:14px;color:var(--gray-700);">Template changes and redirect configuration are Webflow admin tasks — typically handled by whoever manages the Webflow instance. AIA handles metadata rewrites, orphan URL triage, near-duplicate content strategy, and the re-crawl validation.</span></p>
+    <p><strong>Q: Do we need to remove pages from the site?</strong><br>
+    <span style="font-size:14px;color:var(--gray-700);">Not necessarily. The recommendation is to triage each orphan and near-duplicate URL individually. High-value informational pages (blog tips) should be internally linked. Low-value utility pages (thank-you, confirmation) should be removed from the sitemap and noindexed. Only pages with zero distinct intent and no redirect target should be unpublished.</span></p>
+  </div>
+
+  <div class="footer">
+    <div class="logo-sm" style="margin-bottom:8px;">
+      <?xml version="1.0" encoding="UTF-8"?> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 564.59 114.53"><defs><style> .cls-1{fill:#9ca3af} .cls-2{fill:#d1d5db} .cls-1,.cls-2{stroke-width:0px} </style></defs><g><g><polygon class="cls-2" points="184.33 114.13 158.01 114.13 105.32 22.9 118.68 0 184.33 114.13"/><polygon class="cls-1" points="65.62 46.33 26.33 114.13 0 114.13 52.26 23.28 52.31 23.21 65.64 .03 72.31 11.62 105.04 68.52 78.5 68.52 65.62 46.33"/><polygon class="cls-1" points="131.28 114.13 52.88 114.13 66.38 91.61 91.96 91.73 91.89 91.61 118.32 91.61 131.28 114.13"/></g><g><path class="cls-1" d="M229.32,32.55h-16.41l-3.43,9.87h-7.65L217.82.04h6.61l16.04,42.38h-7.68l-3.46-9.87ZM214.97,26.62h12.28l-6.14-17.58-6.14,17.58Z"/><path class="cls-1" d="M252.63,36.54h19.24v5.88h-26.6V.04h7.36v36.5Z"/><path class="cls-1" d="M284.88,36.54h19.24v5.88h-26.6V.04h7.36v36.5Z"/><path class="cls-1" d="M332.37,42.42h-7.33V.04h7.33v42.38Z"/><path class="cls-1" d="M375.04,42.42h-7.36l-18.89-30.06v30.06h-7.36V.04h7.36l18.95,30.18V.04h7.3v42.38Z"/><path class="cls-2" d="M229.52,102.04h-19.24l-4.37,11.9h-3.75l16.04-42.38h3.41l16.04,42.38h-3.73l-4.39-11.9ZM211.39,99.01h17l-8.5-23.08-8.5,23.08Z"/><path class="cls-2" d="M243.87,113.94v-42.38h11.85c3.47,0,6.59.79,9.34,2.37,2.75,1.58,4.9,3.85,6.45,6.8,1.54,2.95,2.31,6.31,2.31,10.07v3.9c0,3.78-.77,7.14-2.3,10.07-1.53,2.93-3.69,5.19-6.48,6.78-2.78,1.59-5.98,2.39-9.59,2.39h-11.58ZM247.45,74.6v36.32h8.03c4.46,0,8.04-1.48,10.74-4.44s4.05-6.97,4.05-12.01v-3.73c0-4.87-1.33-8.78-3.99-11.71-2.66-2.93-6.16-4.41-10.51-4.43h-8.32Z"/><path class="cls-2" d="M295.67,108.71l.23.9.26-.9,13.33-37.14h3.93l-15.77,42.38h-3.43l-15.77-42.38h3.9l13.33,37.14Z"/><path class="cls-2" d="M343.05,93.63h-19.82v17.29h22.79v3.03h-26.37v-42.38h26.22v3.03h-22.64v16.01h19.82v3.03Z"/><path class="cls-2" d="M369.39,96.28h-12.31v17.67h-3.61v-42.38h13.77c4.52,0,8.05,1.1,10.59,3.29,2.54,2.19,3.81,5.25,3.81,9.19,0,2.71-.8,5.11-2.39,7.18-1.59,2.07-3.73,3.51-6.4,4.3l10.59,18.04v.38h-3.81l-10.24-17.67ZM357.08,93.25h10.97c3.01,0,5.42-.86,7.25-2.57,1.82-1.71,2.74-3.93,2.74-6.65,0-2.99-.95-5.31-2.85-6.97-1.9-1.65-4.57-2.48-8-2.48h-10.1v18.66Z"/><path class="cls-2" d="M417.82,74.6h-14.52v39.35h-3.58v-39.35h-14.49v-3.03h32.6v3.03Z"/><path class="cls-2" d="M429.03,113.94h-3.58v-42.38h3.58v42.38Z"/><path class="cls-2" d="M464.5,103.53c0-2.35-.83-4.21-2.47-5.57-1.65-1.37-4.67-2.67-9.05-3.9-4.38-1.23-7.59-2.58-9.6-4.03-2.87-2.06-4.31-4.75-4.31-8.09s1.33-5.87,4-7.9c2.67-2.03,6.08-3.04,10.23-3.04,2.81,0,5.33.54,7.55,1.63,2.22,1.09,3.94,2.6,5.17,4.54,1.22,1.94,1.83,4.1,1.83,6.49h-3.61c0-2.9-.99-5.23-2.97-6.99-1.98-1.76-4.64-2.64-7.97-2.64s-5.82.72-7.74,2.17c-1.92,1.45-2.88,3.34-2.88,5.67,0,2.16.86,3.92,2.59,5.28,1.73,1.36,4.49,2.56,8.29,3.6,3.8,1.04,6.68,2.12,8.64,3.23,1.96,1.12,3.43,2.45,4.42,4,.99,1.55,1.48,3.39,1.48,5.5,0,3.34-1.33,6.02-4,8.03s-6.18,3.03-10.55,3.03c-2.99,0-5.73-.53-8.22-1.6-2.49-1.07-4.38-2.56-5.67-4.48-1.29-1.92-1.94-4.12-1.94-6.61h3.58c0,2.99,1.12,5.35,3.35,7.07,2.23,1.73,5.2,2.59,8.91,2.59,3.3,0,5.95-.73,7.95-2.18,2-1.46,3-3.38,3-5.79Z"/><path class="cls-2" d="M480.19,113.94h-3.58v-42.38h3.58v42.38Z"/><path class="cls-2" d="M523.23,113.94h-3.58l-24.36-36.26v36.26h-3.61v-42.38h3.61l24.39,36.29v-36.29h3.55v42.38Z"/><path class="cls-2" d="M564.59,108.91c-1.24,1.77-3.19,3.14-5.84,4.13s-5.61,1.48-8.89,1.48-6.27-.79-8.85-2.39c-2.58-1.59-4.58-3.84-6-6.75-1.42-2.91-2.13-6.25-2.15-10.01v-5.35c0-5.88,1.48-10.52,4.45-13.93,2.97-3.4,6.96-5.11,11.96-5.11,4.37,0,7.88,1.11,10.54,3.33s4.24,5.28,4.74,9.18h-3.58c-.52-3.11-1.79-5.47-3.8-7.08s-4.63-2.41-7.87-2.41c-3.96,0-7.09,1.41-9.4,4.22-2.31,2.82-3.46,6.79-3.46,11.91v5.01c0,3.22.55,6.07,1.64,8.55,1.1,2.48,2.67,4.39,4.71,5.75,2.05,1.36,4.4,2.04,7.06,2.04,3.08,0,5.73-.49,7.95-1.46,1.44-.64,2.5-1.39,3.2-2.24v-10.94h-11.38v-3.03h14.96v15.08Z"/></g></g></svg>
+    </div>
+    <p>iTK9 Technical &amp; Content SEO Audit · Q2 2026 · Prepared by All In Advertising</p>
+    <p>Questions? Reach out to your account manager or Snell directly.</p>
+  </div>
+</div>
+
+</body>
+</html>

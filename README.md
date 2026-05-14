@@ -1,6 +1,6 @@
 # All In Advertising Audit Portal
 
-A simple Next.js, React, TypeScript, and Tailwind project for serving audit deliverables on Vercel.
+A simple Next.js, React, TypeScript, and Tailwind project for serving audit deliverables on Vercel. The interface follows All In Advertising's business DNA: revenue-focused, collaborative, modern, geometric, and anchored to the brand blue/gold logo system.
 
 ## Local Development
 

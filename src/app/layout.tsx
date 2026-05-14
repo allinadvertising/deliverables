@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
 import "./globals.css";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["400", "500", "700", "900"],
+});
 
 export const metadata: Metadata = {
   title: "All In Advertising Audit Portal",
-  description: "Client audit deliverables served from a Next.js portal.",
+  description:
+    "Revenue-focused client audit deliverables from All In Advertising.",
 };
 
 export default function RootLayout({
@@ -12,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`${roboto.variable} h-full`}>
       <body className="min-h-full">{children}</body>
     </html>
   );

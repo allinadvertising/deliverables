@@ -3,12 +3,12 @@
 import { useState } from "react";
 
 type DeleteAuditButtonProps = {
-  href: string;
+  auditId: string;
   title: string;
 };
 
 export default function DeleteAuditButton({
-  href,
+  auditId,
   title,
 }: DeleteAuditButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -28,7 +28,7 @@ export default function DeleteAuditButton({
 
     try {
       const response = await fetch("/api/audits", {
-        body: JSON.stringify({ href }),
+        body: JSON.stringify({ auditId }),
         headers: { "Content-Type": "application/json" },
         method: "DELETE",
       });

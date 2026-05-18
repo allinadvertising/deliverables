@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://allinadvertising.com/schemas/audit-content.json",
+  "title": "Audit Content",
+  "description": "Structured audit content produced by the SEO Audit Enhancer AI. Used to render audit pages via React components.",
+  "type": "object",
+  "required": [
+    "meta",
+    "executiveSummary",
+    "actionItems",
+    "findings",
+    "solutions",
+    "beforeAfter",
+    "insightBox",
+    "glossary",
+    "faq"
+  ],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["clientName", "auditType", "date", "coverBadge"],
+      "properties": {
+        "clientName": { "type": "string", "description": "Client name, e.g. 'Fossil Age Minerals'" },
+        "auditType": { "type": "string", "description": "Audit type, e.g. 'Technical & Content SEO Audit'" },
+        "date": { "type": "string", "description": "Month and year, e.g. 'May 2026'" },
+        "coverBadge": { "type": "string", "description": "Cover page badge text" },
+        "supportingFile": { "type": ["string", "null"], "description": "URL to supporting workbook, or null" },
+        "sourceNote": { "type": ["string", "null"], "description": "Data source attribution, or null (never populated in existing audits)" }
+      }
+    },
+    "executiveSummary": {
+      "type": "object",
+      "required": ["items", "metricCards"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Bullet-point key insights (At a Glance)"
+        },
+        "metricCards": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" },
+              "change": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "severity": {
+          "type": "object",
+          "required": ["p0Count", "p1Count", "p2Count"],
+          "properties": {
+            "p0Count": { "type": "integer", "minimum": 0 },
+            "p1Count": { "type": "integer", "minimum": 0 },
+            "p2Count": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "actionItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["priority", "title", "category", "scope", "impact", "owner"],
+        "properties": {
+          "priority": { "enum": ["P0", "P1", "P2"] },
+          "title": { "type": "string" },
+          "category": { "type": "string" },
+          "scope": { "type": "string" },
+          "impact": { "type": "string" },
+          "secondaryImpact": { "type": ["string", "null"] },
+          "owner": { "enum": ["AIA", "Client Dev"] }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "priority", "title", "rootCause", "whatThisMeans"],
+        "properties": {
+          "category": { "type": "string" },
+          "priority": { "enum": ["P0", "P1", "P2"] },
+          "title": { "type": "string" },
+          "rootCause": { "type": "string" },
+          "statistics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["number", "description"],
+              "properties": {
+                "number": { "type": "string" },
+                "description": { "type": "string" }
+              }
+            }
+          },
+          "whatThisMeans": { "type": "string" },
+          "representativeUrls": {
+            "type": "array",
+            "items": { "type": "string", "format": "uri" }
+          },
+          "impacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["label", "value"],
+              "properties": {
+                "label": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "solutions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "steps"],
+        "properties": {
+          "category": { "type": "string" },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["title", "description"],
+              "properties": {
+                "title": { "type": "string" },
+                "description": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "beforeAfter": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["label", "before", "after"],
+        "properties": {
+          "label": { "type": "string" },
+          "before": { "type": "string" },
+          "after": { "type": "string" }
+        }
+      }
+    },
+    "insightBox": { "type": ["string", "null"] },
+    "glossary": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["term", "definition"],
+        "properties": {
+          "term": { "type": "string" },
+          "definition": { "type": "string" }
+        }
+      }
+    },
+    "faq": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["question", "answer"],
+        "properties": {
+          "question": { "type": "string" },
+          "answer": { "type": "string" }
+        }
+      }
+    }
+  }
+}

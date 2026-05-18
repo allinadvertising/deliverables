@@ -1,150 +1,283 @@
 ---
 name: seo-audit-enhancer
 description: |
-  Transform SEO technical audit markdown files into polished, client-facing HTML presentations branded for All In Advertising.
-  Use this skill when the user sends a .md file containing an SEO audit (technical audit, content audit, or combined) and asks for an "enhanced", "polished", "HTML", "web version", or "client-facing" version of it.
-  Also use when the user mentions "Rock 4", "audit template", "audit redesign", or "improve the audit presentation" in the context of an .md audit file.
-  Triggers: .md audit files, "enhance this audit", "polish this audit", "convert to HTML audit", "client-facing audit", "audit v2", "Rock 4 audit", "beautify audit", "HTML version of the audit".
+  Transform SEO technical audit markdown files into structured JSON documents that power component-driven audit pages.
+  Use this skill when the user sends a .md file containing an SEO audit and asks for an "enhanced", "polished", "HTML", "web version", or "client-facing" version.
+  Also use when the user mentions "audit template", "audit redesign", or "improve the audit presentation" in the context of an .md audit file.
+  Triggers: .md audit files, "enhance this audit", "polish this audit", "convert to HTML audit", "client-facing audit", "audit v2", "audit redesign".
 ---
 
 # SEO Audit Enhancer
 
-Transform raw `.md` SEO audit files into polished, branded audit body fragments for the All In Advertising audit templates.
+Transform raw `.md` SEO audit files into structured JSON documents. The JSON is stored in Supabase (JSONB column `audits.content`) and rendered by React server components — no HTML generation needed.
 
 ## Workflow
 
 ### 1. Read the Input
 
-Read the user's `.md` audit file. Extract these sections:
+Read the user's `.md` audit file. Extract every section listed below. If a section is missing, note it as null or empty array where appropriate.
 
-- **Client name** — from title or first heading
-- **Audit type** — e.g., "Technical & Content SEO Audit", "Technical SEO Audit"
-- **Date** — from file or current date
-- **Executive Summary** — bullet points summarizing key findings
-- **Metrics** — key numbers to feature in metric cards (issue counts, URLs affected, percentages)
-- **Key Findings** — each finding with: title, priority (P0/P1/P2), root cause, evidence/statistics, affected URLs, plain-English explanation
-- **Proposed Solutions** — numbered action steps per issue category
-- **Immediate Action Items** — prioritized list of what to fix first, with ownership
+### 2. Output JSON
 
-### 2. Map Sections to the Body Template
+Return a single JSON object matching the `AuditContent` schema. Do NOT return HTML, markdown, or any other format. Do NOT wrap the JSON in markdown code fences unless the calling system requires it. The JSON must be the complete response body.
 
-Load `assets/template.html` and replace each body `{{PLACEHOLDER}}` with generated HTML. The template contains only inner audit content. Do not generate the document shell, cover page, logo, footer, `<html>`, `<head>`, `<body>`, stylesheet links, or embedded `<style>` blocks.
+### 3. Validate
 
-The static document shell and header metadata live outside the model output:
+After generating, verify against `schema.json`. Every required field must be present. Every enum value must match exactly ("P0", "P1", "P2"; "AIA", "Client Dev").
 
-- `public/header-template.html` - AIA-branded document head and cover page.
-- `public/footer-template.html` - AIA-branded footer and closing document tags.
-- `public/audit.css` - Shared stylesheet.
-- The app derives client name, audit type, date, quarter, and supporting workbook button from form input, markdown context, and the current date.
+---
 
-| Placeholder | Source | How to Generate |
-|:---|:---|:---|
-| `{{EXEC_ITEMS}}` | .md executive summary | `<li><strong>Key point</strong> — supporting detail.</li>` items |
-| `{{METRIC_CARDS}}` | .md stats | 4 `<div class="metric-card">` blocks with `value` and `label` |
-| `{{SOURCE_NOTE}}` | .md notes | Crawl source, date, validation notes |
-| `{{SEVERITY_LEGEND}}` | P0/P1/P2 counts | Color-coded severity spans |
-| `{{SEVERITY_BAR}}` | P0/P1/P2 ratios | `<div class="seg p0-seg" style="width:X%;">` bars |
-| `{{ACTION_TABLE_ROWS}}` | .md action items | `<tr class="row-p0">` rows with badge, description, scope, impact, owner badge |
-| `{{FINDING_CARDS}}` | .md key findings | Cards grouped with `<h3 class="section-label">` category headers |
-| `{{SOLUTION_STEPS}}` | .md proposed solutions | `<div class="solution-step">` numbered steps by category |
-| `{{BEFORE_AFTER}}` | .md findings | Comparison grids showing current vs recommended state |
-| `{{GLOSSARY_ITEMS}}` | Derived | 6-8 `<div class="glossary-item">` definitions for technical terms used |
-| `{{FAQ_ITEMS}}` | Derived | 3-4 relevant Q&A paragraphs |
-| `{{INSIGHT_BOX}}` | .md analysis | Optional key competitive/strategic insight callout |
+## JSON Schema
 
-### 3. Content Generation Rules
+```typescript
+type AuditContent = {
+  meta: {
+    clientName: string;           // e.g. "Fossil Age Minerals"
+    auditType: string;            // e.g. "Technical & Content SEO Audit"
+    date: string;                 // e.g. "May 2026"
+    coverBadge: string;           // e.g. "Client-facing v2.0 · Internal technical appendix available on request"
+    supportingFile: string|null;  // URL to supporting workbook, or null
+    sourceNote: string|null;      // Data source attribution, or null (never populated in existing audits)
+  };
+  executiveSummary: {
+    items: string[];              // 3-6 bullet-point key insights (At a Glance)
+    metricCards: {                // Exactly 4 or 8 cards
+      value: string;              // e.g. "203", "20.2%"
+      label: string;              // e.g. "Overlength Meta Descriptions"
+      change: string|null;        // e.g. "+12%", null if no trend
+    }[];
+    severity?: {                  // Optional: omit if no severity data
+      p0Count: number;
+      p1Count: number;
+      p2Count: number;
+    };
+  };
+  actionItems: {
+    priority: "P0"|"P1"|"P2";
+    title: string;                // Concise action title
+    category: string;             // e.g. "Heading Structure", "Metadata Quality"
+    scope: string;                // What the fix covers
+    impact: string;               // Primary expected impact
+    secondaryImpact: string|null; // Secondary benefit, or null
+  }[];
+  findings: {
+    category: string;             // Groups findings under a section-label
+    priority: "P0"|"P1"|"P2";
+    title: string;
+    rootCause: string;            // Technical explanation of root cause
+    statistics?: {                // Optional: some findings have no stats
+      number: string;             // e.g. "777"
+      description: string;        // e.g. "exact-duplicate URLs"
+    }[];
+    whatThisMeans: string;        // Plain-English business impact — REQUIRED for every finding
+    representativeUrls?: string[];// Optional: affected URLs
+    impacts?: {                   // Optional: impact grid items
+      label: string;              // e.g. "Search Visibility"
+      value: string;              // e.g. "High — blocks indexing of key pages"
+    }[];
+  }[];
+  solutions: {
+    category: string;             // Mirrors finding categories
+    steps: {
+      title: string;              // Short action title
+      description: string;        // Full implementation detail
+    }[];
+  }[];
+  beforeAfter: {
+    label: string;                // e.g. "Heading Structure Fix", "Redirect Chain"
+    before: string;               // Description of the problem state
+    after: string;                // Description of the fixed/recommended state
+  }[];
+  insightBox: string|null;        // Key competitive/strategic insight, or null
+  glossary: {
+    term: string;                 // Technical term
+    definition: string;           // Plain-English definition
+  }[];
+  faq: {
+    question: string;             // Client-relevant question
+    answer: string;               // Clear, actionable answer
+  }[];
+};
+```
 
-**Priority badges:** Use P0 (red, `.badge-p0`), P1 (orange, `.badge-p1`), P2 (yellow, `.badge-p2`) consistently throughout.
+---
 
-**Owner badges:** Use `.badge-aia` for "AIA" and `.badge-client` for "Client Dev".
+## Field Population Rules
 
-**"What This Means" boxes:** Every finding card must include a plain-English `.what-this-means` explanation. Translate technical findings into business impact language.
+### meta
 
-**Stat grids:** When findings include multiple statistics, use `.stat-grid` with `.stat-item` + `.stat-num` blocks for visual impact.
+| Field | How to Populate |
+|-------|----------------|
+| `clientName` | From markdown title or first heading. Title-case. |
+| `auditType` | Infer from content: "Technical SEO Audit", "Technical & Content SEO Audit", "GSC Coverage Audit", "Schema Markup Audit", "GSC and GA4 Drop Review". |
+| `date` | "Month Year" format, e.g. "May 2026". |
+| `coverBadge` | Default: "Client-facing v2.0 · Internal technical appendix available on request". |
+| `supportingFile` | URL if provided in markdown, else null. |
+| `sourceNote` | "Data sourced from Google Search Console, Screaming Frog crawl, and GA4." or null. |
 
-**URL lists:** Group representative URLs in `.url-list` blocks styled as monospace.
+### executiveSummary
 
-**Before/After comparisons:** Use `.comparison-grid` with exactly two `.comparison-col` children. Each column must include `.col-header.before` or `.col-header.after` followed by `.col-body`. If the comparison needs bullet points, place them in `<ul class="comparison-list">` inside `.col-body`. Do not create raw `<div class="before">` / `<div class="after">` cards with inline borders or inline padding.
+- **items:** Extract 3-6 key insights from the markdown executive summary. Each item is a single sentence starting with a strong lead: e.g. "Critical first fix: ...", "Sitemap-driven crawl waste: ...".
+- **metricCards:** Exactly 4 or 8 cards. Pull numbers from the markdown: issue counts, URL counts, percentage changes. The `label` should be short and descriptive. `change` is almost always null unless a trend is explicitly stated.
+- **severity:** Count P0/P1/P2 items across all findings and action items. Omit if no priority data exists.
 
-**Solution steps:** Group under category H3s. Each step uses `.solution-step` with numbered circle and `.step-body`. Keep steps actionable.
+### actionItems
 
-**Glossary:** Always include 6-8 glossary terms relevant to the audit's technical concepts (H1, canonical, orphan, crawl budget, 301 redirect chain, meta description, near-duplicate, CMS template, etc.). Use plain language.
+- Extract from the markdown's "Immediate Action Items" or "Prioritized Actions" section.
+- **priority:** Map to P0 (critical, blocking), P1 (high, next sprint), P2 (moderate, backlog).
+- **category:** Derive from the finding category this action addresses.
+- **scope:** What pages/templates/sections this affects.
+- **impact:** Expected outcome in business terms. Use "We expect..." phrasing.
 
-**FAQ:** Generate 3-4 questions specific to the client context. Common patterns: "What should we fix first?", "How long until results?", "Which team handles what?", "Do we need to remove pages?"
+### findings
 
-### 4. Polish and Output
+- Each finding must have a **whatThisMeans** field — translate technical issues into business impact.
+- Group under category names: "Heading Structure", "Metadata Quality", "Crawl & Index Health", "Content Quality & Duplication", "Structured Data", "URL Architecture", "Sitemap & Governance", etc.
+- **statistics:** Pull exact numbers from the markdown. Each stat is a `{ number, description }` pair. Omit if the finding has no quantitative evidence.
+- **representativeUrls:** List 1-5 example URLs. Omit if not applicable.
+- **impacts:** 0-4 impact items with `{ label, value }`. Use labels like "Search Visibility", "Crawl Budget", "User Experience", "Index Coverage".
+
+### solutions
+
+- Categories mirror finding categories. Steps are numbered implementation actions.
+- **title:** Short action phrase, e.g. "Patch the Webflow Collection template".
+- **description:** Full detail: what to change, where, expected outcome.
+
+### beforeAfter
+
+- Extract 1-5 comparison pairs from the markdown. Each pair has a `label`, `before` (problem state), and `after` (fixed/recommended state).
+- **Do not duplicate pairs.** If the markdown has the same Before/After in two positions, include it once.
+
+### insightBox
+
+- If the markdown contains a strategic insight about competitive positioning, market opportunity, or architectural pattern: capture it here. Otherwise null.
+- Example: "Most duplication originates from navigational components — not editorial content. By cleaning internal link generation and reinforcing canonicals at the theme level, [client] can eliminate the majority of duplicate and near-duplicate issues without changing a single page of content."
+
+### glossary
+
+- Always include 6-10 terms relevant to the audit.
+- Common terms: H1, canonical, orphan URL, crawl budget, 301 redirect chain, meta description, near-duplicate, CMS template, robots.txt, sitemap, schema markup, JSON-LD, noindex, index coverage, CTR.
+- Definitions must be in plain English — no jargon.
+
+### faq
+
+- Generate 3-5 questions specific to the client context and audit findings.
+- Common patterns: "What should we fix first?", "How long until we see results?", "Which team handles what?", "Do we need to remove pages?", "Will this affect our current rankings?"
+- Answers must be specific and actionable — not generic.
+
+---
+
+## Quality Rules
 
 - **Tone:** Professional, authoritative, corporate. No casual language. Use "we recommend" not "you should".
-- **Brand consistency:** Every page uses AIA blue (#3e71b8) and gold (#f6b328). Logo appears only in the static cover and footer templates.
 - **No em dashes:** Use " — " (space-hyphen-hyphen-space) or commas instead.
-- **Print-ready:** All pages have `page-break-after: always` for clean PDF conversion.
-- **Responsive:** Grid layouts collapse to single column on mobile.
+- **Plain English:** Every `whatThisMeans`, every `definition`, every `description` must be understandable by a non-technical business stakeholder.
+- **Consistency:** Priority values must be exactly "P0", "P1", "P2".
+- **Completeness:** Every finding MUST have a `whatThisMeans`. Every solution step MUST have a `title` and `description`.
+- **Accuracy:** Numbers in `statistics`, `metricCards`, and `severity` must match the source markdown.
+- **Validation:** Before returning, verify the JSON against `schema.json`. Check that all required fields are present.
 
-Save output under `public/{client-slug}/{year}/{month}/` and confirm the final generated file path to the user:
+---
 
-- `audit-body.html` - AI-generated audit content only.
-- `{audit-type}.html` - final assembled deliverable built locally by wrapping the body between `public/header-template.html` and `public/footer-template.html`.
+## Output Format
 
-## Template Reference
+Return ONLY the JSON object. No preamble, no explanation, no markdown code fences (unless the calling system wraps all responses in fences).
 
-The body template is at `assets/template.html`. It contains only the inner audit pages with `{{PLACEHOLDER}}` markers. Header, footer, CSS link, logo, and document tags are fixed public templates.
+```json
+{
+  "meta": { ... },
+  "executiveSummary": { ... },
+  "actionItems": [ ... ],
+  "findings": [ ... ],
+  "solutions": [ ... ],
+  "beforeAfter": [ ... ],
+  "insightBox": null,
+  "glossary": [ ... ],
+  "faq": [ ... ]
+}
+```
 
-### CSS Classes Quick Reference
+## Validation Reference
 
-| Class | Purpose |
-|:---|:---|
-| `.page` / `.page.cover` | Page container / dark cover page |
-| `.metrics` / `.metric-card` | 4-column metric grid |
-| `.badge-p0` / `.badge-p1` / `.badge-p2` | Priority badges |
-| `.badge-aia` / `.badge-client` | Owner badges |
-| `.exec-summary` | Blue-tinted summary box |
-| `.finding-card` | Individual finding container |
-| `.finding-header` / `.finding-title` | Finding header row |
-| `.what-this-means` | Plain-English explanation box |
-| `.stat-grid` / `.stat-item` / `.stat-num` | 2-column stat display |
-| `.url-list` | Monospace URL listing |
-| `.comparison-grid` / `.comparison-col` / `.col-header.before` / `.col-header.after` / `.comparison-list` | Before/after columns and bullet lists |
-| `.solution-step` / `.step-num` / `.step-body` | Numbered solution steps |
-| `.glossary-grid` / `.glossary-item` | 2-column glossary |
-| `tr.row-p0` / `tr.row-p1` / `tr.row-p2` | Priority-colored table rows |
-| `.chart-placeholder` | Dashed-border chart placeholder |
-| `.footer` | Footer section |
+The formal JSON Schema is at `schema.json`. Key constraints:
+- `metricCards`: minItems 4, maxItems 8
+- `actionItems[].priority`: enum ["P0", "P1", "P2"]
+- `severity.p*Count`: integer, minimum 0
+- `solutions[].steps`: minItems 1
+- `beforeAfter`: minItems 1
+- `glossary`: minItems 1
+- `faq`: minItems 1
 
 ## Examples
 
-### Finding Card Pattern
+### Metric Card
 
-```html
-<div class="finding-card">
-  <div class="finding-header">
-    <span class="badge badge-p0">P0</span>
-    <h3 class="finding-title">Title describing the issue</h3>
-  </div>
-  <div class="finding-desc">
-    <strong>Root cause:</strong> Explanation of what caused this.
-  </div>
-  <div class="stat-grid">
-    <div class="stat-item"><span class="stat-num">N</span> Description</div>
-    ...
-  </div>
-  <div class="what-this-means">
-    <strong>What This Means:</strong> Plain-English business impact.
-  </div>
-  <div class="url-list">
-    <strong>Representative URLs:</strong><br>
-    https://...
-  </div>
-</div>
+```json
+{ "value": "203", "label": "Overlength Meta Descriptions", "change": null }
 ```
 
-### Action Table Row Pattern
+### Action Item
 
-```html
-<tr class="row-p0">
-  <td><span class="badge badge-p0">P0</span></td>
-  <td><strong>Issue title</strong><br><span style="color:var(--gray-500);font-size:13px;">Category</span></td>
-  <td>Concise description of the fix.</td>
-  <td><strong>Impact metric</strong><br><span style="font-size:12px;color:var(--gray-500);">Secondary impact</span></td>
-  <td><span class="badge badge-aia">AIA</span></td>
-</tr>
+```json
+{
+  "priority": "P0",
+  "title": "Patch Webflow Collection template for Board & Train pages",
+  "category": "Heading Structure",
+  "scope": "All /board-and-train/ URLs generated by the Webflow CMS Collection template",
+  "impact": "Fixes duplicated H1s, multiple H1s, non-sequential headings, and 100% near-duplicate content across the entire /board-and-train/ URL set",
+  "secondaryImpact": "Also resolves 54 overlength titles on the same template"
+}
+```
+
+### Finding
+
+```json
+{
+  "category": "Crawl & Index Health",
+  "priority": "P0",
+  "title": "Content: Exact Duplicates from Parameterized Product URLs",
+  "rootCause": "Recommendation and merchandising links expose parameterized product URLs as crawlable, indexable alternatives to the same product pages",
+  "statistics": [
+    { "number": "777", "description": "exact-duplicate URLs" },
+    { "number": "767", "description": "contain pr_prod_strat" }
+  ],
+  "whatThisMeans": "Search engines split signals across duplicates, wasting crawl budget and suppressing the canonical product page's ability to rank",
+  "representativeUrls": [
+    "https://example.com/products/led-lights?pr_prod_strat=e5_desc&pr_rec_id=..."
+  ],
+  "impacts": [
+    { "label": "Crawl Budget", "value": "777 duplicate URLs consume crawl allocation" },
+    { "label": "Index Coverage", "value": "Canonical signals diluted across parameter variants" }
+  ]
+}
+```
+
+### Solution
+
+```json
+{
+  "category": "Crawl & Index Health",
+  "steps": [
+    {
+      "title": "Emit canonical tags for all indexable templates",
+      "description": "Use Shopify's canonical_url value in theme.liquid for product, collection, and page templates."
+    },
+    {
+      "title": "Update internal links to clean product URLs",
+      "description": "Modify product cards, recommendation blocks, collection grids, and app snippets so all internal links point to clean product URLs only."
+    }
+  ]
+}
+```
+
+### Glossary
+
+```json
+{ "term": "Canonical URL", "definition": "The preferred version of a page that you want search engines to index and rank. When multiple URLs serve the same content, the canonical tag tells Google which one is the real page." }
+```
+
+### FAQ
+
+```json
+{ "question": "What should we fix first to regain clicks?", "answer": "We recommend addressing two items in parallel: refresh and retarget priority collection pages for SERP intent, and normalize analytics by consolidating to a single tag load path. This restores click share where demand exists and ensures the data is trustworthy as changes roll out." }
 ```

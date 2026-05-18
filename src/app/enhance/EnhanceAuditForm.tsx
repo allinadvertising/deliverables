@@ -1,20 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 type ProviderId = "openai" | "deepseek";
 
 type EnhanceResult = {
-  bodyFilePath: string;
-  bodyHref: string;
-  filePath: string;
-  href: string;
+  auditId: string;
+  auditType: string;
+  clientName: string;
   logId?: string;
   logPath?: string;
   model: string;
-  outputDirectory: string;
   provider: ProviderId;
-  publicFilePath: string;
+  shareToken?: string;
   title: string;
 };
 
@@ -316,29 +315,17 @@ export default function EnhanceAuditForm() {
                 ) : null}
               </div>
 
-              <div className="grid gap-2 sm:grid-cols-2">
-                <a
-                  className="bg-[#3e71b8] px-4 py-3 text-center text-sm font-black uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#2f5f9f]"
-                  href={result.href}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  Open Final Audit
-                </a>
-                <a
-                  className="border border-[#3e71b8] bg-[#eff5fd] px-4 py-3 text-center text-sm font-black uppercase tracking-[0.12em] text-[#18355f] transition-colors hover:bg-white"
-                  href={result.bodyHref}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  Open Body HTML
-                </a>
-              </div>
+              <Link
+                className="bg-[#3e71b8] px-4 py-3 text-center text-sm font-black uppercase tracking-[0.12em] text-white transition-colors hover:bg-[#2f5f9f]"
+                href="/"
+              >
+                View in Dashboard
+              </Link>
 
               <div className="grid gap-2 break-words border border-[#d9e2ef] bg-[#f8fbff] px-3 py-3 text-xs leading-5 text-[#65718a]">
-                <span>Output folder: {result.outputDirectory}</span>
-                <span>Final: {result.filePath}</span>
-                <span>Body: {result.bodyFilePath}</span>
+                <span>Audit ID: {result.auditId}</span>
+                <span>Client: {result.clientName}</span>
+                <span>Type: {result.auditType}</span>
               </div>
             </div>
           ) : null}

@@ -62,7 +62,7 @@ async function handleTokenAction(
     return Response.json({ error: "Audit not found." }, { status: 404 });
   }
 
-  if (audit.owner_id !== user.id) {
+  if (audit.owner_id && audit.owner_id !== user.id) {
     return Response.json(
       { error: "You can only manage tokens for your own audits." },
       { status: 403 },

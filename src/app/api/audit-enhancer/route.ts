@@ -107,7 +107,7 @@ export async function POST(request: Request) {
     });
 
     await logger.info("request_completed", {
-      href: result.href,
+      href: result.auditId,
       model: result.model,
       provider: result.provider,
     });

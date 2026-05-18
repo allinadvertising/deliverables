@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "sync-audits": "node scripts/sync-audits.mjs",
-    "predev": "npm run sync-audits",
     "dev": "next dev",
-    "prebuild": "npm run sync-audits",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

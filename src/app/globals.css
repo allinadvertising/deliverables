@@ -1,13 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f6f8fb;
-  --foreground: #16243d;
-  --brand-blue: #3e71b8;
+  --background: #edf2f7;
+  --foreground: #172033;
+  --brand-blue: #2f65a7;
+  --brand-blue-dark: #183b68;
+  --brand-blue-light: #eaf2fb;
   --brand-gold: #f6b328;
-  --ink: #16243d;
-  --muted: #65718a;
-  --line: #d9e2ef;
+  --brand-gold-light: #fef7e8;
+  --brand-gold-dark: #d4950a;
+  --ink: #172033;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --p0: #c62828;
+  --p0-bg: #fff1f1;
+  --p0-border: #ffc9c9;
+  --p1: #c75a12;
+  --p1-bg: #fff5eb;
+  --p1-border: #ffd9b7;
+  --p2: #9a6a00;
+  --p2-bg: #fff9df;
+  --p2-border: #f5df83;
+  --green: #16803d;
+  --green-bg: #edf9f1;
+  --audit-page-width: 1160px;
+  --audit-radius: 8px;
+  --audit-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --audit-shadow-md: 0 18px 42px rgba(15, 23, 42, 0.10);
 }
 
 @theme inline {
@@ -20,8 +39,199 @@
 }
 
 body {
-  background: var(--background);
+  background:
+    linear-gradient(180deg, #eef5fc 0, #f7f9fc 420px, #edf2f7 100%);
   color: var(--foreground);
   color-scheme: light;
-  font-family: var(--font-roboto), Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@layer components {
+  .audit-page {
+    background: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: var(--audit-radius);
+    box-shadow: var(--audit-shadow-md);
+    margin: 32px auto;
+    max-width: var(--audit-page-width);
+    overflow: hidden;
+    padding: 64px 72px;
+  }
+
+  .audit-cover {
+    align-items: center;
+    background:
+      linear-gradient(
+        160deg,
+        rgba(12, 24, 45, 0.98) 0%,
+        rgba(24, 59, 104, 0.98) 48%,
+        rgba(47, 101, 167, 0.95) 100%
+      );
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 660px;
+    padding: 92px 72px 64px;
+    text-align: center;
+  }
+
+  .audit-section-title {
+    border-bottom: 2px solid var(--line);
+    color: #0f172a;
+    font-size: 31px;
+    font-weight: 850;
+    line-height: 1.16;
+    margin: 0 0 22px;
+    padding-bottom: 16px;
+  }
+
+  .audit-section-title::before {
+    background: var(--brand-gold);
+    border-radius: 999px;
+    content: "";
+    display: block;
+    height: 5px;
+    margin-bottom: 14px;
+    width: 56px;
+  }
+
+  .audit-category-title {
+    align-items: center;
+    color: #1e293b;
+    display: flex;
+    font-size: 22px;
+    font-weight: 800;
+    gap: 10px;
+    line-height: 1.25;
+    margin: 30px 0 12px;
+  }
+
+  .audit-copy {
+    color: #475569;
+    font-size: 16px;
+    line-height: 1.58;
+  }
+
+  .audit-card {
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: var(--audit-radius);
+    box-shadow: var(--audit-shadow-sm);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .audit-fit-text {
+    font-size: clamp(1.375rem, 8vw, 2.125rem);
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .audit-table {
+    border: 1px solid var(--line);
+    border-collapse: separate;
+    border-radius: var(--audit-radius);
+    border-spacing: 0;
+    box-shadow: var(--audit-shadow-sm);
+    font-size: 15.5px;
+    line-height: 1.5;
+    margin: 24px 0;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .audit-table th {
+    background: var(--brand-blue-dark);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 16px;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .audit-table td {
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+    color: #475569;
+    padding: 18px 16px;
+    vertical-align: top;
+  }
+
+  .audit-table tbody tr:nth-child(even) td {
+    background: #f9fbfe;
+  }
+
+  .audit-table tbody tr:hover td {
+    background: #f1f7ff;
+  }
+
+  .audit-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .audit-row-p0 td:first-child {
+    border-left: 5px solid var(--p0);
+  }
+
+  .audit-row-p1 td:first-child {
+    border-left: 5px solid var(--p1);
+  }
+
+  .audit-row-p2 td:first-child {
+    border-left: 5px solid var(--p2);
+  }
+
+  .audit-mono {
+    font-family: var(--font-jetbrains-mono), Consolas, "Liberation Mono",
+      monospace;
+  }
+
+  @media (max-width: 980px) {
+    body {
+      font-size: 17px;
+    }
+
+    .audit-page {
+      margin: 16px;
+      padding: 44px 34px;
+    }
+
+    .audit-cover {
+      min-height: auto;
+      padding: 64px 34px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    body {
+      font-size: 16px;
+    }
+
+    .audit-page {
+      border-radius: 0;
+      margin: 8px;
+      padding: 30px 20px;
+    }
+
+    .audit-section-title {
+      font-size: 26px;
+      margin-top: 0;
+    }
+
+    .audit-category-title {
+      align-items: flex-start;
+      flex-direction: column;
+      font-size: 21px;
+    }
+  }
 }

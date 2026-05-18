@@ -103,6 +103,7 @@ export async function insertAudit(params: {
   filePath: string;
   fileSize: number;
   ownerId?: string;
+  content?: Record<string, unknown>;
 }): Promise<string> {
   const row: Record<string, unknown> = {
     client_id: params.clientId,
@@ -116,6 +117,10 @@ export async function insertAudit(params: {
 
   if (params.ownerId) {
     row.owner_id = params.ownerId;
+  }
+
+  if (params.content) {
+    row.content = params.content;
   }
 
   const { data, error } = await supabaseServer

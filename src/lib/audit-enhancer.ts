@@ -1,5 +1,4 @@
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { readFile } from "node:fs/promises";
 import {
   serializeError,
   type AuditEnhancerLogger,
@@ -25,16 +24,14 @@ export type EnhanceAuditOptions = {
 };
 
 export type EnhanceAuditResult = {
-  bodyFilePath: string;
-  bodyHref: string;
-  filePath: string;
-  href: string;
+  auditId: string;
+  clientName: string;
+  auditType: string;
   logId?: string;
   logPath?: string;
   model: string;
-  outputDirectory: string;
   provider: ProviderId;
-  publicFilePath: string;
+  shareToken?: string;
   title: string;
 };
 
@@ -75,33 +72,7 @@ type PlaceholderKey =
 
 type PlaceholderMap = Partial<Record<PlaceholderKey, string>>;
 
-const root = process.cwd();
-const skillPath = path.join(root, "seo-audit-enhancer", "SKILL.md");
-const templatePath = path.join(
-  root,
-  "seo-audit-enhancer",
-  "assets",
-  "template.html",
-);
-const headerTemplatePath = path.join(root, "public", "header-template.html");
-const footerTemplatePath = path.join(root, "public", "footer-template.html");
-const publicRoot = path.join(root, "public");
 const maxInputBytes = 2 * 1024 * 1024;
-
-const placeholderKeys: PlaceholderKey[] = [
-  "EXEC_ITEMS",
-  "METRIC_CARDS",
-  "SOURCE_NOTE",
-  "SEVERITY_LEGEND",
-  "SEVERITY_BAR",
-  "ACTION_TABLE_ROWS",
-  "FINDING_CARDS",
-  "SOLUTION_STEPS",
-  "BEFORE_AFTER",
-  "GLOSSARY_ITEMS",
-  "FAQ_ITEMS",
-  "INSIGHT_BOX",
-];
 
 export class AuditEnhancerError extends Error {
   diagnostics: AuditEnhancerErrorDiagnostics;
@@ -142,12 +113,9 @@ export async function enhanceAuditMarkdown(
     );
   }
 
-  const [skill, template, headerTemplate, footerTemplate] = await Promise.all([
-    readFile(skillPath, "utf8"),
-    readFile(templatePath, "utf8"),
-    readFile(headerTemplatePath, "utf8"),
-    readFile(footerTemplatePath, "utf8"),
-  ]).catch((error: NodeJS.ErrnoException) => {
+  // Read the SKILL.md as the AI system prompt
+  const skillPath = ["seo-audit-enhancer", "SKILL.md"].join("/");
+  const skill = await readFile(skillPath, "utf8").catch((error: NodeJS.ErrnoException) => {
     if (error.code === "ENOENT") {
       throw new AuditEnhancerError(
         "The seo-audit-enhancer skill or public audit templates were not found.",
@@ -177,33 +145,55 @@ export async function enhanceAuditMarkdown(
     dateLabel: context.dateLabel,
     quarterLabel: context.quarterLabel,
     skill,
-    template,
   });
 
-  const bodyHtml = await buildAuditBody({
-    context,
-    logger: options.logger,
-    modelOutput,
-    template,
-  });
-  const finalHtml = assembleFinalHtml({
-    bodyHtml,
-    context: context.header,
-    footerTemplate,
-    headerTemplate,
-  });
-  const output = await saveAuditArtifacts({
-    auditSlug: context.header.auditSlug,
-    bodyHtml,
-    clientSlug: context.header.clientSlug,
-    finalHtml,
-    monthSlug: context.monthSlug,
-    year: context.year,
-  });
-  await options.logger?.info("audit_artifacts_saved", output);
+  // Parse AI response as JSON
+  let auditContent: Record<string, unknown>;
+  try {
+    auditContent = JSON.parse(stripCodeFence(modelOutput));
+  } catch {
+    const parseErrorPath = await options.logger?.saveRaw(
+      "json-parse-error",
+      modelOutput,
+    );
+    throw new AuditEnhancerError(
+      "AI did not return valid JSON. Check the raw response log.",
+      502,
+      withLogDiagnostics(options.logger, {
+        provider: options.provider,
+        providerResponsePath: parseErrorPath,
+      }),
+    );
+  }
 
-  // Persist metadata to Supabase
-  const finalFilePath = output.finalFilePath;
+  // Validate basic structure
+  if (
+    typeof auditContent.meta !== "object" ||
+    !auditContent.meta ||
+    typeof auditContent.executiveSummary !== "object" ||
+    !Array.isArray(auditContent.actionItems) ||
+    !Array.isArray(auditContent.findings) ||
+    !Array.isArray(auditContent.solutions)
+  ) {
+    throw new AuditEnhancerError(
+      "AI returned JSON but it is missing required top-level fields (meta, executiveSummary, actionItems, findings, solutions).",
+      502,
+      withLogDiagnostics(options.logger, { provider: options.provider }),
+    );
+  }
+
+  await options.logger?.info("json_parsed", {
+    actionItems: (auditContent.actionItems as unknown[]).length,
+    faq: Array.isArray(auditContent.faq) ? (auditContent.faq as unknown[]).length : 0,
+    findings: (auditContent.findings as unknown[]).length,
+    glossary: Array.isArray(auditContent.glossary) ? (auditContent.glossary as unknown[]).length : 0,
+    metricCards: Array.isArray((auditContent.executiveSummary as Record<string, unknown>).metricCards)
+      ? ((auditContent.executiveSummary as Record<string, unknown>).metricCards as unknown[]).length
+      : 0,
+    solutions: (auditContent.solutions as unknown[]).length,
+  });
+
+  // Persist to Supabase
   const clientId = await upsertClient({
     slug: context.header.clientSlug,
     name: context.clientName,
@@ -212,50 +202,53 @@ export async function enhanceAuditMarkdown(
     return null;
   });
 
-  let auditId: string | null = null;
-  if (clientId) {
-    const finalStats = await stat(finalFilePath).catch(() => null);
-    auditId = await insertAudit({
-      clientId,
-      auditType: context.auditType,
-      title: `${context.clientName} - ${context.auditType}`,
-      year: Number(context.year),
-      month: context.monthSlug,
-      filePath: path.relative(path.join(root, "public"), finalFilePath),
-      fileSize: finalStats?.size ?? 0,
-      ownerId: options.ownerId,
-    }).catch((err) => {
-      options.logger?.warn("supabase_audit_insert_failed", serializeError(err));
-      return null;
-    });
+  if (!clientId) {
+    throw new AuditEnhancerError(
+      "Failed to register client in database.",
+      500,
+      withLogDiagnostics(options.logger),
+    );
   }
 
+  const auditId = await insertAudit({
+    clientId,
+    auditType: context.auditType,
+    title: `${context.clientName} - ${context.auditType}`,
+    year: Number(context.year),
+    month: context.monthSlug,
+    filePath: `${context.header.clientSlug}/${context.year}/${context.monthSlug}/audit.json`,
+    fileSize: Buffer.byteLength(JSON.stringify(auditContent), "utf8"),
+    ownerId: options.ownerId,
+    content: auditContent,
+  });
+
+  await options.logger?.info("audit_stored", {
+    auditId,
+    clientId,
+    clientName: context.clientName,
+  });
+
   // Log the enhancement run
-  const runId = await insertEnhancementRun({
+  await insertEnhancementRun({
     auditId,
     provider: options.provider,
     model: resolveModel(options.provider, options.model),
     status: "completed",
     logId: options.logger?.id ?? null,
-    outputPath: output.finalHref,
+    outputPath: null,
   }).catch((err) => {
     options.logger?.warn("supabase_run_insert_failed", serializeError(err));
-    return null;
   });
-  await options.logger?.info("supabase_metadata_saved", { auditId, runId });
 
   return {
-    bodyFilePath: output.bodyFilePath,
-    bodyHref: output.bodyHref,
-    filePath: output.finalFilePath,
-    href: output.finalHref,
+    auditId,
+    clientName: context.clientName,
+    auditType: context.auditType,
     logId: options.logger?.id,
     logPath: options.logger?.filePath,
     model: resolveModel(options.provider, options.model),
-    outputDirectory: output.outputDirectory,
     provider: options.provider,
-    publicFilePath: output.finalFilePath,
-    title: context.clientName,
+    title: `${context.clientName} - ${context.auditType}`,
   };
 }
 
@@ -311,7 +304,6 @@ async function callModel(
     dateLabel: string;
     quarterLabel: string;
     skill: string;
-    template: string;
   },
 ) {
   if (options.provider === "openai") {
@@ -332,7 +324,6 @@ async function callOpenAI(
     dateLabel: string;
     quarterLabel: string;
     skill: string;
-    template: string;
   },
 ) {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -488,7 +479,6 @@ async function callDeepSeek(
     dateLabel: string;
     quarterLabel: string;
     skill: string;
-    template: string;
   },
 ) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
@@ -635,11 +625,11 @@ function buildUserPrompt(
     clientName: string;
     dateLabel: string;
     quarterLabel: string;
-    template: string;
+    skill: string;
   },
 ) {
   return [
-    "Create body-only HTML placeholder values for the All In Advertising audit body template.",
+    "Create a structured JSON audit document for All In Advertising.",
     "",
     `Client name: ${options.clientName}`,
     `Audit type: ${options.auditType}`,
@@ -647,220 +637,18 @@ function buildUserPrompt(
     `Quarter label: ${options.quarterLabel}`,
     `Uploaded filename: ${options.fileName}`,
     "",
-    "Return one JSON object with these exact keys:",
-    placeholderKeys.join(", "),
-    "",
-    "Value rules:",
-    "- Every value must be an HTML fragment that uses the CSS classes in the template.",
-    "- The assembled body starts at Executive Summary and ends after FAQ content.",
-    "- Do not include the AIA header, cover page, footer, logo, document head, stylesheet link, style block, metadata JSON, or client metadata fields.",
-    "- EXEC_ITEMS must contain only <li> elements.",
-    "- METRIC_CARDS must contain exactly four .metric-card blocks.",
-    "- ACTION_TABLE_ROWS must contain only <tr> rows.",
-    "- FINDING_CARDS must contain grouped finding cards and every finding must include a .what-this-means box.",
-    "- BEFORE_AFTER must use .comparison-grid with two .comparison-col children. Each column must include a .col-header.before or .col-header.after and a .col-body. If bullets are needed, use <ul class=\"comparison-list\"> inside .col-body.",
-    "- Do not create raw <div class=\"before\"> or <div class=\"after\"> comparison cards with inline borders or inline padding.",
-    "- GLOSSARY_ITEMS must contain 6 to 8 .glossary-item blocks.",
-    "- FAQ_ITEMS must contain 3 to 4 client-specific question and answer blocks.",
-    "- Leave no template placeholder unresolved.",
-    "",
-    "Template reference:",
-    "```html",
-    options.template,
-    "```",
+    "Return one JSON object matching the AuditContent schema defined in the skill.",
+    "Every finding MUST include a whatThisMeans field with plain-English business impact.",
+    "Priority values must be exactly P0, P1, or P2.",
+    "Owner values must be exactly AIA or Client Dev.",
+    "Use professional, client-facing language. Use hyphens instead of em dashes.",
+    "Do not wrap the JSON in markdown fences unless required by the provider.",
     "",
     "Source markdown:",
     "```markdown",
     options.markdown,
     "```",
   ].join("\n");
-}
-
-async function buildAuditBody({
-  context,
-  logger,
-  modelOutput,
-  template,
-}: {
-  context: ReturnType<typeof buildAuditContext>;
-  logger?: AuditEnhancerLogger;
-  modelOutput: string;
-  template: string;
-}) {
-  const placeholders = await parsePlaceholderJson(modelOutput, logger);
-  const defaults = buildDefaultPlaceholders(context);
-  let bodyHtml = template;
-
-  for (const key of placeholderKeys) {
-    bodyHtml = bodyHtml.replaceAll(
-      `{{${key}}}`,
-      placeholders[key] ?? defaults[key],
-    );
-  }
-
-  const unresolved = bodyHtml.match(/{{[A-Z_]+}}/g);
-
-  if (unresolved?.length) {
-    throw new AuditEnhancerError(
-      `Model output left unresolved placeholders: ${[
-        ...new Set(unresolved),
-      ].join(", ")}`,
-      502,
-      withLogDiagnostics(logger),
-    );
-  }
-
-  return prepareAuditBody(bodyHtml);
-}
-
-async function parsePlaceholderJson(
-  output: string,
-  logger?: AuditEnhancerLogger,
-): Promise<PlaceholderMap> {
-  const cleaned = stripCodeFence(output).trim();
-  const candidates = [
-    cleaned,
-    cleaned.slice(cleaned.indexOf("{"), cleaned.lastIndexOf("}") + 1),
-  ].filter((value) => value.startsWith("{") && value.endsWith("}"));
-
-  for (const candidate of candidates) {
-    try {
-      const parsed = JSON.parse(candidate) as unknown;
-
-      if (!isRecord(parsed)) {
-        continue;
-      }
-
-      return placeholderKeys.reduce<PlaceholderMap>((accumulator, key) => {
-        const value = parsed[key];
-
-        if (typeof value === "string") {
-          accumulator[key] = value;
-        }
-
-        return accumulator;
-      }, {});
-    } catch {
-      continue;
-    }
-  }
-
-  const modelOutputPath = await logger?.saveRaw(
-    "invalid-placeholder-json",
-    output,
-  );
-  await logger?.error("model_output_parse_failed", {
-    modelOutputPath,
-    outputChars: output.length,
-  });
-
-  throw new AuditEnhancerError(
-    "The model did not return valid placeholder JSON.",
-    502,
-    {
-      ...withLogDiagnostics(logger),
-      providerResponsePath: modelOutputPath,
-    },
-  );
-}
-
-function buildDefaultPlaceholders(
-  context: ReturnType<typeof buildAuditContext>,
-): Record<PlaceholderKey, string> {
-  return {
-    ACTION_TABLE_ROWS: `<tr class="row-p1"><td><span class="badge badge-p1">P1</span></td><td><strong>Review generated audit</strong><br><span style="color:var(--gray-500);font-size:13px;">Quality assurance</span></td><td>Confirm priorities, URL examples, and ownership before publication.</td><td><strong>Client-ready delivery</strong><br><span style="font-size:12px;color:var(--gray-500);">Final editorial pass</span></td><td><span class="badge badge-aia">AIA</span></td></tr>`,
-    BEFORE_AFTER: `<h2>Recommended Direction</h2><div class="comparison-grid"><div class="comparison-col"><div class="col-header before">Current State</div><div class="col-body"><ul class="comparison-list"><li>The markdown audit identifies SEO issues that require prioritization and owner assignment.</li><li>Findings may be too technical for quick client-side sequencing.</li></ul></div></div><div class="comparison-col"><div class="col-header after">Recommended State</div><div class="col-body"><ul class="comparison-list"><li>Issues are grouped by business impact, remediation sequence, and expected search benefit.</li><li>Each recommendation is easier to assign, validate, and measure.</li></ul></div></div></div>`,
-    EXEC_ITEMS: `<li><strong>Audit transformed</strong> - Source findings have been organized into a branded client-facing presentation.</li><li><strong>Priorities clarified</strong> - Recommended actions are grouped by urgency, impact, and ownership.</li>`,
-    FAQ_ITEMS: `<p><strong>What should be reviewed first?</strong><br>The highest-priority technical fixes and any recommendations tied to revenue-critical pages should be checked first.</p><p><strong>Who owns implementation?</strong><br>All In Advertising can own SEO direction, while development tasks should be assigned to the client development team.</p><p><strong>When should this be revisited?</strong><br>We recommend reviewing implementation progress after the first release cycle and validating results after recrawl.</p>`,
-    FINDING_CARDS: `<div class="finding-card"><div class="finding-header"><span class="badge badge-p1">P1</span><h3 class="finding-title">Audit findings require implementation planning</h3></div><div class="finding-desc"><strong>Root cause:</strong> The source audit needs a client-facing structure that translates technical work into business impact.</div><div class="what-this-means"><strong>What This Means:</strong> Clear prioritization helps teams sequence fixes and focus on the work most likely to improve organic visibility.</div></div>`,
-    GLOSSARY_ITEMS: `<div class="glossary-item"><div class="term">Canonical</div><div class="def">A signal that tells search engines which version of a similar page should be treated as primary.</div></div><div class="glossary-item"><div class="term">Crawl Budget</div><div class="def">The amount of attention search engines spend discovering and refreshing pages on a site.</div></div><div class="glossary-item"><div class="term">Indexation</div><div class="def">Whether a page is eligible to appear in organic search results.</div></div><div class="glossary-item"><div class="term">Redirect</div><div class="def">A server instruction that sends users and search engines from one URL to another.</div></div><div class="glossary-item"><div class="term">Metadata</div><div class="def">Page-level title and description information used by search engines and search result snippets.</div></div><div class="glossary-item"><div class="term">Internal Link</div><div class="def">A link between two pages on the same website that helps users and search engines discover content.</div></div>`,
-    INSIGHT_BOX: `<div style="background:var(--brand-gold-light);border-left:4px solid var(--brand-gold);border-radius:var(--radius);padding:20px 24px;"><strong>Strategic Insight:</strong> The strongest SEO gains usually come from pairing technical cleanup with clearer priority sequencing and ownership.</div>`,
-    METRIC_CARDS: `<div class="metric-card"><div class="value">SEO</div><div class="label">Audit Focus</div></div><div class="metric-card"><div class="value">P0-P2</div><div class="label">Priority System</div></div><div class="metric-card"><div class="value">HTML</div><div class="label">Delivery Format</div></div><div class="metric-card"><div class="value">AIA</div><div class="label">Prepared By</div></div>`,
-    SEVERITY_BAR: `<div style="width:35%;background:var(--p1);"></div><div style="width:65%;background:var(--p2);"></div>`,
-    SEVERITY_LEGEND: `<span><strong style="color:var(--p1);">P1</strong> High priority</span><span><strong style="color:var(--p2);">P2</strong> Supporting improvements</span>`,
-    SOLUTION_STEPS: `<h3 class="section-label">Implementation Sequence</h3><div class="solution-step"><div class="step-num">1</div><div class="step-body"><strong>Validate priority issues</strong>Confirm the affected templates, URLs, and ownership before implementation.</div></div><div class="solution-step"><div class="step-num">2</div><div class="step-body"><strong>Release fixes in batches</strong>Group related technical changes so they can be QA-tested and measured cleanly.</div></div><div class="solution-step"><div class="step-num">3</div><div class="step-body"><strong>Recrawl and measure</strong>Validate that search engines can discover, render, and index the corrected pages.</div></div>`,
-    SOURCE_NOTE: `Generated from ${escapeHtml(
-      context.fileName,
-    )}. Review source crawl exports before final publication.`,
-  };
-}
-
-function assembleFinalHtml({
-  bodyHtml,
-  context,
-  footerTemplate,
-  headerTemplate,
-}: {
-  bodyHtml: string;
-  context: AuditHeaderContext;
-  footerTemplate: string;
-  headerTemplate: string;
-}) {
-  const replacements: Record<string, string> = {
-    AUDIT_TYPE: escapeHtml(context.auditType),
-    CLIENT_NAME: escapeHtml(context.clientName),
-    COVER_BADGE: escapeHtml(context.coverBadge),
-    DATE: escapeHtml(context.date),
-    QUARTER: escapeHtml(context.quarter),
-    SUPPORTING_WORKBOOK_BUTTON: context.supportingWorkbookButton,
-  };
-
-  return [
-    renderStaticTemplate(headerTemplate, replacements).trimEnd(),
-    bodyHtml.trim(),
-    renderStaticTemplate(footerTemplate, replacements).trimStart(),
-  ].join("\n\n");
-}
-
-function renderStaticTemplate(
-  template: string,
-  replacements: Record<string, string>,
-) {
-  return Object.entries(replacements).reduce(
-    (html, [key, value]) => html.replaceAll(`{{${key}}}`, value),
-    template,
-  );
-}
-
-async function saveAuditArtifacts({
-  auditSlug,
-  bodyHtml,
-  clientSlug,
-  finalHtml,
-  monthSlug,
-  year,
-}: {
-  auditSlug: string;
-  bodyHtml: string;
-  clientSlug: string;
-  finalHtml: string;
-  monthSlug: string;
-  year: string;
-}) {
-  const directoryParts = [clientSlug, year, monthSlug];
-  const outputDirectory = path.join(publicRoot, ...directoryParts);
-  const bodyParts = [...directoryParts, "audit-body.html"];
-  const finalParts = [...directoryParts, `${auditSlug}.html`];
-  const bodyFilePath = path.join(publicRoot, ...bodyParts);
-  const finalFilePath = path.join(publicRoot, ...finalParts);
-
-  assertInside(outputDirectory, publicRoot);
-  assertInside(bodyFilePath, publicRoot);
-  assertInside(finalFilePath, publicRoot);
-
-  await mkdir(outputDirectory, { recursive: true });
-  await Promise.all([
-    writeFile(bodyFilePath, bodyHtml, "utf8"),
-    writeFile(finalFilePath, finalHtml, "utf8"),
-  ]);
-
-  return {
-    bodyFilePath,
-    bodyHref: `/${bodyParts.map(encodeURIComponent).join("/")}`,
-    finalFilePath,
-    finalHref: `/${finalParts.map(encodeURIComponent).join("/")}`,
-    outputDirectory,
-  };
 }
 
 function resolveModel(provider: ProviderId, selectedModel?: string) {
@@ -940,13 +728,8 @@ function getOpenAITextFormat() {
 
   if (format === "json_schema") {
     return {
-      name: "audit_template_placeholders",
+      name: "audit_content",
       schema: {
-        additionalProperties: false,
-        properties: Object.fromEntries(
-          placeholderKeys.map((key) => [key, { type: "string" }]),
-        ),
-        required: placeholderKeys,
         type: "object",
       },
       strict: true,
@@ -1499,27 +1282,7 @@ function stripCodeFence(value: string) {
     .replace(/\s*```$/i, "");
 }
 
-function prepareAuditBody(value: string) {
-  return sanitizeHtml(value)
-    .replace(/<!doctype html>/gi, "")
-    .replace(/<html\b[^>]*>|<\/html>/gi, "")
-    .replace(/<head\b[^>]*>[\s\S]*?<\/head>/gi, "")
-    .replace(/<body\b[^>]*>|<\/body>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<link\b(?=[^>]*\brel=["']stylesheet["'])[^>]*>\s*/gi, "")
-    .trim();
-}
 
-function sanitizeHtml(value: string) {
-  return value
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
-    .replace(/\son[a-z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-    .replace(
-      /\s(href|src)\s*=\s*(['"])\s*javascript:[\s\S]*?\2/gi,
-      ' $1="#"',
-    );
-}
 
 function inferClientName(markdown: string, fileName: string) {
   const heading =
@@ -1692,13 +1455,6 @@ function escapeHtml(value: string) {
     .replace(/'/g, "&#39;");
 }
 
-function assertInside(child: string, parent: string) {
-  const relative = path.relative(parent, child);
-
-  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new AuditEnhancerError(`Refusing to write outside ${parent}.`, 500);
-  }
-}
 
 function withLogDiagnostics(
   logger?: AuditEnhancerLogger,

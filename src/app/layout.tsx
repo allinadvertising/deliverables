@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { AuthProvider } from "@/components/AuthProvider";
 import "./globals.css";
 
-const roboto = Roboto({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-roboto",
-  weight: ["400", "500", "700", "900"],
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -21,8 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable} h-full`}>
-      <body className="min-h-full">
+    <html
+      lang="en"
+      className={`${inter.variable} ${jetBrainsMono.variable} h-full`}
+    >
+      <body className="min-h-full" suppressHydrationWarning>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

@@ -100,7 +100,7 @@ export default async function Home() {
                     key={audit.id}
                     className="grid gap-3 px-5 py-4 transition-colors hover:bg-[#f7fbff] md:grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.3fr_0.3fr_88px] md:items-center"
                   >
-                    <a href={audit.href} className="block">
+                    <a href={`/dashboard/audits/${audit.id}`} className="block">
                       <span className="block text-base font-black text-[#16243d]">
                         {audit.title}
                       </span>
@@ -130,7 +130,7 @@ export default async function Home() {
                         title={`${audit.client} ${audit.title}`}
                       />
                       <DeleteAuditButton
-                        href={audit.href}
+                        auditId={audit.id}
                         title={`${audit.client} ${audit.title}`}
                       />
                     </div>

@@ -1,7 +1,4 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
-const skillContent = readFileSync(path.join(process.cwd(), "seo-audit-enhancer", "SKILL.md"), "utf8");
+import { skillContent } from "./skill-content";
 import {
   serializeError,
   type AuditEnhancerLogger,

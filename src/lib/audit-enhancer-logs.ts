@@ -28,7 +28,6 @@ export function createAuditEnhancerLogger(): AuditEnhancerLogger {
   const rawDir = path.join(directory, `${id}-raw`);
 
   async function write(level: LogLevel, message: string, data?: unknown) {
-    await mkdir(directory, { recursive: true });
     const entry = {
       data: redact(data),
       level,
@@ -37,7 +36,16 @@ export function createAuditEnhancerLogger(): AuditEnhancerLogger {
       timestamp: new Date().toISOString(),
     };
 
-    await appendFile(filePath, `${JSON.stringify(entry)}\n`, "utf8");
+    try {
+      await mkdir(directory, { recursive: true });
+      await appendFile(filePath, `${JSON.stringify(entry)}\n`, "utf8");
+    } catch (error) {
+      const method = level === "error" ? "error" : level === "warn" ? "warn" : "log";
+      console[method](
+        `[audit-enhancer:${id}] ${message}`,
+        redact({ data, logWriteError: serializeLogWriteError(error) }),
+      );
+    }
   }
 
   return {
@@ -47,7 +55,6 @@ export function createAuditEnhancerLogger(): AuditEnhancerLogger {
     info: (message, data) => write("info", message, data),
     rawDir,
     saveRaw: async (name, data) => {
-      await mkdir(rawDir, { recursive: true });
       const safeName = name.replace(/[^a-z0-9._-]+/gi, "-").toLowerCase();
       const rawPath = path.join(rawDir, `${safeName}.txt`);
       const body =
@@ -55,7 +62,18 @@ export function createAuditEnhancerLogger(): AuditEnhancerLogger {
           ? redactString(data)
           : JSON.stringify(redact(data), null, 2);
 
-      await writeFile(rawPath, truncate(body), "utf8");
+      try {
+        await mkdir(rawDir, { recursive: true });
+        await writeFile(rawPath, truncate(body), "utf8");
+      } catch (error) {
+        console.warn(
+          `[audit-enhancer:${id}] raw response log write failed`,
+          redact({
+            name: safeName,
+            logWriteError: serializeLogWriteError(error),
+          }),
+        );
+      }
 
       return rawPath;
     },
@@ -72,7 +90,25 @@ export function serializeError(error: unknown) {
 }
 
 function getLogRoot() {
+  if (process.env.VERCEL) {
+    return path.join("/tmp", "audit-enhancer-logs");
+  }
+
   return path.join(root, "audit-enhancer-logs");
+}
+
+function serializeLogWriteError(error: unknown) {
+  if (error instanceof Error) {
+    const errorRecord = error as Error & Record<string, unknown>;
+
+    return {
+      code: errorRecord.code,
+      message: error.message,
+      name: error.name,
+    };
+  }
+
+  return String(error);
 }
 
 function redact(value: unknown, depth = 0): unknown {

@@ -30,6 +30,9 @@ type ErrorPayload = {
   error?: string;
   logId?: string;
   logPath?: string;
+  rawBody?: string;
+  responseStatus?: number;
+  responseStatusText?: string;
   providerRequestId?: string;
   providerResponsePath?: string;
   providerStatus?: number;
@@ -112,16 +115,26 @@ export default function EnhanceAuditForm() {
         body: new FormData(event.currentTarget),
         method: "POST",
       });
-      const payload = (await response.json()) as
-        | EnhanceResult
-        | ErrorPayload;
+      const payload = await parseEnhanceResponse(response);
 
       if (!response.ok) {
         const errorPayload = payload as ErrorPayload;
         setError({
           logId: errorPayload.logId,
           logPath: errorPayload.logPath,
-          message: errorPayload.error || "Audit enhancement failed.",
+          message:
+            errorPayload.error ||
+            [
+              "Audit enhancement failed before returning JSON.",
+              errorPayload.responseStatus
+                ? `HTTP ${errorPayload.responseStatus} ${errorPayload.responseStatusText ?? ""}`.trim()
+                : "",
+              errorPayload.rawBody
+                ? `Response preview: ${errorPayload.rawBody}`
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" "),
           providerRequestId: errorPayload.providerRequestId,
           providerResponsePath: errorPayload.providerResponsePath,
           providerStatus: errorPayload.providerStatus,
@@ -339,6 +352,31 @@ export default function EnhanceAuditForm() {
       </section>
     </div>
   );
+}
+
+async function parseEnhanceResponse(response: Response) {
+  const text = await response.text();
+
+  if (!text.trim()) {
+    return {
+      error:
+        "The server returned an empty response. Check the Vercel function logs for /api/audit-enhancer.",
+      responseStatus: response.status,
+      responseStatusText: response.statusText,
+    } satisfies ErrorPayload;
+  }
+
+  try {
+    return JSON.parse(text) as EnhanceResult | ErrorPayload;
+  } catch {
+    return {
+      error:
+        "The server returned a non-JSON response. Check the Vercel function logs for /api/audit-enhancer.",
+      rawBody: text.slice(0, 500),
+      responseStatus: response.status,
+      responseStatusText: response.statusText,
+    } satisfies ErrorPayload;
+  }
 }
 
 function LoadingStatus({ provider }: { provider: ProviderId }) {

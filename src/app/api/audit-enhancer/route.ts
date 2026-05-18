@@ -11,6 +11,7 @@ import { insertEnhancementRun } from "@/lib/db";
 import { createClient } from "@/lib/supabase-middleware";
 
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
 const supportedProviders = new Set<ProviderId>(["openai", "deepseek"]);
 

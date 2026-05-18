@@ -798,9 +798,24 @@ function getOpenAIPollIntervalMs() {
 
 function getOpenAIPollTimeoutMs() {
   const configured = Number(process.env.AUDIT_ENHANCER_OPENAI_POLL_TIMEOUT_MS);
+  const platformLimit = getFunctionSafeTimeoutMs();
 
   if (Number.isFinite(configured) && configured >= 30000) {
+    return Math.min(Math.floor(configured), platformLimit);
+  }
+
+  return platformLimit;
+}
+
+function getFunctionSafeTimeoutMs() {
+  const configured = Number(process.env.AUDIT_ENHANCER_FUNCTION_BUDGET_MS);
+
+  if (Number.isFinite(configured) && configured >= 45000) {
     return Math.floor(configured);
+  }
+
+  if (process.env.VERCEL) {
+    return 240000;
   }
 
   return 600000;

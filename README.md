@@ -28,6 +28,7 @@ DEEPSEEK_API_KEY=...
 DEEPSEEK_MODEL=deepseek-v4-pro
 AUDIT_ENHANCER_MAX_OUTPUT_TOKENS=30000
 AUDIT_ENHANCER_TIMEOUT_MS=120000
+AUDIT_ENHANCER_FUNCTION_BUDGET_MS=240000
 ```
 
 Every enhancement logs a redacted JSONL under `audit-enhancer-logs/`. API keys and bearer tokens are redacted before logs are written.

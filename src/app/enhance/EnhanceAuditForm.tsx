@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 type ProviderId = "openai" | "deepseek";
 
@@ -38,16 +38,8 @@ type ErrorPayload = {
   providerStatus?: number;
 };
 
-const modelOptions: Record<
-  ProviderId,
-  { label: string; value: string }[]
-> = {
-  deepseek: [
-    { label: "DeepSeek V4 Pro", value: "deepseek-v4-pro" },
-    { label: "DeepSeek V4 Flash", value: "deepseek-v4-flash" },
-  ],
-  openai: [{ label: "OpenAI GPT-5", value: "gpt-5" }],
-};
+const defaultProvider: ProviderId = "openai";
+const defaultModel = "gpt-5";
 
 type LoadingPhase = {
   description: string;
@@ -96,13 +88,9 @@ const loadingPhases: LoadingPhase[] = [
 ];
 
 export default function EnhanceAuditForm() {
-  const [provider, setProvider] = useState<ProviderId>("openai");
-  const [model, setModel] = useState(modelOptions.openai[0].value);
   const [error, setError] = useState<EnhanceError | null>(null);
   const [result, setResult] = useState<EnhanceResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  const activeModels = useMemo(() => modelOptions[provider], [provider]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -144,23 +132,20 @@ export default function EnhanceAuditForm() {
 
       setResult(payload as EnhanceResult);
       event.currentTarget.reset();
-      setProvider("openai");
-      setModel(modelOptions.openai[0].value);
     } catch (caughtError) {
+      const message =
+        caughtError instanceof Error
+          ? caughtError.message
+          : "Audit enhancement failed.";
       setError({
         message:
-          caughtError instanceof Error
-            ? caughtError.message
-            : "Audit enhancement failed.",
+          message === "Failed to fetch"
+            ? "The enhancement request connection closed before the server returned a response. On Vercel this usually means the /api/audit-enhancer function exceeded its runtime limit. Check the Vercel function logs for /api/audit-enhancer."
+            : message,
       });
     } finally {
       setSubmitting(false);
     }
-  }
-
-  function handleProviderChange(nextProvider: ProviderId) {
-    setProvider(nextProvider);
-    setModel(modelOptions[nextProvider][0].value);
   }
 
   return (
@@ -174,6 +159,9 @@ export default function EnhanceAuditForm() {
         </div>
 
         <div className="grid gap-5 p-5 sm:p-6">
+          <input name="provider" type="hidden" value={defaultProvider} />
+          <input name="model" type="hidden" value={defaultModel} />
+
           <label className="grid gap-2">
             <span className="text-sm font-black text-[#16243d]">
               Audit file
@@ -225,52 +213,6 @@ export default function EnhanceAuditForm() {
             />
           </label>
 
-          <fieldset className="grid gap-3">
-            <legend className="text-sm font-black text-[#16243d]">
-              AI provider
-            </legend>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {(["openai", "deepseek"] as ProviderId[]).map((option) => (
-                <label
-                  className={`flex cursor-pointer items-center justify-between gap-4 border px-4 py-3 text-sm font-black ${
-                    provider === option
-                      ? "border-[#3e71b8] bg-[#eff5fd] text-[#18355f]"
-                      : "border-[#d9e2ef] bg-white text-[#475775]"
-                  }`}
-                  key={option}
-                >
-                  <span>{option === "openai" ? "OpenAI 5.0" : "DeepSeek V4"}</span>
-                  <input
-                    checked={provider === option}
-                    className="h-4 w-4 accent-[#3e71b8]"
-                    name="provider"
-                    onChange={() => handleProviderChange(option)}
-                    type="radio"
-                    value={option}
-                  />
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          <label className="grid gap-2">
-            <span className="text-sm font-black text-[#16243d]">Model</span>
-            <input
-              className="w-full border border-[#c9d7e9] bg-white px-3 py-3 text-sm font-black text-[#16243d] outline-none focus:border-[#3e71b8]"
-              list={`${provider}-model-options`}
-              name="model"
-              onChange={(event) => setModel(event.target.value)}
-              value={model}
-            />
-            <datalist id={`${provider}-model-options`}>
-              {activeModels.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </datalist>
-          </label>
-
           <button
             className="w-full bg-[#f6b328] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#16243d] transition-colors hover:bg-[#e6a51d] disabled:cursor-not-allowed disabled:bg-[#d9e2ef] disabled:text-[#65718a]"
             disabled={submitting}
@@ -290,7 +232,7 @@ export default function EnhanceAuditForm() {
         </div>
         <div className="grid gap-4 p-5">
           {submitting ? (
-            <LoadingStatus provider={provider} />
+            <LoadingStatus provider={defaultProvider} />
           ) : null}
 
           {error ? (

@@ -1,4 +1,7 @@
-import { readFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+const skillContent = readFileSync(path.join(process.cwd(), "seo-audit-enhancer", "SKILL.md"), "utf8");
 import {
   serializeError,
   type AuditEnhancerLogger,
@@ -114,18 +117,7 @@ export async function enhanceAuditMarkdown(
   }
 
   // Read the SKILL.md as the AI system prompt
-  const skillPath = ["seo-audit-enhancer", "SKILL.md"].join("/");
-  const skill = await readFile(skillPath, "utf8").catch((error: NodeJS.ErrnoException) => {
-    if (error.code === "ENOENT") {
-      throw new AuditEnhancerError(
-        "The seo-audit-enhancer skill or public audit templates were not found.",
-        500,
-        withLogDiagnostics(options.logger),
-      );
-    }
-
-    throw error;
-  });
+  const skill = skillContent;
 
   const context = buildAuditContext(options);
   await options.logger?.info("audit_context_ready", {

@@ -1,104 +1,9 @@
-import { readdir, stat } from "node:fs/promises";
+import { getAudits } from "@/lib/db";
+import DeleteAuditButton from "./DeleteAuditButton";
 import Image from "next/image";
-import path from "node:path";
+import Link from "next/link";
 
-type Audit = {
-  href: string;
-  title: string;
-  client: string;
-  period: string;
-  pathLabel: string;
-  updatedAt: string;
-  updatedTime: number;
-  size: string;
-};
-
-const auditsRoot = path.join(process.cwd(), "audits");
-
-async function findAuditIndexes(directory: string): Promise<string[]> {
-  let entries;
-
-  try {
-    entries = await readdir(directory, { withFileTypes: true });
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return [];
-    }
-
-    throw error;
-  }
-
-  const nestedFiles = await Promise.all(
-    entries.map(async (entry) => {
-      const fullPath = path.join(directory, entry.name);
-
-      if (entry.isDirectory()) {
-        return findAuditIndexes(fullPath);
-      }
-
-      if (entry.isFile() && entry.name.toLowerCase() === "index.html") {
-        return [fullPath];
-      }
-
-      return [];
-    }),
-  );
-
-  return nestedFiles.flat();
-}
-
-function titleCase(value: string) {
-  return value
-    .replace(/[-_]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/\b\w/g, (character) => character.toUpperCase());
-}
-
-function formatBytes(bytes: number) {
-  if (bytes < 1024) {
-    return `${bytes} B`;
-  }
-
-  const kilobytes = bytes / 1024;
-  if (kilobytes < 1024) {
-    return `${kilobytes.toFixed(1)} KB`;
-  }
-
-  return `${(kilobytes / 1024).toFixed(1)} MB`;
-}
-
-async function getAudits(): Promise<Audit[]> {
-  const files = await findAuditIndexes(auditsRoot);
-  const audits = await Promise.all(
-    files.map(async (file) => {
-      const relativePath = path.relative(auditsRoot, file);
-      const parts = relativePath.split(path.sep);
-      const stats = await stat(file);
-      const auditFolder = parts.at(-2) ?? "audit";
-      const href =
-        "/audits/" + parts.map((part) => encodeURIComponent(part)).join("/");
-      const month = parts[2] ? titleCase(parts[2]) : "";
-      const year = parts[1] ?? "";
-
-      return {
-        href,
-        title: titleCase(auditFolder),
-        client: parts[0] ? parts[0].toUpperCase() : "GENERAL",
-        period: [month, year].filter(Boolean).join(" ") || "Current",
-        pathLabel: parts.slice(0, -1).join(" / "),
-        updatedAt: new Intl.DateTimeFormat("en", {
-          dateStyle: "medium",
-          timeZone: "UTC",
-        }).format(stats.mtime),
-        updatedTime: stats.mtimeMs,
-        size: formatBytes(stats.size),
-      };
-    }),
-  );
-
-  return audits.sort((first, second) => second.updatedTime - first.updatedTime);
-}
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const audits = await getAudits();
@@ -116,9 +21,17 @@ export default async function Home() {
             priority
             className="h-auto w-48 max-w-[68vw] sm:w-56"
           />
-          <div className="hidden items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3e71b8] sm:flex">
-            <span className="h-2 w-2 bg-[#f6b328]" aria-hidden="true" />
-            Client Portal
+          <div className="flex items-center gap-3">
+            <Link
+              className="border border-[#c9d7e9] bg-[#eff5fd] px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-[#3e71b8] transition-colors hover:bg-white"
+              href="/enhance"
+            >
+              Enhance
+            </Link>
+            <div className="hidden items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3e71b8] sm:flex">
+              <span className="h-2 w-2 bg-[#f6b328]" aria-hidden="true" />
+              Client Portal
+            </div>
           </div>
         </div>
       </div>
@@ -183,36 +96,35 @@ export default async function Home() {
               >
                 Available Audits
               </h2>
-              
             </div>
             <div className="h-1 w-28 bg-[#f6b328]" aria-hidden="true" />
           </div>
 
           {audits.length > 0 ? (
             <div className="overflow-hidden border border-[#d9e2ef] bg-white shadow-[0_18px_45px_rgba(30,62,108,0.09)]">
-              <div className="hidden grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.5fr] gap-4 border-b border-[#d9e2ef] bg-[#18355f] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white md:grid">
+              <div className="hidden grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.5fr_44px] gap-4 border-b border-[#d9e2ef] bg-[#18355f] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white md:grid">
                 <span>Audit</span>
                 <span>Client</span>
                 <span>Period</span>
                 <span>Updated</span>
                 <span className="text-right">Size</span>
+                <span className="sr-only">Delete</span>
               </div>
 
               <div className="divide-y divide-[#e6edf6]">
                 {audits.map((audit) => (
-                  <a
-                    key={audit.href}
-                    href={audit.href}
-                    className="grid gap-3 px-5 py-4 transition-colors hover:bg-[#f7fbff] md:grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.5fr] md:items-center"
+                  <div
+                    key={audit.id}
+                    className="grid gap-3 px-5 py-4 transition-colors hover:bg-[#f7fbff] md:grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.5fr_44px] md:items-center"
                   >
-                    <span>
+                    <a href={audit.href} className="block">
                       <span className="block text-base font-black text-[#16243d]">
                         {audit.title}
                       </span>
                       <span className="mt-1 block break-words text-sm text-[#65718a]">
                         {audit.pathLabel}
                       </span>
-                    </span>
+                    </a>
                     <span className="w-fit border border-[#c9d7e9] bg-[#eff5fd] px-2 py-1 text-xs font-black text-[#3e71b8]">
                       {audit.client}
                     </span>
@@ -225,7 +137,13 @@ export default async function Home() {
                     <span className="text-sm text-[#65718a] md:text-right">
                       {audit.size}
                     </span>
-                  </a>
+                    <div className="flex justify-start md:justify-end">
+                      <DeleteAuditButton
+                        href={audit.href}
+                        title={`${audit.client} ${audit.title}`}
+                      />
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>

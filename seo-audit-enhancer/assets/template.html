@@ -1,0 +1,69 @@
+<!--
+  BODY TEMPLATE PLACEHOLDERS:
+  {{EXEC_ITEMS}}        - Bullet list items for Executive Summary
+  {{METRIC_CARDS}}      - 4 metric cards (number + label pairs)
+  {{SOURCE_NOTE}}       - Source attribution note
+  {{SEVERITY_LEGEND}}   - Issue severity distribution legend
+  {{SEVERITY_BAR}}      - Severity bar segments with widths
+  {{ACTION_TABLE_ROWS}} - Prioritized action items table rows
+  {{FINDING_CARDS}}     - Key finding cards grouped by category
+  {{SOLUTION_STEPS}}    - Numbered solution steps
+  {{BEFORE_AFTER}}      - Before/after comparison blocks
+  {{GLOSSARY_ITEMS}}    - Glossary definition cards
+  {{FAQ_ITEMS}}         - FAQ Q&A blocks
+  {{INSIGHT_BOX}}       - Optional: key insight callout box
+
+  The AI must only produce inner audit content. The AIA cover, logo, document
+  head, stylesheet link, and footer are assembled locally from public templates.
+-->
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="page">
+  <h2>Executive Summary</h2>
+  <div class="exec-summary">
+    <h3>At a Glance</h3>
+    <ul>{{EXEC_ITEMS}}</ul>
+  </div>
+  <div class="metrics">{{METRIC_CARDS}}</div>
+  <p style="font-size:13px;color:var(--gray-500);margin-top:8px;">{{SOURCE_NOTE}}</p>
+  <div style="display:flex;gap:24px;font-size:12px;color:var(--gray-500);margin-bottom:8px;font-weight:500;">{{SEVERITY_LEGEND}}</div>
+  <div class="severity-bar" style="display:flex;height:10px;border-radius:5px;overflow:hidden;margin:14px 0;">{{SEVERITY_BAR}}</div>
+</div>
+
+<!-- PRIORITIZED ACTION ITEMS -->
+<div class="page">
+  <h2>Immediate Action Items</h2>
+  <p style="color:var(--gray-600);font-size:14px;margin-bottom:8px;">Ordered by impact and urgency. Each item includes the recommended fix, expected result, and which team owns the work.</p>
+  <table>
+    <thead><tr><th style="width:60px;">Priority</th><th>Action</th><th>Scope</th><th>Impact</th><th style="width:84px;">Owner</th></tr></thead>
+    <tbody>{{ACTION_TABLE_ROWS}}</tbody>
+  </table>
+</div>
+
+<!-- KEY FINDINGS BY CATEGORY -->
+<div class="page">
+  <h2>Key Findings by Category</h2>
+  {{FINDING_CARDS}}
+</div>
+
+<!-- PROPOSED SOLUTIONS -->
+<div class="page">
+  <h2>Proposed Solutions</h2>
+  {{SOLUTION_STEPS}}
+</div>
+
+<!-- INSIGHT / BEFORE-AFTER -->
+<div class="page">
+  {{BEFORE_AFTER}}
+  {{INSIGHT_BOX}}
+</div>
+
+<!-- GLOSSARY + FAQ -->
+<div class="page">
+  <h2>Glossary: Technical Terms, Simplified</h2>
+  <div class="glossary-grid">{{GLOSSARY_ITEMS}}</div>
+  <div style="margin-top:36px;background:var(--brand-blue-light);border-radius:var(--radius);padding:24px 28px;">
+    <h3 style="margin-top:0;color:var(--brand-blue-dark);">Frequently Asked Questions</h3>
+    {{FAQ_ITEMS}}
+  </div>
+</div>

@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import EnhanceAuditForm from "./EnhanceAuditForm";
+
+export const metadata: Metadata = {
+  title: "Audit HTML Enhancer | All In Advertising",
+  description:
+    "Convert markdown SEO audits into branded All In Advertising HTML deliverables.",
+};
+
+export default function EnhancePage() {
+  return (
+    <main className="min-h-screen bg-[linear-gradient(180deg,#ffffff_0,#f6f8fb_42%,#eef3fa_100%)] text-[#16243d]">
+      <div className="border-b border-[#d9e2ef] bg-white">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-10">
+          <Link href="/" aria-label="All In Advertising audit portal">
+            <Image
+              src="/all-in-advertising-logo.svg"
+              alt="All In Advertising"
+              width={260}
+              height={53}
+              priority
+              className="h-auto w-48 max-w-[68vw] sm:w-56"
+            />
+          </Link>
+          <Link
+            className="border border-[#c9d7e9] bg-[#eff5fd] px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-[#3e71b8] transition-colors hover:bg-white"
+            href="/"
+          >
+            Portal
+          </Link>
+        </div>
+      </div>
+
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-8 sm:px-8 lg:px-10">
+        <header className="border-b border-[#d9e2ef] pb-8">
+          <p className="mb-4 inline-flex border border-[#c9d7e9] bg-white px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3e71b8] shadow-sm">
+            SEO Delivery
+          </p>
+          <h1 className="max-w-4xl text-4xl font-black leading-[1.04] text-[#16243d] sm:text-5xl">
+            Audit HTML Enhancer
+          </h1>
+        </header>
+
+        <EnhanceAuditForm />
+      </div>
+    </main>
+  );
+}

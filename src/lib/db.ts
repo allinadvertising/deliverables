@@ -3,8 +3,8 @@ import type { AuditDisplay, EnhancementStatus } from "./db-types";
 
 // ── Audit listing (replaces filesystem scan) ──────────────────────
 
-export async function getAudits(): Promise<AuditDisplay[]> {
-  const { data, error } = await supabaseServer
+export async function getAudits(userId?: string): Promise<AuditDisplay[]> {
+  let query = supabaseServer
     .from("audits")
     .select(
       `
@@ -15,12 +15,22 @@ export async function getAudits(): Promise<AuditDisplay[]> {
       month,
       file_path,
       file_size,
+      share_token,
       created_at,
       updated_at,
-      clients ( slug, name )
+      owner_id,
+      clients ( slug, name ),
+      audit_views ( count )
     `,
-    )
-    .order("updated_at", { ascending: false });
+    );
+
+  // Filter by owner_id when a user is authenticated.
+  // Also include audits with NULL owner_id (existing audits before backfill).
+  if (userId) {
+    query = query.or(`owner_id.eq.${userId},owner_id.is.null`);
+  }
+
+  const { data, error } = await query.order("updated_at", { ascending: false });
 
   if (error) {
     console.error("Failed to fetch audits from Supabase:", error);
@@ -54,6 +64,8 @@ export async function getAudits(): Promise<AuditDisplay[]> {
       updatedAt: formatDate(updatedAt),
       updatedTime,
       size: formatBytes(fileSize),
+      hasToken: Boolean(row.share_token),
+      views: extractViewCount(row.audit_views),
     } satisfies AuditDisplay;
   });
 }
@@ -90,18 +102,25 @@ export async function insertAudit(params: {
   month: string;
   filePath: string;
   fileSize: number;
+  ownerId?: string;
 }): Promise<string> {
+  const row: Record<string, unknown> = {
+    client_id: params.clientId,
+    audit_type: params.auditType,
+    title: params.title,
+    year: params.year,
+    month: params.month,
+    file_path: params.filePath,
+    file_size: params.fileSize,
+  };
+
+  if (params.ownerId) {
+    row.owner_id = params.ownerId;
+  }
+
   const { data, error } = await supabaseServer
     .from("audits")
-    .insert({
-      client_id: params.clientId,
-      audit_type: params.auditType,
-      title: params.title,
-      year: params.year,
-      month: params.month,
-      file_path: params.filePath,
-      file_size: params.fileSize,
-    })
+    .insert(row)
     .select("id")
     .single();
 
@@ -215,4 +234,12 @@ function formatDate(iso: string): string {
     dateStyle: "medium",
     timeZone: "UTC",
   }).format(new Date(iso));
+}
+
+function extractViewCount(views: unknown): number {
+  if (Array.isArray(views) && views.length > 0) {
+    const first = views[0] as { count?: number };
+    return typeof first.count === "number" ? first.count : 0;
+  }
+  return 0;
 }

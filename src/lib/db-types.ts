@@ -52,4 +52,6 @@ export type AuditDisplay = {
   updatedAt: string;
   updatedTime: number;
   size: string;
+  hasToken: boolean;
+  views: number;
 };

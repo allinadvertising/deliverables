@@ -1,6 +1,8 @@
 import { readdir, rm, rmdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { deleteAuditByFilePath } from "@/lib/db";
+import { createClient } from "@/lib/supabase-middleware";
+import { supabaseServer } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 
@@ -15,6 +17,11 @@ const protectedHtmlFiles = new Set([
 ]);
 
 export async function DELETE(request: Request) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   try {
     const payload = (await request.json()) as { href?: unknown };
     const href = typeof payload.href === "string" ? payload.href : "";
@@ -31,6 +38,23 @@ export async function DELETE(request: Request) {
         { error: "This audit artifact cannot be deleted directly." },
         { status: 400 },
       );
+    }
+
+    // Check ownership
+    if (user) {
+      const relativePath = path.relative(publicRoot, target);
+      const { data: audit } = await supabaseServer
+        .from("audits")
+        .select("owner_id")
+        .eq("file_path", relativePath)
+        .maybeSingle();
+
+      if (audit && audit.owner_id && audit.owner_id !== user.id) {
+        return Response.json(
+          { error: "You can only delete your own audits." },
+          { status: 403 },
+        );
+      }
     }
 
     const targetStats = await stat(target);

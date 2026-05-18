@@ -1,40 +1,22 @@
 import { getAudits } from "@/lib/db";
+import { createClient } from "@/lib/supabase-middleware";
+import { NavBar } from "@/components/NavBar";
 import DeleteAuditButton from "./DeleteAuditButton";
-import Image from "next/image";
-import Link from "next/link";
+import ShareButton from "./ShareButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const audits = await getAudits();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const audits = await getAudits(user?.id);
   const clientCount = new Set(audits.map((audit) => audit.client)).size;
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#ffffff_0,#f6f8fb_42%,#eef3fa_100%)] text-[#16243d]">
-      <div className="border-b border-[#d9e2ef] bg-white">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-10">
-          <Image
-            src="/all-in-advertising-logo.svg"
-            alt="All In Advertising"
-            width={260}
-            height={53}
-            priority
-            className="h-auto w-48 max-w-[68vw] sm:w-56"
-          />
-          <div className="flex items-center gap-3">
-            <Link
-              className="border border-[#c9d7e9] bg-[#eff5fd] px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-[#3e71b8] transition-colors hover:bg-white"
-              href="/enhance"
-            >
-              Enhance
-            </Link>
-            <div className="hidden items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3e71b8] sm:flex">
-              <span className="h-2 w-2 bg-[#f6b328]" aria-hidden="true" />
-              Client Portal
-            </div>
-          </div>
-        </div>
-      </div>
+      <NavBar />
 
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 py-8 sm:px-8 lg:px-10">
         <header className="grid gap-8 border-b border-[#d9e2ef] pb-8 lg:grid-cols-[1fr_360px] lg:items-end">
@@ -102,20 +84,21 @@ export default async function Home() {
 
           {audits.length > 0 ? (
             <div className="overflow-hidden border border-[#d9e2ef] bg-white shadow-[0_18px_45px_rgba(30,62,108,0.09)]">
-              <div className="hidden grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.5fr_44px] gap-4 border-b border-[#d9e2ef] bg-[#18355f] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white md:grid">
+              <div className="hidden grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.3fr_0.3fr_88px] gap-4 border-b border-[#d9e2ef] bg-[#18355f] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white md:grid">
                 <span>Audit</span>
                 <span>Client</span>
                 <span>Period</span>
                 <span>Updated</span>
                 <span className="text-right">Size</span>
-                <span className="sr-only">Delete</span>
+                <span className="text-right">Views</span>
+                <span className="sr-only">Actions</span>
               </div>
 
               <div className="divide-y divide-[#e6edf6]">
                 {audits.map((audit) => (
                   <div
                     key={audit.id}
-                    className="grid gap-3 px-5 py-4 transition-colors hover:bg-[#f7fbff] md:grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.5fr_44px] md:items-center"
+                    className="grid gap-3 px-5 py-4 transition-colors hover:bg-[#f7fbff] md:grid-cols-[1.4fr_0.7fr_0.7fr_0.8fr_0.3fr_0.3fr_88px] md:items-center"
                   >
                     <a href={audit.href} className="block">
                       <span className="block text-base font-black text-[#16243d]">
@@ -137,7 +120,15 @@ export default async function Home() {
                     <span className="text-sm text-[#65718a] md:text-right">
                       {audit.size}
                     </span>
-                    <div className="flex justify-start md:justify-end">
+                    <span className="text-sm text-[#65718a] md:text-right">
+                      {audit.views > 0 ? audit.views : "—"}
+                    </span>
+                    <div className="flex justify-start gap-1.5 md:justify-end">
+                      <ShareButton
+                        auditId={audit.id}
+                        hasToken={audit.hasToken}
+                        title={`${audit.client} ${audit.title}`}
+                      />
                       <DeleteAuditButton
                         href={audit.href}
                         title={`${audit.client} ${audit.title}`}

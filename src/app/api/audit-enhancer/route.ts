@@ -8,6 +8,7 @@ import {
   serializeError,
 } from "@/lib/audit-enhancer-logs";
 import { insertEnhancementRun } from "@/lib/db";
+import { createClient } from "@/lib/supabase-middleware";
 
 export const runtime = "nodejs";
 
@@ -15,6 +16,10 @@ const supportedProviders = new Set<ProviderId>(["openai", "deepseek"]);
 
 export async function POST(request: Request) {
   const logger = createAuditEnhancerLogger();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   try {
     await logger.info("request_received", {
@@ -94,6 +99,7 @@ export async function POST(request: Request) {
       logger,
       markdown,
       model: stringValue(formData.get("model")),
+      ownerId: user?.id,
       provider: provider as ProviderId,
       supportingWorkbookLink: stringValue(
         formData.get("supportingWorkbookLink"),

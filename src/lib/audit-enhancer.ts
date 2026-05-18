@@ -19,6 +19,7 @@ export type EnhanceAuditOptions = {
   logger?: AuditEnhancerLogger;
   markdown: string;
   model?: string;
+  ownerId?: string;
   provider: ProviderId;
   supportingWorkbookLink?: string;
 };
@@ -222,6 +223,7 @@ export async function enhanceAuditMarkdown(
       month: context.monthSlug,
       filePath: path.relative(path.join(root, "public"), finalFilePath),
       fileSize: finalStats?.size ?? 0,
+      ownerId: options.ownerId,
     }).catch((err) => {
       options.logger?.warn("supabase_audit_insert_failed", serializeError(err));
       return null;
@@ -367,7 +369,7 @@ async function callOpenAI(
       reasoning,
     ),
     "temperature",
-    getTemperature(),
+    getOpenAITemperature(model),
   );
   const startedAt = Date.now();
 
@@ -896,13 +898,33 @@ function getTimeoutMs() {
 }
 
 function getTemperature() {
-  const configured = Number(process.env.AUDIT_ENHANCER_TEMPERATURE);
+  const raw = process.env.AUDIT_ENHANCER_TEMPERATURE?.trim();
+
+  if (!raw) {
+    return undefined;
+  }
+
+  const configured = Number(raw);
 
   if (Number.isFinite(configured) && configured >= 0 && configured <= 2) {
     return configured;
   }
 
   return undefined;
+}
+
+function getOpenAITemperature(model: string) {
+  if (isOpenAIModelWithoutTemperature(model)) {
+    return undefined;
+  }
+
+  return getTemperature();
+}
+
+function isOpenAIModelWithoutTemperature(model: string) {
+  const normalized = model.trim().toLowerCase();
+
+  return normalized === "gpt-5" || normalized.startsWith("gpt-5-");
 }
 
 function getOpenAITextFormat() {

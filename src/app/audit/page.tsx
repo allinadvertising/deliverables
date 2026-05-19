@@ -20,7 +20,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
   const { data: audit } = await supabaseServer
     .from("audits")
-    .select("title, client_name:clients(name)")
+    .select("title, audit_type, client_name:clients(name)")
     .eq("share_token", token)
     .maybeSingle();
 
@@ -29,10 +29,11 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   }
 
   const clientName = (audit.client_name as { name?: string } | null)?.name ?? audit.title;
+  const auditType = audit.audit_type as string ?? "SEO Audit";
 
   return {
-    title: `${clientName} : SEO Audit`,
-    description: `SEO audit deliverable for ${clientName}.`,
+    title: `${clientName} : ${auditType}`,
+    description: `${auditType} deliverable for ${clientName}.`,
     robots: "noindex, nofollow",
   };
 }

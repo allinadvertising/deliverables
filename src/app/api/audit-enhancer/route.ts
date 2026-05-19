@@ -1,14 +1,16 @@
 import {
   AuditEnhancerError,
   enhanceAuditMarkdown,
+  resolveModel,
   type ProviderId,
 } from "@/lib/audit-enhancer";
 import {
   createAuditEnhancerLogger,
   serializeError,
 } from "@/lib/audit-enhancer-logs";
-import { insertEnhancementRun } from "@/lib/db";
+import { insertEnhancementRun, updateEnhancementRun } from "@/lib/db";
 import { createClient } from "@/lib/supabase-middleware";
+import { after } from "next/server";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -93,27 +95,74 @@ export async function POST(request: Request) {
       ),
     });
 
-    const result = await enhanceAuditMarkdown({
+    const selectedProvider = provider as ProviderId;
+    const selectedModel = resolveModel(
+      selectedProvider,
+      stringValue(formData.get("model")),
+    );
+    const runId = await insertEnhancementRun({
+      auditId: null,
+      provider: selectedProvider,
+      model: selectedModel,
+      status: "running",
+      logId: logger.id,
+      outputPath: null,
+    });
+
+    const job = {
       auditType: stringValue(formData.get("auditType")),
       clientName: stringValue(formData.get("clientName")),
       fileName,
-      logger,
       markdown,
-      model: stringValue(formData.get("model")),
+      model: selectedModel,
       ownerId: user?.id,
-      provider: provider as ProviderId,
+      provider: selectedProvider,
       supportingWorkbookLink: stringValue(
         formData.get("supportingWorkbookLink"),
       ),
+    };
+
+    after(async () => {
+      try {
+        const result = await enhanceAuditMarkdown({
+          ...job,
+          enhancementRunId: runId,
+          logger,
+        });
+
+        await logger.info("background_job_completed", {
+          auditId: result.auditId,
+          model: result.model,
+          provider: result.provider,
+          runId,
+        });
+      } catch (error) {
+        await logger.error("background_job_failed", serializeError(error));
+        await updateEnhancementRun(runId, {
+          errorMessage:
+            error instanceof Error ? error.message : String(error),
+          status: "failed",
+        });
+      }
     });
 
-    await logger.info("request_completed", {
-      href: result.auditId,
-      model: result.model,
-      provider: result.provider,
+    await logger.info("background_job_started", {
+      model: selectedModel,
+      provider: selectedProvider,
+      runId,
     });
 
-    return Response.json(result);
+    return Response.json(
+      {
+        jobId: runId,
+        logId: logger.id,
+        logPath: logger.filePath,
+        model: selectedModel,
+        provider: selectedProvider,
+        status: "running",
+      },
+      { status: 202 },
+    );
   } catch (error) {
     await logger.error("request_failed", serializeError(error));
 

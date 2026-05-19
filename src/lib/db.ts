@@ -184,6 +184,46 @@ export async function insertEnhancementRun(params: {
   return data.id as string;
 }
 
+export async function getEnhancementRun(id: string) {
+  const { data, error } = await supabaseServer
+    .from("enhancement_runs")
+    .select(
+      `
+      id,
+      audit_id,
+      provider,
+      model,
+      status,
+      log_id,
+      output_path,
+      error_message,
+      created_at,
+      completed_at,
+      audits (
+        title,
+        audit_type,
+        clients ( name )
+      )
+    `,
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Failed to fetch enhancement run: ${error.message}`);
+  }
+
+  return data as
+    | (Record<string, unknown> & {
+        audits?: {
+          audit_type?: string;
+          clients?: { name?: string } | null;
+          title?: string;
+        } | null;
+      })
+    | null;
+}
+
 export async function updateEnhancementRun(
   id: string,
   params: {

@@ -17,6 +17,28 @@ type EnhanceResult = {
   title: string;
 };
 
+type EnhanceJob = {
+  jobId: string;
+  logId?: string;
+  logPath?: string;
+  model: string;
+  provider: ProviderId;
+  status: "running";
+};
+
+type EnhanceJobStatus = {
+  auditId: string | null;
+  auditType: string;
+  clientName: string;
+  error?: string | null;
+  jobId: string;
+  logId?: string | null;
+  model: string;
+  provider: ProviderId;
+  status: "pending" | "running" | "completed" | "failed";
+  title: string;
+};
+
 type EnhanceError = {
   message: string;
   logId?: string;
@@ -89,12 +111,14 @@ const loadingPhases: LoadingPhase[] = [
 
 export default function EnhanceAuditForm() {
   const [error, setError] = useState<EnhanceError | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
   const [result, setResult] = useState<EnhanceResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    setJobId(null);
     setResult(null);
     setSubmitting(true);
 
@@ -130,6 +154,33 @@ export default function EnhanceAuditForm() {
         return;
       }
 
+      if (response.status === 202 && isEnhanceJob(payload)) {
+        setJobId(payload.jobId);
+        const completed = await pollEnhancementJob(payload.jobId);
+
+        if (completed.status === "completed" && completed.auditId) {
+          setResult({
+            auditId: completed.auditId,
+            auditType: completed.auditType,
+            clientName: completed.clientName,
+            logId: completed.logId ?? undefined,
+            model: completed.model,
+            provider: completed.provider,
+            title: completed.title,
+          });
+          event.currentTarget.reset();
+          return;
+        }
+
+        setError({
+          logId: completed.logId ?? undefined,
+          message:
+            completed.error ||
+            "Audit enhancement failed before the job completed.",
+        });
+        return;
+      }
+
       setResult(payload as EnhanceResult);
       event.currentTarget.reset();
     } catch (caughtError) {
@@ -145,6 +196,7 @@ export default function EnhanceAuditForm() {
       });
     } finally {
       setSubmitting(false);
+      setJobId(null);
     }
   }
 
@@ -232,7 +284,7 @@ export default function EnhanceAuditForm() {
         </div>
         <div className="grid gap-4 p-5">
           {submitting ? (
-            <LoadingStatus provider={defaultProvider} />
+            <LoadingStatus jobId={jobId} provider={defaultProvider} />
           ) : null}
 
           {error ? (
@@ -309,7 +361,7 @@ async function parseEnhanceResponse(response: Response) {
   }
 
   try {
-    return JSON.parse(text) as EnhanceResult | ErrorPayload;
+    return JSON.parse(text) as EnhanceResult | EnhanceJob | ErrorPayload;
   } catch {
     return {
       error:
@@ -321,7 +373,59 @@ async function parseEnhanceResponse(response: Response) {
   }
 }
 
-function LoadingStatus({ provider }: { provider: ProviderId }) {
+function isEnhanceJob(payload: unknown): payload is EnhanceJob {
+  return (
+    Boolean(payload) &&
+    typeof payload === "object" &&
+    typeof (payload as { jobId?: unknown }).jobId === "string"
+  );
+}
+
+async function pollEnhancementJob(jobId: string): Promise<EnhanceJobStatus> {
+  const startedAt = Date.now();
+  const timeoutMs = 14 * 60 * 1000;
+
+  while (Date.now() - startedAt < timeoutMs) {
+    await sleep(3000);
+
+    const response = await fetch(
+      `/api/audit-enhancer/status?runId=${encodeURIComponent(jobId)}`,
+      { cache: "no-store" },
+    );
+    const payload = (await parseEnhanceResponse(response)) as
+      | EnhanceJobStatus
+      | ErrorPayload;
+
+    if (!response.ok) {
+      throw new Error(
+        (payload as ErrorPayload).error ||
+          `Enhancement status request failed with HTTP ${response.status}.`,
+      );
+    }
+
+    const status = payload as EnhanceJobStatus;
+
+    if (status.status === "completed" || status.status === "failed") {
+      return status;
+    }
+  }
+
+  throw new Error(
+    "Enhancement is still running after 14 minutes. Refresh the dashboard or check Vercel logs for the background job.",
+  );
+}
+
+function sleep(milliseconds: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+}
+
+function LoadingStatus({
+  jobId,
+  provider,
+}: {
+  jobId: string | null;
+  provider: ProviderId;
+}) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const phase = getLoadingPhase(elapsedSeconds);
   const progress = Math.min(
@@ -355,6 +459,11 @@ function LoadingStatus({ provider }: { provider: ProviderId }) {
           <p className="mt-1 text-xs font-bold leading-5 text-[#475775]">
             {phase.description}
           </p>
+          {jobId ? (
+            <p className="mt-2 break-all text-[11px] font-black uppercase tracking-[0.08em] text-[#65718a]">
+              Job ID: {jobId}
+            </p>
+          ) : null}
         </div>
       </div>
 

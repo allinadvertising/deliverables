@@ -6,6 +6,7 @@ import {
 import {
   insertAudit,
   insertEnhancementRun,
+  updateEnhancementRun,
   upsertClient,
 } from "./db";
 
@@ -18,6 +19,7 @@ export type EnhanceAuditOptions = {
   logger?: AuditEnhancerLogger;
   markdown: string;
   model?: string;
+  enhancementRunId?: string;
   ownerId?: string;
   provider: ProviderId;
   supportingWorkbookLink?: string;
@@ -217,17 +219,26 @@ export async function enhanceAuditMarkdown(
     clientName: context.clientName,
   });
 
-  // Log the enhancement run
-  await insertEnhancementRun({
-    auditId,
-    provider: options.provider,
-    model: resolveModel(options.provider, options.model),
-    status: "completed",
-    logId: options.logger?.id ?? null,
-    outputPath: null,
-  }).catch((err) => {
-    options.logger?.warn("supabase_run_insert_failed", serializeError(err));
-  });
+  if (options.enhancementRunId) {
+    await updateEnhancementRun(options.enhancementRunId, {
+      auditId,
+      errorMessage: null,
+      outputPath: null,
+      status: "completed",
+    });
+  } else {
+    // Log the enhancement run
+    await insertEnhancementRun({
+      auditId,
+      provider: options.provider,
+      model: resolveModel(options.provider, options.model),
+      status: "completed",
+      logId: options.logger?.id ?? null,
+      outputPath: null,
+    }).catch((err) => {
+      options.logger?.warn("supabase_run_insert_failed", serializeError(err));
+    });
+  }
 
   return {
     auditId,
@@ -640,7 +651,7 @@ function buildUserPrompt(
   ].join("\n");
 }
 
-function resolveModel(provider: ProviderId, selectedModel?: string) {
+export function resolveModel(provider: ProviderId, selectedModel?: string) {
   const cleanModel = normalizeText(selectedModel);
 
   if (cleanModel) {

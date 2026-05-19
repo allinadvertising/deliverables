@@ -35,7 +35,7 @@ type AuditContent = {
     clientName: string;           // e.g. "Fossil Age Minerals"
     auditType: string;            // e.g. "Technical & Content SEO Audit"
     date: string;                 // e.g. "May 2026"
-    coverBadge: string;           // e.g. "Client-facing v2.0 · Internal technical appendix available on request"
+    // coverBadge removed (deprecated May 2026)
     supportingFile: string|null;  // URL to supporting workbook, or null
     sourceNote: string|null;      // Data source attribution, or null (never populated in existing audits)
   };
@@ -111,7 +111,7 @@ type AuditContent = {
 | `clientName` | From markdown title or first heading. Title-case. |
 | `auditType` | Infer from content: "Technical SEO Audit", "Technical & Content SEO Audit", "GSC Coverage Audit", "Schema Markup Audit", "GSC and GA4 Drop Review". |
 | `date` | "Month Year" format, e.g. "May 2026". |
-| `coverBadge` | Default: "Client-facing v2.0 · Internal technical appendix available on request". |
+| ~~`coverBadge`~~ | **Deprecated May 2026.** Do not populate. Field is ignored by the rendering engine. |
 | `supportingFile` | URL if provided in markdown, else null. |
 | `sourceNote` | "Data sourced from Google Search Console, Screaming Frog crawl, and GA4." or null. |
 

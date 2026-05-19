@@ -18,12 +18,11 @@
   "properties": {
     "meta": {
       "type": "object",
-      "required": ["clientName", "auditType", "date", "coverBadge"],
+      "required": ["clientName", "auditType", "date"],
       "properties": {
         "clientName": { "type": "string", "description": "Client name, e.g. 'Fossil Age Minerals'" },
         "auditType": { "type": "string", "description": "Audit type, e.g. 'Technical & Content SEO Audit'" },
         "date": { "type": "string", "description": "Month and year, e.g. 'May 2026'" },
-        "coverBadge": { "type": "string", "description": "Cover page badge text" },
         "supportingFile": { "type": ["string", "null"], "description": "URL to supporting workbook, or null" },
         "sourceNote": { "type": ["string", "null"], "description": "Data source attribution, or null (never populated in existing audits)" }
       }

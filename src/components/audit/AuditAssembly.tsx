@@ -27,7 +27,6 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
       <AuditHeader
         auditType={meta.auditType}
         clientName={meta.clientName}
-        coverBadge={meta.coverBadge}
         date={meta.date}
         quarter={quarter}
         supportingWorkbookLink={meta.supportingFile ?? undefined}

@@ -3,7 +3,8 @@ import { BrandLogo } from "@/components/shared/BrandLogo";
 type AuditHeaderProps = {
   auditType: string;
   clientName: string;
-  coverBadge: string;
+  /** @deprecated Cover badge pill removed — no longer rendered. */
+  coverBadge?: string;
   date: string;
   quarter: string;
   supportingWorkbookLink?: string;
@@ -16,7 +17,6 @@ type AuditHeaderProps = {
 export function AuditHeader({
   auditType,
   clientName,
-  coverBadge,
   date,
   quarter,
   supportingWorkbookLink,
@@ -48,10 +48,6 @@ export function AuditHeader({
       </div>
 
       <div className="mt-[52px]">
-        <span className="inline-block rounded-3xl border border-white/[0.12] bg-white/[0.08] px-[22px] py-[7px] text-[13px] font-light">
-          {coverBadge}
-        </span>
-
         {supportingWorkbookLink && (
           <a
             className="mx-auto mt-4 inline-flex items-center justify-center rounded-full border border-white/[0.24] bg-white/[0.12] px-[22px] py-[9px] text-[13px] font-bold text-white no-underline hover:bg-white/[0.18]"

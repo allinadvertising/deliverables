@@ -42,7 +42,6 @@ type AuditHeaderContext = {
   auditType: string;
   clientName: string;
   clientSlug: string;
-  coverBadge: string;
   date: string;
   quarter: string;
   supportingWorkbookButton: string;
@@ -270,8 +269,8 @@ function buildAuditContext(options: EnhanceAuditOptions) {
   const supportingWorkbookLink = normalizeHttpUrl(
     options.supportingWorkbookLink,
   );
-  const coverBadge =
-    "Client-facing v2.0 \u00b7 Internal technical appendix available on request";
+  // Cover badge deprecated May 2026 — no longer rendered or generated.
+  const coverBadge = undefined;
 
   return {
     auditType,
@@ -283,7 +282,7 @@ function buildAuditContext(options: EnhanceAuditOptions) {
       auditType,
       clientName,
       clientSlug,
-      coverBadge,
+      // coverBadge removed (deprecated May 2026)
       date: dateLabel,
       quarter: quarterLabel,
       supportingWorkbookButton:

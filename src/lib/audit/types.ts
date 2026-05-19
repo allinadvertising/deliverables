@@ -10,7 +10,8 @@ export type AuditMeta = {
   clientName: string;
   auditType: string;
   date: string; // e.g. "May 2026"
-  coverBadge: string;
+  /** @deprecated Removed May 2026 — cover badge pill is no longer rendered. */
+  coverBadge?: string;
   supportingFile: string | null;
   sourceNote: string | null; // Never populated in existing audits — retained for future use
 };

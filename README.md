@@ -171,7 +171,7 @@ The audit rendering pipeline is fully componentized. The AI outputs structured J
 type AuditContent = {
   meta: {
     clientName: string; auditType: string; date: string;
-    coverBadge: string; supportingFile: string | null;
+    // coverBadge removed (deprecated May 2026)
     sourceNote: string | null;       // Never populated in existing audits
   };
   executiveSummary: {

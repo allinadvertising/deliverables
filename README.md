@@ -13,7 +13,7 @@ Open http://localhost:3000 with your browser.
 
 ## Audit Files
 
-Audits are stored as structured JSON in Supabase (`audits.content` JSONB column) and rendered by React server components. The AI enhancement flow outputs JSON directly — no HTML files are written to disk.
+Audits are stored as structured JSON in Supabase (`audits.content` JSONB column) and rendered by React server components. The AI enhancement flow outputs JSON directly : no HTML files are written to disk.
 
 Legacy HTML files from the previous pipeline remain in `public/` as archive. The app no longer reads or writes them.
 
@@ -235,7 +235,7 @@ All 9 refactoring phases completed. Audits render from JSONB via React component
 
 ---
 
-## Next Step: Deprecate HTML Pipeline — JSON-Only Enhancement
+## Next Step: Deprecate HTML Pipeline : JSON-Only Enhancement
 
 The view layer already uses React components + Supabase JSONB. The next step is to make the enhancement flow produce JSON directly, eliminating the legacy file-based HTML pipeline entirely.
 
@@ -245,8 +245,8 @@ The view layer already uses React components + Supabase JSONB. The next step is 
 Markdown upload → /api/audit-enhancer
   → enhanceAuditMarkdown()
     → AI call (returns filled HTML template)
-    → saveAuditArtifacts() — writes HTML files to public/{client}/{year}/{month}/
-    → insertAudit() — stores metadata in Supabase (no JSON content)
+    → saveAuditArtifacts() : writes HTML files to public/{client}/{year}/{month}/
+    → insertAudit() : stores metadata in Supabase (no JSON content)
   → Response: { href, bodyHref, bodyFilePath }
 ```
 
@@ -257,7 +257,7 @@ Markdown upload → /api/audit-enhancer
   → enhanceAuditMarkdown()
     → AI call (returns JSON per updated SKILL.md)
     → validate JSON against schema.json
-    → insertAudit() — stores full AuditContent JSON in audits.content JSONB
+    → insertAudit() : stores full AuditContent JSON in audits.content JSONB
     → no file writes, no public/ artifacts
   → Response: { auditId, shareUrl, clientName, auditType }
 ```
@@ -268,22 +268,22 @@ Markdown upload → /api/audit-enhancer
 |------|--------|
 | `src/lib/audit-enhancer.ts` | Remove `saveAuditArtifacts()`. Stop writing HTML files. Parse AI JSON response → validate → store in Supabase. New return type: `{ auditId, shareUrl, ... }` instead of `{ filePath, bodyFilePath, ... }`. |
 | `src/app/api/audit-enhancer/route.ts` | Remove file-path references from response. Pass JSON content through. Return shareable URL immediately after generation. |
-| `src/lib/db.ts` | `insertAudit()` already accepts optional `content` — no change needed. |
+| `src/lib/db.ts` | `insertAudit()` already accepts optional `content` : no change needed. |
 | `seo-audit-enhancer/SKILL.md` | Already rewritten to output JSON (Phase R6). No change needed. |
 | `seo-audit-enhancer/assets/template.html` | No longer read during enhancement. Safe to remove after verification. |
 | `seo-audit-enhancer/schema.json` | Already created (Phase R3). Used for JSON validation. |
 | `public/header-template.html` | Unused by new flow. Safe to remove after verification. |
 | `public/footer-template.html` | Unused by new flow. Safe to remove after verification. |
-| `scripts/sync-audits.mjs` | Remove or repurpose — no longer needed to sync HTML audits. |
+| `scripts/sync-audits.mjs` | Remove or repurpose : no longer needed to sync HTML audits. |
 
 ### What Stays
 
 | Component | Why |
 |-----------|-----|
-| `src/lib/audit-enhancer-logs.ts` | Logging infrastructure still needed — now logs JSON responses instead of HTML |
-| `src/lib/audit-enhancer.ts` core AI logic | Provider routing, timeout handling, retry, background mode — all preserved |
-| `src/lib/db.ts` queries | `insertAudit()`, `upsertClient()`, `insertEnhancementRun()` — all preserved |
-| `src/app/api/audit-enhancer/route.ts` | File upload parsing, validation, error handling — preserved |
+| `src/lib/audit-enhancer-logs.ts` | Logging infrastructure still needed : now logs JSON responses instead of HTML |
+| `src/lib/audit-enhancer.ts` core AI logic | Provider routing, timeout handling, retry, background mode : all preserved |
+| `src/lib/db.ts` queries | `insertAudit()`, `upsertClient()`, `insertEnhancementRun()` : all preserved |
+| `src/app/api/audit-enhancer/route.ts` | File upload parsing, validation, error handling : preserved |
 | `public/audit.css` | Still used by the `seo-audit-enhancer` skill's quality rules (brand colors, print styles) |
 | HTML audit files in `public/` | Keep on disk as archive. App no longer reads or writes them. |
 
@@ -291,7 +291,7 @@ Markdown upload → /api/audit-enhancer
 
 ### Phased Implementation
 
-#### Phase D1: Update audit-enhancer.ts — JSON Output Handling
+#### Phase D1: Update audit-enhancer.ts : JSON Output Handling
 
 - Parse the AI response as JSON (not HTML) using `JSON.parse()`
 - Validate against `schema.json` or the TypeScript types
@@ -308,7 +308,7 @@ Markdown upload → /api/audit-enhancer
 
 ---
 
-#### Phase D2: Update API Route — Clean Response Shape
+#### Phase D2: Update API Route : Clean Response Shape
 
 - Update `src/app/api/audit-enhancer/route.ts`:
   - Remove file-path references from response body
@@ -360,7 +360,7 @@ Markdown upload → /api/audit-enhancer
 D1 (JSON handling) → D2 (clean response) → D3 (remove artifacts) → D4 (integration test)
 ```
 
-All phases are sequential — each depends on the previous.
+All phases are sequential : each depends on the previous.
 
 ### Commands Reference
 

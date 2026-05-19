@@ -3,7 +3,7 @@ import { BrandLogo } from "@/components/shared/BrandLogo";
 type AuditHeaderProps = {
   auditType: string;
   clientName: string;
-  /** @deprecated Cover badge pill removed — no longer rendered. */
+  /** @deprecated Cover badge pill removed : no longer rendered. */
   coverBadge?: string;
   date: string;
   quarter: string;
@@ -11,7 +11,7 @@ type AuditHeaderProps = {
 };
 
 /**
- * Audit cover page — dark blue gradient with white text, logo, and metadata.
+ * Audit cover page : dark blue gradient with white text, logo, and metadata.
  * Converted from public/header-template.html. All CSS migrated to Tailwind.
  */
 export function AuditHeader({

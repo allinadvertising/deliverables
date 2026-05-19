@@ -1,4 +1,4 @@
-// Database schema types — mirrors the Supabase SQL migration.
+// Database schema types : mirrors the Supabase SQL migration.
 // These are the raw row shapes; join/display types are derived below.
 
 export type DbClient = {
@@ -41,7 +41,7 @@ export type DbEnhancementRun = {
   completed_at: string | null;
 };
 
-// Display type for the audit list — a flat projection of audit + client.
+// Display type for the audit list : a flat projection of audit + client.
 export type AuditDisplay = {
   id: string;
   href: string;

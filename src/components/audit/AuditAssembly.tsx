@@ -16,7 +16,7 @@ type AuditAssemblyProps = {
 
 /**
  * Composes all audit section components from a structured AuditContent JSON.
- * This is the server-side rendering engine — one component drives the entire page.
+ * This is the server-side rendering engine : one component drives the entire page.
  */
 export function AuditAssembly({ content }: AuditAssemblyProps) {
   const { meta, executiveSummary, actionItems, findings, solutions, beforeAfter, insightBox, glossary, faq } = content;

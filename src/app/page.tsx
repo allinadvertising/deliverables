@@ -121,7 +121,7 @@ export default async function Home() {
                       {audit.size}
                     </span>
                     <span className="text-sm text-[#65718a] md:text-right">
-                      {audit.views > 0 ? audit.views : "—"}
+                      {audit.views > 0 ? audit.views : ":"}
                     </span>
                     <div className="flex justify-start gap-1.5 md:justify-end">
                       <ShareButton

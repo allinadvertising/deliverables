@@ -8,7 +8,7 @@ type BrandLogoProps = {
 };
 
 /**
- * All In Advertising logo — inline SVG.
+ * All In Advertising logo : inline SVG.
  * Set inverted=true for the white version on dark backgrounds.
  */
 export function BrandLogo({

@@ -9,7 +9,7 @@ description: |
 
 # SEO Audit Enhancer
 
-Transform raw `.md` SEO audit files into structured JSON documents. The JSON is stored in Supabase (JSONB column `audits.content`) and rendered by React server components — no HTML generation needed.
+Transform raw `.md` SEO audit files into structured JSON documents. The JSON is stored in Supabase (JSONB column `audits.content`) and rendered by React server components : no HTML generation needed.
 
 ## Workflow
 
@@ -69,11 +69,11 @@ type AuditContent = {
       number: string;             // e.g. "777"
       description: string;        // e.g. "exact-duplicate URLs"
     }[];
-    whatThisMeans: string;        // Plain-English business impact — REQUIRED for every finding
+    whatThisMeans: string;        // Plain-English business impact : REQUIRED for every finding
     representativeUrls?: string[];// Optional: affected URLs
     impacts?: {                   // Optional: impact grid items
       label: string;              // e.g. "Search Visibility"
-      value: string;              // e.g. "High — blocks indexing of key pages"
+      value: string;              // e.g. "High : blocks indexing of key pages"
     }[];
   }[];
   solutions: {
@@ -131,7 +131,7 @@ type AuditContent = {
 
 ### findings
 
-- Each finding must have a **whatThisMeans** field — translate technical issues into business impact.
+- Each finding must have a **whatThisMeans** field : translate technical issues into business impact.
 - Group under category names: "Heading Structure", "Metadata Quality", "Crawl & Index Health", "Content Quality & Duplication", "Structured Data", "URL Architecture", "Sitemap & Governance", etc.
 - **statistics:** Pull exact numbers from the markdown. Each stat is a `{ number, description }` pair. Omit if the finding has no quantitative evidence.
 - **representativeUrls:** List 1-5 example URLs. Omit if not applicable.
@@ -151,26 +151,26 @@ type AuditContent = {
 ### insightBox
 
 - If the markdown contains a strategic insight about competitive positioning, market opportunity, or architectural pattern: capture it here. Otherwise null.
-- Example: "Most duplication originates from navigational components — not editorial content. By cleaning internal link generation and reinforcing canonicals at the theme level, [client] can eliminate the majority of duplicate and near-duplicate issues without changing a single page of content."
+- Example: "Most duplication originates from navigational components : not editorial content. By cleaning internal link generation and reinforcing canonicals at the theme level, [client] can eliminate the majority of duplicate and near-duplicate issues without changing a single page of content."
 
 ### glossary
 
 - Always include 6-10 terms relevant to the audit.
 - Common terms: H1, canonical, orphan URL, crawl budget, 301 redirect chain, meta description, near-duplicate, CMS template, robots.txt, sitemap, schema markup, JSON-LD, noindex, index coverage, CTR.
-- Definitions must be in plain English — no jargon.
+- Definitions must be in plain English : no jargon.
 
 ### faq
 
 - Generate 3-5 questions specific to the client context and audit findings.
 - Common patterns: "What should we fix first?", "How long until we see results?", "Which team handles what?", "Do we need to remove pages?", "Will this affect our current rankings?"
-- Answers must be specific and actionable — not generic.
+- Answers must be specific and actionable : not generic.
 
 ---
 
 ## Quality Rules
 
 - **Tone:** Professional, authoritative, corporate. No casual language. Use "we recommend" not "you should".
-- **No em dashes:** Use " — " (space-hyphen-hyphen-space) or commas instead.
+- **No em dashes:** Use colons (:) instead.
 - **Plain English:** Every `whatThisMeans`, every `definition`, every `description` must be understandable by a non-technical business stakeholder.
 - **Consistency:** Priority values must be exactly "P0", "P1", "P2".
 - **Completeness:** Every finding MUST have a `whatThisMeans`. Every solution step MUST have a `title` and `description`.

@@ -1,4 +1,4 @@
-// Audit content types — mirrors the JSON schema defined in README.md.
+// Audit content types : mirrors the JSON schema defined in README.md.
 // Updated 2026-05-18 after Phase R1 analysis of 8 existing audits.
 // Nullable/optional fields reflect real-world audit variations.
 
@@ -10,16 +10,16 @@ export type AuditMeta = {
   clientName: string;
   auditType: string;
   date: string; // e.g. "May 2026"
-  /** @deprecated Removed May 2026 — cover badge pill is no longer rendered. */
+  /** @deprecated Removed May 2026 : cover badge pill is no longer rendered. */
   coverBadge?: string;
   supportingFile: string | null;
-  sourceNote: string | null; // Never populated in existing audits — retained for future use
+  sourceNote: string | null; // Never populated in existing audits : retained for future use
 };
 
 export type MetricCard = {
   value: string; // e.g. "203", "12%"
   label: string; // e.g. "Orphan URLs"
-  change: string | null; // Always null in existing audits — future: "+12%", "-5%"
+  change: string | null; // Always null in existing audits : future: "+12%", "-5%"
 };
 
 export type Severity = {

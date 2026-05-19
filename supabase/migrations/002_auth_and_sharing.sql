@@ -1,6 +1,6 @@
 -- 002_auth_and_sharing.sql
 -- Phase 3: Extend audits table for owner-based access and public token sharing.
--- Run in Supabase SQL Editor. Idempotent — safe to re-run.
+-- Run in Supabase SQL Editor. Idempotent : safe to re-run.
 
 BEGIN;
 

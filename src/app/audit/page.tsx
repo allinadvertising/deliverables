@@ -31,7 +31,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const clientName = (audit.client_name as { name?: string } | null)?.name ?? audit.title;
 
   return {
-    title: `${clientName} — SEO Audit`,
+    title: `${clientName} : SEO Audit`,
     description: `SEO audit deliverable for ${clientName}.`,
     robots: "noindex, nofollow",
   };

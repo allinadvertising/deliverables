@@ -8,7 +8,7 @@ import { type NextRequest, NextResponse } from "next/server";
  * - /audit, /api/*, static assets: passthrough (no auth check).
  *
  * Uses getUser() (validates JWT against Supabase) instead of getSession()
- * (which only reads the local cookie — unreliable in middleware).
+ * (which only reads the local cookie : unreliable in middleware).
  */
 export async function proxy(request: NextRequest) {
   const supabaseResponse = NextResponse.next({ request });
@@ -34,7 +34,7 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  // getUser() hits Supabase to validate the JWT — reliable in proxy context.
+  // getUser() hits Supabase to validate the JWT : reliable in proxy context.
   const {
     data: { user },
   } = await supabase.auth.getUser();

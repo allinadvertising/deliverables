@@ -269,7 +269,7 @@ function buildAuditContext(options: EnhanceAuditOptions) {
   const supportingWorkbookLink = normalizeHttpUrl(
     options.supportingWorkbookLink,
   );
-  // Cover badge deprecated May 2026 — no longer rendered or generated.
+  // Cover badge deprecated May 2026 : no longer rendered or generated.
   const coverBadge = undefined;
 
   return {

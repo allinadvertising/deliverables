@@ -30,7 +30,7 @@ export async function createClient() {
               cookieStore.set(name, value, options);
             } catch {
               // In middleware, setAll may be called from a Server Component context
-              // where cookies() is read-only. This is expected — the cookie will
+              // where cookies() is read-only. This is expected : the cookie will
               // be set on the response via middleware's cookie management.
             }
           }

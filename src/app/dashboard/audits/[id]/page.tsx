@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     (audit.client_name as { name?: string } | null)?.name ?? audit.title;
 
   return {
-    title: `${clientName} — SEO Audit`,
+    title: `${clientName} : SEO Audit`,
     description: `SEO audit deliverable for ${clientName}.`,
   };
 }

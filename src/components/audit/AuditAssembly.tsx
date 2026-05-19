@@ -1,14 +1,8 @@
 import type { AuditContent } from "@/lib/audit/types";
 import { AuditHeader } from "./AuditHeader";
-import { ExecutiveSummary } from "./ExecutiveSummary";
-import { ActionItemsTable } from "./ActionItemsTable";
-import { FindingCategoryGroup } from "./FindingCategoryGroup";
-import { SolutionSteps } from "./SolutionSteps";
-import { BeforeAfterGrid } from "./BeforeAfterGrid";
-import { GlossaryGrid } from "./GlossaryGrid";
-import { FaqSection } from "./FaqSection";
-import { InsightBox } from "./InsightBox";
+import { AuditTabs } from "./AuditTabs";
 import { AuditFooter } from "./AuditFooter";
+import { BackToTopButton } from "./BackToTopButton";
 
 type AuditAssemblyProps = {
   content: AuditContent;
@@ -19,7 +13,7 @@ type AuditAssemblyProps = {
  * This is the server-side rendering engine : one component drives the entire page.
  */
 export function AuditAssembly({ content }: AuditAssemblyProps) {
-  const { meta, executiveSummary, actionItems, findings, solutions, beforeAfter, insightBox, glossary, faq } = content;
+  const { meta } = content;
   const quarter = inferQuarterLabel(meta.date);
 
   return (
@@ -32,32 +26,15 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
         supportingWorkbookLink={meta.supportingFile ?? undefined}
       />
 
-      <ExecutiveSummary
-        items={executiveSummary.items}
-        metricCards={executiveSummary.metricCards}
-        severity={executiveSummary.severity}
-        sourceNote={meta.sourceNote}
-      />
-
-      <ActionItemsTable items={actionItems} />
-
-      <FindingCategoryGroup findings={findings} />
-
-      <SolutionSteps solutions={solutions} />
-
-      {insightBox && <InsightBox insight={insightBox} />}
-
-      <BeforeAfterGrid pairs={beforeAfter} />
-
-      <GlossaryGrid terms={glossary} />
-
-      <FaqSection items={faq} />
+      <AuditTabs content={content} />
 
       <AuditFooter
         auditType={meta.auditType}
         clientName={meta.clientName}
         quarter={quarter}
       />
+
+      <BackToTopButton />
     </>
   );
 }

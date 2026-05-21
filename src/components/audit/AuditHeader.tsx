@@ -44,7 +44,7 @@ export function AuditHeader({
       </div>
 
       <div className="text-[15px] font-medium text-white/65">
-        Prepared by All In Advertising &middot; Confidential
+        Prepared by All In Advertising
       </div>
 
       <div className="mt-[52px]">

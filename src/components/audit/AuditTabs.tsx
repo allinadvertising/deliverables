@@ -146,13 +146,13 @@ export function AuditTabs({ content }: AuditTabsProps) {
       >
         {activeTab === "overview" ? (
           <>
+            {insightBox ? <InsightBox insight={insightBox} /> : null}
             <ExecutiveSummary
               items={executiveSummary.items}
               metricCards={executiveSummary.metricCards}
               severity={executiveSummary.severity}
               sourceNote={meta.sourceNote}
             />
-            {insightBox ? <InsightBox insight={insightBox} /> : null}
           </>
         ) : null}
 

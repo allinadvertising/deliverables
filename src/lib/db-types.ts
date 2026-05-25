@@ -53,5 +53,6 @@ export type AuditDisplay = {
   updatedTime: number;
   size: string;
   hasToken: boolean;
+  supportingWorkbookLink: string | null;
   views: number;
 };

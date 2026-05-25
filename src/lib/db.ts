@@ -16,6 +16,7 @@ export async function getAudits(userId?: string): Promise<AuditDisplay[]> {
       file_path,
       file_size,
       share_token,
+      content,
       created_at,
       updated_at,
       owner_id,
@@ -50,6 +51,13 @@ export async function getAudits(userId?: string): Promise<AuditDisplay[]> {
     const fileSize = (row.file_size ?? 0) as number;
     const updatedAt = (row.updated_at ?? row.created_at ?? "") as string;
     const updatedTime = new Date(updatedAt).getTime();
+    const content = (row.content ?? null) as
+      | { meta?: { supportingFile?: unknown } }
+      | null;
+    const supportingWorkbookLink =
+      typeof content?.meta?.supportingFile === "string"
+        ? content.meta.supportingFile
+        : null;
     const pathLabel = [clientSlug, String(year), month ?? ""]
       .filter(Boolean)
       .join(" / ");
@@ -65,6 +73,7 @@ export async function getAudits(userId?: string): Promise<AuditDisplay[]> {
       updatedTime,
       size: formatBytes(fileSize),
       hasToken: Boolean(row.share_token),
+      supportingWorkbookLink,
       views: extractViewCount(row.audit_views),
     } satisfies AuditDisplay;
   });

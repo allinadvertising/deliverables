@@ -16,7 +16,7 @@ export function NavBar() {
     }`;
 
   return (
-    <div className="border-b border-[#d9e2ef] bg-white">
+    <div className="audit-no-print border-b border-[#d9e2ef] bg-white">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-5 py-4 sm:px-8 lg:px-10">
         <Link href="/" aria-label="All In Advertising audit portal">
           <Image

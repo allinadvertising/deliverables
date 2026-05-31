@@ -12,7 +12,7 @@ export function AuditFooter({
   quarter,
 }: AuditFooterProps) {
   return (
-    <div className="audit-page mb-8">
+    <div className="audit-page audit-footer-page mb-8">
       <footer className="mt-[52px] border-t border-slate-200 pt-6 text-center text-sm text-slate-500">
         <div className="mb-2 flex justify-center">
           <BrandLogo

@@ -14,7 +14,7 @@ export function ExecutiveSummary({
     <div className="audit-page">
       <h2 className="audit-section-title">Executive Summary</h2>
 
-      <section className="relative my-6 overflow-hidden rounded-lg border border-[#cbdff4] bg-[linear-gradient(135deg,#f3f8ff_0%,#ffffff_46%,#fffaf0_100%)] px-8 py-8 shadow-[0_14px_34px_rgba(24,59,104,0.08)] max-sm:px-5 max-sm:py-6">
+      <section className="audit-executive-readout relative my-6 overflow-hidden rounded-lg border border-[#cbdff4] bg-[linear-gradient(135deg,#f3f8ff_0%,#ffffff_46%,#fffaf0_100%)] px-8 py-8 shadow-[0_14px_34px_rgba(24,59,104,0.08)] max-sm:px-5 max-sm:py-6">
         <div
           aria-hidden="true"
           className="absolute right-0 top-0 h-full w-1.5 bg-[linear-gradient(180deg,#2f65a7_0%,#f6b328_100%)]"
@@ -33,7 +33,7 @@ export function ExecutiveSummary({
           </span>
         </div>
 
-        <ol className="grid gap-3">
+        <ol className="audit-executive-list grid gap-3">
           {items.map((item, i) => (
             <li
               className="grid grid-cols-[34px_1fr] gap-4 rounded-lg border border-[#e2edf8] bg-white/80 px-4 py-4 text-[17px] leading-[1.58] text-slate-700 shadow-[0_1px_2px_rgba(15,23,42,0.04)] max-sm:grid-cols-1 max-sm:gap-2"
@@ -48,7 +48,7 @@ export function ExecutiveSummary({
         </ol>
       </section>
 
-      <div className="my-8 grid grid-cols-4 gap-[18px] max-lg:grid-cols-2 max-sm:grid-cols-1">
+      <div className="audit-metric-grid my-8 grid grid-cols-4 gap-[18px] max-lg:grid-cols-2 max-sm:grid-cols-1">
         {metricCards.map((card, i) => (
           <MetricCard key={i} {...card} />
         ))}

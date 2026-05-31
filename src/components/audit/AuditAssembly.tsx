@@ -1,8 +1,10 @@
 import type { AuditContent } from "@/lib/audit/types";
 import { AuditHeader } from "./AuditHeader";
+import { AuditPrintDocument } from "./AuditPrintDocument";
 import { AuditTabs } from "./AuditTabs";
 import { AuditFooter } from "./AuditFooter";
 import { BackToTopButton } from "./BackToTopButton";
+import { PrintAuditButton } from "./PrintAuditButton";
 
 type AuditAssemblyProps = {
   content: AuditContent;
@@ -18,6 +20,10 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
 
   return (
     <>
+      <div className="audit-no-print mx-auto mt-6 flex max-w-[1160px] justify-end px-4 sm:px-0">
+        <PrintAuditButton />
+      </div>
+
       <AuditHeader
         auditType={meta.auditType}
         clientName={meta.clientName}
@@ -26,7 +32,13 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
         supportingWorkbookLink={meta.supportingFile ?? undefined}
       />
 
-      <AuditTabs content={content} />
+      <div className="audit-screen-only">
+        <AuditTabs content={content} />
+      </div>
+
+      <div className="audit-print-only" aria-hidden="true">
+        <AuditPrintDocument content={content} />
+      </div>
 
       <AuditFooter
         auditType={meta.auditType}

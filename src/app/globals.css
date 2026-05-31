@@ -196,6 +196,10 @@ body {
       monospace;
   }
 
+  .audit-print-only {
+    display: none;
+  }
+
   @media (max-width: 980px) {
     body {
       font-size: 17px;
@@ -232,6 +236,359 @@ body {
       align-items: flex-start;
       flex-direction: column;
       font-size: 21px;
+    }
+  }
+
+  @media print {
+    @page {
+      margin: 8mm;
+      size: A4;
+    }
+
+    * {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    html,
+    body {
+      background: #ffffff !important;
+      min-height: auto !important;
+    }
+
+    body {
+      color: var(--ink);
+      font-size: 9.6pt;
+      line-height: 1.42;
+    }
+
+    .audit-no-print,
+    .audit-screen-only {
+      display: none !important;
+    }
+
+    .audit-print-only {
+      display: block !important;
+    }
+
+    .audit-insight-box {
+      margin: 0 0 5mm !important;
+      max-width: none !important;
+      padding: 0 !important;
+    }
+
+    .audit-insight-box > div {
+      border-radius: 2.5mm !important;
+      box-shadow: var(--audit-shadow-sm) !important;
+      margin: 0 !important;
+      padding: 4mm 5mm !important;
+    }
+
+    .audit-page {
+      background: #ffffff !important;
+      border: 0.3mm solid rgba(148, 163, 184, 0.38) !important;
+      border-radius: 2.6mm !important;
+      box-shadow: 0 1.2mm 4mm rgba(15, 23, 42, 0.08) !important;
+      break-inside: auto;
+      margin: 0 0 6mm !important;
+      max-width: none !important;
+      overflow: visible !important;
+      padding: 7mm 8.5mm !important;
+      page-break-inside: auto;
+      width: 100% !important;
+    }
+
+    .audit-cover {
+      align-items: center !important;
+      background:
+        linear-gradient(
+          160deg,
+          rgba(12, 24, 45, 0.98) 0%,
+          rgba(24, 59, 104, 0.98) 48%,
+          rgba(47, 101, 167, 0.95) 100%
+        ) !important;
+      break-after: page;
+      border: 0 !important;
+      box-shadow: none !important;
+      color: #ffffff !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      min-height: calc(297mm - 16mm) !important;
+      margin: 0 !important;
+      padding: 24mm 14mm !important;
+      page-break-after: always;
+      text-align: center !important;
+    }
+
+    .audit-cover h1 {
+      color: #ffffff !important;
+      font-size: 35pt !important;
+      letter-spacing: 0 !important;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .audit-cover div,
+    .audit-cover a {
+      color: inherit;
+    }
+
+    .audit-cover img {
+      filter: brightness(0) invert(1) !important;
+    }
+
+    .audit-cover a {
+      border-radius: 999px !important;
+      padding: 2.4mm 6mm !important;
+    }
+
+    .audit-section-title {
+      font-size: 16.5pt !important;
+      line-height: 1.14 !important;
+      margin: 0 0 5mm !important;
+      padding-bottom: 3.5mm !important;
+    }
+
+    .audit-section-title::before {
+      height: 1.2mm !important;
+      margin-bottom: 3mm !important;
+      width: 14mm !important;
+    }
+
+    .audit-category-title {
+      align-items: center !important;
+      flex-direction: row !important;
+      font-size: 12.5pt !important;
+      gap: 2.5mm !important;
+      margin: 5.5mm 0 3mm !important;
+    }
+
+    .audit-copy {
+      font-size: 9pt !important;
+      line-height: 1.45 !important;
+      margin-bottom: 3mm !important;
+    }
+
+    .audit-executive-readout {
+      border-radius: 2.6mm !important;
+      margin: 4mm 0 5mm !important;
+      padding: 5mm !important;
+    }
+
+    .audit-executive-readout h3 {
+      font-size: 15pt !important;
+    }
+
+    .audit-executive-list {
+      gap: 2.5mm !important;
+    }
+
+    .audit-executive-list li {
+      gap: 3mm !important;
+      grid-template-columns: 7mm 1fr !important;
+      padding: 3mm !important;
+    }
+
+    .audit-executive-list li span:first-child {
+      font-size: 8pt !important;
+      height: 7mm !important;
+      width: 7mm !important;
+    }
+
+    .audit-metric-grid {
+      gap: 3mm !important;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+      margin: 5mm 0 !important;
+    }
+
+    .audit-metric-card {
+      padding: 4.5mm 3mm !important;
+    }
+
+    .audit-metric-value {
+      font-size: 21pt !important;
+    }
+
+    .audit-metric-label {
+      font-size: 6.8pt !important;
+      letter-spacing: 0.05em !important;
+      line-height: 1.25 !important;
+      margin-top: 2mm !important;
+    }
+
+    .audit-card {
+      border-radius: 2.4mm !important;
+      box-shadow: 0 0.6mm 1.8mm rgba(15, 23, 42, 0.05) !important;
+    }
+
+    .audit-metric-card,
+    .audit-stat-card,
+    .audit-impact-item,
+    .audit-comparison-card,
+    .audit-glossary-card,
+    .audit-table tr,
+    .audit-table td,
+    .audit-table th {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .audit-table {
+      border-radius: 2.4mm !important;
+      font-size: 7.2pt !important;
+      line-height: 1.28 !important;
+      margin: 3.5mm 0 !important;
+      table-layout: fixed;
+    }
+
+    .audit-table thead {
+      display: table-header-group;
+    }
+
+    .audit-table th {
+      font-size: 6.2pt !important;
+      letter-spacing: 0.05em !important;
+      padding: 2.2mm 2mm !important;
+    }
+
+    .audit-table td {
+      font-size: 7.2pt !important;
+      line-height: 1.28 !important;
+      padding: 2.2mm 2mm !important;
+    }
+
+    .audit-table td strong,
+    .audit-action-secondary {
+      font-size: 7.2pt !important;
+      line-height: 1.28 !important;
+    }
+
+    .audit-table td:first-child span {
+      font-size: 7pt !important;
+      min-height: 5.6mm !important;
+      padding: 1.4mm 3mm !important;
+    }
+
+    .audit-table th:first-child,
+    .audit-table td:first-child {
+      width: 16mm;
+    }
+
+    .audit-row-p0 td:first-child,
+    .audit-row-p1 td:first-child,
+    .audit-row-p2 td:first-child {
+      border-left-width: 1.1mm !important;
+    }
+
+    .audit-finding-card {
+      break-inside: auto !important;
+      font-size: 8.4pt !important;
+      line-height: 1.36 !important;
+      margin: 3.8mm 0 !important;
+      page-break-inside: auto !important;
+      padding: 4.5mm !important;
+    }
+
+    .audit-finding-header {
+      align-items: center !important;
+      flex-direction: row !important;
+      gap: 3mm !important;
+      margin-bottom: 3.5mm !important;
+    }
+
+    .audit-finding-card h3 {
+      font-size: 11.6pt !important;
+      line-height: 1.18 !important;
+    }
+
+    .audit-root-cause {
+      font-size: 9pt !important;
+      line-height: 1.38 !important;
+      margin-bottom: 3mm !important;
+    }
+
+    .audit-finding-card strong,
+    .audit-page strong {
+      font-weight: 800;
+    }
+
+    .audit-stat-grid,
+    .audit-impact-grid {
+      gap: 2.4mm !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      margin: 2.8mm 0 !important;
+    }
+
+    .audit-stat-card,
+    .audit-impact-item,
+    .audit-comparison-card,
+    .audit-glossary-card {
+      font-size: 8pt !important;
+      line-height: 1.34 !important;
+      padding: 3mm !important;
+    }
+
+    .audit-stat-number {
+      font-size: 15pt !important;
+    }
+
+    .audit-what-this-means,
+    .audit-url-list {
+      border-radius: 2.3mm !important;
+      font-size: 7.6pt !important;
+      line-height: 1.36 !important;
+      margin: 2.8mm 0 !important;
+      padding: 3mm 3.5mm !important;
+    }
+
+    .audit-what-this-means {
+      border-left-width: 1.3mm !important;
+    }
+
+    .audit-url-list {
+      word-break: break-word;
+    }
+
+    .audit-solution-step {
+      gap: 3.5mm !important;
+      padding: 3.5mm 0 !important;
+    }
+
+    .audit-step-number {
+      font-size: 8pt !important;
+      height: 8mm !important;
+      width: 8mm !important;
+    }
+
+    .audit-comparison-grid,
+    .audit-glossary-grid {
+      gap: 3.5mm !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .audit-comparison-card h4 {
+      font-size: 8.5pt !important;
+      margin-bottom: 2.5mm !important;
+      padding-bottom: 2.5mm !important;
+    }
+
+    .audit-page p,
+    .audit-page li,
+    .audit-page td,
+    .audit-page div {
+      orphans: 3;
+      widows: 3;
+    }
+
+    .audit-page footer {
+      font-size: 8pt !important;
+      margin-top: 8mm !important;
+      padding-top: 4mm !important;
+    }
+
+    .audit-page img {
+      max-width: 100% !important;
     }
   }
 }

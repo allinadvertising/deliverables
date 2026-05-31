@@ -46,7 +46,7 @@ export function ActionItemsTable({
                   {item.secondaryImpact && (
                     <>
                       <br />
-                      <span className="text-[13px] text-slate-500">
+                      <span className="audit-action-secondary text-[13px] text-slate-500">
                         {item.secondaryImpact}
                       </span>
                     </>

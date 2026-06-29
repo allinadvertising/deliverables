@@ -4,18 +4,18 @@ import { useCallback, useState } from "react";
 
 type ShareButtonProps = {
   auditId: string;
-  hasToken: boolean;
+  shareToken: string | null;
   title: string;
 };
 
 export default function ShareButton({
   auditId,
-  hasToken: initialHasToken,
+  shareToken: initialToken,
   title,
 }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
-  const [hasToken, setHasToken] = useState(initialHasToken);
+  const [token, setToken] = useState<string | null>(initialToken);
+  const [hasToken, setHasToken] = useState(Boolean(initialToken));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -124,7 +124,6 @@ export default function ShareButton({
 
   function handleOpen() {
     setError("");
-    setToken(null);
     setOpen(true);
   }
 

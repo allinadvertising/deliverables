@@ -72,7 +72,7 @@ export async function getAudits(userId?: string): Promise<AuditDisplay[]> {
       updatedAt: formatDate(updatedAt),
       updatedTime,
       size: formatBytes(fileSize),
-      hasToken: Boolean(row.share_token),
+      shareToken: (row.share_token as string | null) ?? null,
       supportingWorkbookLink,
       views: extractViewCount(row.audit_views),
     } satisfies AuditDisplay;

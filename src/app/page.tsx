@@ -127,7 +127,7 @@ export default async function Home() {
                     <div className="flex justify-start gap-1.5 md:justify-end">
                       <ShareButton
                         auditId={audit.id}
-                        hasToken={audit.hasToken}
+                        shareToken={audit.shareToken}
                         title={`${audit.client} ${audit.title}`}
                       />
                       <EditAuditButton

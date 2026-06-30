@@ -85,16 +85,35 @@ export async function upsertClient(params: {
   slug: string;
   name: string;
 }): Promise<string> {
+  const { data: existing } = await supabaseServer
+    .from("clients")
+    .select("id")
+    .eq("slug", params.slug)
+    .maybeSingle();
+
+  if (existing?.id) {
+    return existing.id as string;
+  }
+
   const { data, error } = await supabaseServer
     .from("clients")
-    .upsert(
-      { slug: params.slug, name: params.name, updated_at: new Date().toISOString() },
-      { onConflict: "slug" },
-    )
+    .insert({ slug: params.slug, name: params.name })
     .select("id")
     .single();
 
   if (error) {
+    // Race condition: another request inserted the same slug between our SELECT and INSERT.
+    // Re-fetch and return the winner's id.
+    if (error.code === "23505") {
+      const { data: retry } = await supabaseServer
+        .from("clients")
+        .select("id")
+        .eq("slug", params.slug)
+        .maybeSingle();
+
+      if (retry?.id) return retry.id as string;
+    }
+
     throw new Error(`Failed to upsert client "${params.slug}": ${error.message}`);
   }
 

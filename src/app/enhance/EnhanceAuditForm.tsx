@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+
+const maxFiles = 3;
 
 type ProviderId = "openai" | "deepseek";
 
@@ -61,7 +63,7 @@ type ErrorPayload = {
 };
 
 const defaultProvider: ProviderId = "openai";
-const defaultModel = "gpt-5";
+const defaultModel = "gpt-5.6-sol";
 
 type LoadingPhase = {
   description: string;
@@ -114,6 +116,30 @@ export default function EnhanceAuditForm() {
   const [jobId, setJobId] = useState<string | null>(null);
   const [result, setResult] = useState<EnhanceResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [fileWarning, setFileWarning] = useState<string | null>(null);
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+
+    if (!files || files.length === 0) {
+      setFileNames([]);
+      setFileWarning(null);
+      return;
+    }
+
+    if (files.length > maxFiles) {
+      event.target.value = "";
+      setFileNames([]);
+      setFileWarning(
+        `You can upload up to ${maxFiles} markdown files. Please select ${maxFiles} or fewer.`,
+      );
+      return;
+    }
+
+    setFileWarning(null);
+    setFileNames(Array.from(files).map((file) => file.name));
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -169,6 +195,8 @@ export default function EnhanceAuditForm() {
             title: completed.title,
           });
           event.currentTarget.reset();
+          setFileNames([]);
+          setFileWarning(null);
           return;
         }
 
@@ -183,6 +211,8 @@ export default function EnhanceAuditForm() {
 
       setResult(payload as EnhanceResult);
       event.currentTarget.reset();
+      setFileNames([]);
+      setFileWarning(null);
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
@@ -216,15 +246,32 @@ export default function EnhanceAuditForm() {
 
           <label className="grid gap-2">
             <span className="text-sm font-black text-[#16243d]">
-              Audit file
+              Audit files
             </span>
             <input
               accept=".md,.markdown,text/markdown,text/plain"
               className="w-full border border-[#c9d7e9] bg-[#f8fbff] px-3 py-3 text-sm font-medium text-[#16243d] file:mr-4 file:border-0 file:bg-[#3e71b8] file:px-4 file:py-2 file:text-sm file:font-black file:text-white"
+              multiple
               name="file"
+              onChange={handleFileChange}
               required
               type="file"
             />
+            {fileWarning ? (
+              <p className="text-xs font-bold text-[#dc2626]">
+                {fileWarning}
+              </p>
+            ) : fileNames.length > 0 ? (
+              <p className="text-xs font-bold text-[#475775]">
+                {fileNames.length} file{fileNames.length > 1 ? "s" : ""}{" "}
+                selected: {fileNames.join(", ")}
+              </p>
+            ) : (
+              <p className="text-xs font-medium text-[#65718a]">
+                Upload up to {maxFiles} .md files. They will be combined in
+                the order selected.
+              </p>
+            )}
           </label>
 
           <div className="grid gap-4 sm:grid-cols-2">

@@ -727,7 +727,11 @@ function getOpenAITemperature(model: string) {
 function isOpenAIModelWithoutTemperature(model: string) {
   const normalized = model.trim().toLowerCase();
 
-  return normalized === "gpt-5" || normalized.startsWith("gpt-5-");
+  return (
+    normalized === "gpt-5" ||
+    normalized.startsWith("gpt-5-") ||
+    normalized.startsWith("gpt-5.")
+  );
 }
 
 function getOpenAITextFormat() {

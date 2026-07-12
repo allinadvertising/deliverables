@@ -31,7 +31,9 @@ export async function POST(request: Request) {
     });
 
     const formData = await request.formData();
-    const file = formData.get("file");
+    const files = formData
+      .getAll("file")
+      .filter((entry): entry is File => typeof entry !== "string");
     const provider = String(formData.get("provider") ?? "");
 
     if (!supportedProviders.has(provider as ProviderId)) {
@@ -47,11 +49,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (
-      !file ||
-      typeof file === "string" ||
-      typeof file.arrayBuffer !== "function"
-    ) {
+    if (files.length === 0) {
       await logger.warn("validation_failed", { reason: "missing_file" });
 
       return Response.json(
@@ -64,11 +62,26 @@ export async function POST(request: Request) {
       );
     }
 
-    const fileName = file.name || "audit.md";
+    if (files.length > 3) {
+      await logger.warn("validation_failed", { reason: "too_many_files" });
 
-    if (!/\.(md|markdown)$/i.test(fileName)) {
+      return Response.json(
+        {
+          error: "Upload up to 3 markdown files.",
+          logId: logger.id,
+          logPath: logger.filePath,
+        },
+        { status: 400 },
+      );
+    }
+
+    const unsupportedFile = files.find(
+      (file) => !/\.(md|markdown)$/i.test(file.name || ""),
+    );
+
+    if (unsupportedFile) {
       await logger.warn("validation_failed", {
-        fileName,
+        fileName: unsupportedFile.name,
         reason: "unsupported_extension",
       });
 
@@ -82,11 +95,24 @@ export async function POST(request: Request) {
       );
     }
 
-    const markdown = Buffer.from(await file.arrayBuffer()).toString("utf8");
+    const fileName = files[0].name || "audit.md";
+    const fileNames = files.map((file) => file.name || "audit.md");
+    const markdown = (
+      await Promise.all(
+        files.map(async (file) => {
+          const text = Buffer.from(await file.arrayBuffer()).toString("utf8");
+          return files.length > 1
+            ? `<!-- Source file: ${file.name || "audit.md"} -->\n\n${text}`
+            : text;
+        }),
+      )
+    ).join("\n\n---\n\n");
+
     await logger.info("request_payload_ready", {
       auditType: stringValue(formData.get("auditType")),
       clientName: stringValue(formData.get("clientName")),
       fileName,
+      fileNames,
       markdownBytes: Buffer.byteLength(markdown, "utf8"),
       model: stringValue(formData.get("model")),
       provider,

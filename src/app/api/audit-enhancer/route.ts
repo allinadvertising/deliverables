@@ -139,6 +139,7 @@ export async function POST(request: Request) {
       auditType: stringValue(formData.get("auditType")),
       clientName: stringValue(formData.get("clientName")),
       fileName,
+      fileNames,
       markdown,
       model: selectedModel,
       ownerId: user?.id,

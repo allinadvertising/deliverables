@@ -14,6 +14,7 @@ export type AuditMeta = {
   coverBadge?: string;
   supportingFile: string | null;
   sourceNote: string | null; // Never populated in existing audits : retained for future use
+  sourceFiles?: string[] | null; // Names of the .md files uploaded to create this audit; absent on audits created before this field existed
 };
 
 export type MetricCard = {
@@ -213,13 +214,18 @@ function isAuditMeta(value: unknown): value is AuditMeta {
       "date",
       "supportingFile",
       "sourceNote",
+      "sourceFiles",
     ]) &&
     isNonEmptyString(value.clientName) &&
     isNonEmptyString(value.auditType) &&
     isNonEmptyString(value.date) &&
     (typeof value.supportingFile === "string" ||
       value.supportingFile === null) &&
-    (typeof value.sourceNote === "string" || value.sourceNote === null)
+    (typeof value.sourceNote === "string" || value.sourceNote === null) &&
+    (value.sourceFiles === undefined ||
+      value.sourceFiles === null ||
+      (Array.isArray(value.sourceFiles) &&
+        value.sourceFiles.every(isNonEmptyString)))
   );
 }
 

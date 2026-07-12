@@ -6,6 +6,7 @@ import { AuditFooter } from "./AuditFooter";
 import { BackToTopButton } from "./BackToTopButton";
 import { PrintAuditButton } from "./PrintAuditButton";
 import { AuditReportV2 } from "./AuditReportV2";
+import { AuditSourceFiles } from "./AuditSourceFiles";
 
 type AuditAssemblyProps = {
   content: AuditContent;
@@ -45,6 +46,8 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
           <AuditPrintDocument content={content} />
         )}
       </div>
+
+      <AuditSourceFiles sourceFiles={meta.sourceFiles} />
 
       <AuditFooter
         auditType={meta.auditType}

@@ -20,6 +20,7 @@ export type EnhanceAuditOptions = {
   auditType?: string;
   clientName?: string;
   fileName: string;
+  fileNames?: string[];
   logger?: AuditEnhancerLogger;
   markdown: string;
   model?: string;
@@ -184,6 +185,7 @@ export async function enhanceAuditMarkdown(
       clientName: context.clientName,
       date: context.dateLabel,
       sourceNote: null,
+      sourceFiles: context.sourceFiles,
       supportingFile: context.supportingWorkbookLink || null,
     },
     issues: transformedOutput.issues,
@@ -293,6 +295,10 @@ function buildAuditContext(options: EnhanceAuditOptions) {
     clientName,
     dateLabel,
     fileName: options.fileName,
+    sourceFiles:
+      options.fileNames && options.fileNames.length > 0
+        ? options.fileNames
+        : null,
     header: {
       auditSlug,
       auditType,

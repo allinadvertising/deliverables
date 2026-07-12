@@ -23,7 +23,11 @@
         "auditType": { "type": "string", "minLength": 1 },
         "date": { "type": "string", "minLength": 1 },
         "supportingFile": { "type": ["string", "null"] },
-        "sourceNote": { "type": ["string", "null"] }
+        "sourceNote": { "type": ["string", "null"] },
+        "sourceFiles": {
+          "type": ["array", "null"],
+          "items": { "type": "string", "minLength": 1 }
+        }
       }
     },
     "issues": {

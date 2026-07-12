@@ -159,6 +159,7 @@ export async function POST(request: Request) {
         logPath: logger.filePath,
         model: selectedModel,
         provider: selectedProvider,
+        schemaVersion: 2,
         status: "running",
       },
       { status: 202 },

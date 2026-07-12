@@ -4,7 +4,7 @@ import { supabaseServer } from "@/lib/supabase-server";
 import { createClient } from "@/lib/supabase-middleware";
 import { NavBar } from "@/components/NavBar";
 import { AuditAssembly } from "@/components/audit/AuditAssembly";
-import type { AuditContent } from "@/lib/audit/types";
+import { isAuditContent, type AuditContent } from "@/lib/audit/types";
 
 export const dynamic = "force-dynamic";
 
@@ -62,14 +62,14 @@ export default async function DashboardAuditPage({ params }: Props) {
 
   const content = audit.content as AuditContent | null;
 
-  if (!content || typeof content.meta !== "object") {
+  if (!isAuditContent(content)) {
     notFound();
   }
 
   return (
     <>
       <NavBar />
-      <AuditAssembly content={content as AuditContent} />
+      <AuditAssembly content={content} />
     </>
   );
 }

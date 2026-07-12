@@ -1,5 +1,9 @@
 import { skillContent } from "./skill-content";
 import {
+  isAuditTransformationV2Payload,
+  type AuditContentV2,
+} from "./audit/types";
+import {
   serializeError,
   type AuditEnhancerLogger,
 } from "./audit-enhancer-logs";
@@ -33,6 +37,7 @@ export type EnhanceAuditResult = {
   logPath?: string;
   model: string;
   provider: ProviderId;
+  schemaVersion: 2;
   shareToken?: string;
   title: string;
 };
@@ -137,10 +142,11 @@ export async function enhanceAuditMarkdown(
     skill,
   });
 
-  // Parse AI response as JSON
-  let auditContent: Record<string, unknown>;
+  // Parse and validate the v2 transformation response. Server-owned metadata is
+  // added after validation so model output cannot change routing or ownership.
+  let transformedOutput: unknown;
   try {
-    auditContent = JSON.parse(stripCodeFence(modelOutput));
+    transformedOutput = JSON.parse(stripCodeFence(modelOutput));
   } catch {
     const parseErrorPath = await options.logger?.saveRaw(
       "json-parse-error",
@@ -156,31 +162,40 @@ export async function enhanceAuditMarkdown(
     );
   }
 
-  // Validate basic structure
-  if (
-    typeof auditContent.meta !== "object" ||
-    !auditContent.meta ||
-    typeof auditContent.executiveSummary !== "object" ||
-    !Array.isArray(auditContent.actionItems) ||
-    !Array.isArray(auditContent.findings) ||
-    !Array.isArray(auditContent.solutions)
-  ) {
+  if (!isAuditTransformationV2Payload(transformedOutput)) {
+    const validationErrorPath = await options.logger?.saveRaw(
+      "v2-validation-error",
+      modelOutput,
+    );
     throw new AuditEnhancerError(
-      "AI returned JSON but it is missing required top-level fields (meta, executiveSummary, actionItems, findings, solutions).",
+      "AI returned JSON but it does not match the v2 audit shape (issues, glossary, faq). Every issue must contain what_is_the_issue, why_it_matters, how_we_will_fix_it, and expected_outcome.",
       502,
-      withLogDiagnostics(options.logger, { provider: options.provider }),
+      withLogDiagnostics(options.logger, {
+        provider: options.provider,
+        providerResponsePath: validationErrorPath,
+      }),
     );
   }
 
+  const auditContent: AuditContentV2 = {
+    schemaVersion: 2,
+    meta: {
+      auditType: context.auditType,
+      clientName: context.clientName,
+      date: context.dateLabel,
+      sourceNote: null,
+      supportingFile: context.supportingWorkbookLink || null,
+    },
+    issues: transformedOutput.issues,
+    glossary: transformedOutput.glossary,
+    faq: transformedOutput.faq,
+  };
+
   await options.logger?.info("json_parsed", {
-    actionItems: (auditContent.actionItems as unknown[]).length,
-    faq: Array.isArray(auditContent.faq) ? (auditContent.faq as unknown[]).length : 0,
-    findings: (auditContent.findings as unknown[]).length,
-    glossary: Array.isArray(auditContent.glossary) ? (auditContent.glossary as unknown[]).length : 0,
-    metricCards: Array.isArray((auditContent.executiveSummary as Record<string, unknown>).metricCards)
-      ? ((auditContent.executiveSummary as Record<string, unknown>).metricCards as unknown[]).length
-      : 0,
-    solutions: (auditContent.solutions as unknown[]).length,
+    faq: auditContent.faq.length,
+    glossary: auditContent.glossary.length,
+    issues: auditContent.issues.length,
+    schemaVersion: auditContent.schemaVersion,
   });
 
   // Persist to Supabase
@@ -206,7 +221,7 @@ export async function enhanceAuditMarkdown(
     title: `${context.clientName} - ${context.auditType}`,
     year: Number(context.year),
     month: context.monthSlug,
-    filePath: `${context.header.clientSlug}/${context.year}/${context.monthSlug}/audit.json`,
+    filePath: `${context.header.clientSlug}/${context.year}/${context.monthSlug}/audit-v2.json`,
     fileSize: Buffer.byteLength(JSON.stringify(auditContent), "utf8"),
     ownerId: options.ownerId,
     content: auditContent,
@@ -247,6 +262,7 @@ export async function enhanceAuditMarkdown(
     logPath: options.logger?.filePath,
     model: resolveModel(options.provider, options.model),
     provider: options.provider,
+    schemaVersion: 2,
     title: `${context.clientName} - ${context.auditType}`,
   };
 }
@@ -628,7 +644,7 @@ function buildUserPrompt(
   },
 ) {
   return [
-    "Create a structured JSON audit document for All In Advertising.",
+    "Transform the source markdown into the version 2 audit JSON for All In Advertising.",
     "",
     `Client name: ${options.clientName}`,
     `Audit type: ${options.auditType}`,
@@ -636,10 +652,10 @@ function buildUserPrompt(
     `Quarter label: ${options.quarterLabel}`,
     `Uploaded filename: ${options.fileName}`,
     "",
-    "Return one JSON object matching the AuditContent schema defined in the skill.",
-    "Every finding MUST include a whatThisMeans field with plain-English business impact.",
-    "Priority values must be exactly P0, P1, or P2.",
-    "Owner values must be exactly AIA or Client Dev.",
+    "Return one JSON object matching the v2 model-output schema defined in the skill.",
+    "Each issue must contain exactly four non-empty storytelling fields: what_is_the_issue, why_it_matters, how_we_will_fix_it, and expected_outcome.",
+    "Keep each field distinct and avoid repeating the same fact across fields.",
+    "Include the glossary and FAQ arrays required by the skill.",
     "Use professional, client-facing language. Use hyphens instead of em dashes.",
     "Do not wrap the JSON in markdown fences unless required by the provider.",
     "",

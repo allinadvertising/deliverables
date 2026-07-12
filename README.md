@@ -19,7 +19,7 @@ Legacy HTML files from the previous pipeline remain in `public/` as archive. The
 
 ## Markdown Audit Enhancer
 
-Open `/enhance` to upload a `.md` SEO audit. The `seo-audit-enhancer` skill instructs the AI to output structured JSON matching the `AuditContent` schema. The JSON is validated, stored in Supabase JSONB, and rendered by React components.
+Open `/enhance` to upload a `.md` SEO audit. New submissions use the version 2 storytelling parser: each issue is separated into the problem, why it matters, remediation, and expected outcome. The validated JSON is versioned with `schemaVersion: 2`, stored in Supabase JSONB, and rendered as one vertical report. Existing legacy records remain unchanged and continue to use the tabbed renderer.
 
 ```bash
 OPENAI_API_KEY=...
@@ -163,41 +163,31 @@ deliverables/
 
 ## Componentized Audit Architecture (Completed R1-R9)
 
-The audit rendering pipeline is fully componentized. The AI outputs structured JSON (per `seo-audit-enhancer/SKILL.md`), stored in Supabase JSONB, and rendered by 13 React server components.
+The audit rendering pipeline is fully componentized. The AI outputs structured JSON (per `seo-audit-enhancer/SKILL.md`), stored in Supabase JSONB, and routed to either the v2 vertical renderer or the legacy tabbed renderer.
 
 ### JSON Schema (Key Sections)
 
 ```typescript
-type AuditContent = {
+type AuditContent = AuditContentV2 | LegacyAuditContent;
+
+type AuditContentV2 = {
+  schemaVersion: 2;
   meta: {
     clientName: string; auditType: string; date: string;
-    // coverBadge removed (deprecated May 2026)
-    sourceNote: string | null;       // Never populated in existing audits
+    supportingFile: string | null; sourceNote: string | null;
   };
-  executiveSummary: {
-    items: string[];
-    metricCards: { value: string; label: string; change: string | null }[];
-    severity?: { p0Count: number; p1Count: number; p2Count: number };
-  };
-  actionItems: {
-    priority: "P0" | "P1" | "P2"; title: string; category: string;
-    scope: string; impact: string; secondaryImpact: string | null;
-    owner: "AIA" | "Client Dev";
+  issues: {
+    what_is_the_issue: string;
+    why_it_matters: string;
+    how_we_will_fix_it: string;
+    expected_outcome: string;
   }[];
-  findings: {
-    category: string; priority: "P0" | "P1" | "P2"; title: string;
-    rootCause: string;
-    statistics?: { number: string; description: string }[];
-    whatThisMeans: string;
-    representativeUrls?: string[];
-    impacts?: { label: string; value: string }[];
-  }[];
-  solutions: { category: string; steps: { title: string; description: string }[] }[];
-  beforeAfter: { label: string; before: string; after: string }[];
-  insightBox: string | null;
   glossary: { term: string; definition: string }[];
   faq: { question: string; answer: string }[];
 };
+
+// LegacyAuditContent retains executiveSummary, actionItems, findings,
+// solutions, beforeAfter, insightBox, glossary, and faq for old records.
 ```
 
 ### Component Tree
@@ -205,14 +195,9 @@ type AuditContent = {
 ```
 AuditAssembly
 ├── AuditHeader        ← Cover page (dark gradient)
-├── ExecutiveSummary   ← Metric cards + severity bar
-├── ActionItemsTable   ← Prioritized table
-├── FindingCategoryGroup → FindingCard[]
-├── SolutionSteps      ← Numbered cards
-├── InsightBox         ← Optional callout
-├── BeforeAfterGrid    ← Side-by-side
-├── GlossaryGrid       ← Term cards
-├── FaqSection         ← Q&A block
+├── AuditReportV2      ← Vertical issue stories + Glossary + FAQ
+├── AuditTabs          ← Legacy-only interactive report
+├── AuditPrintDocument ← Legacy-only flat print report
 └── AuditFooter        ← AIA branding
 ```
 
@@ -220,11 +205,11 @@ AuditAssembly
 
 | File | Purpose |
 |------|---------|
-| `src/lib/audit/types.ts` | 18 TypeScript interfaces |
-| `seo-audit-enhancer/schema.json` | JSON Schema for AI validation |
-| `seo-audit-enhancer/SKILL.md` | AI prompt: outputs JSON |
-| `src/components/audit/AuditAssembly.tsx` | Master component |
-| `src/components/audit/*.tsx` | 11 section components |
+| `src/lib/audit/types.ts` | Versioned TypeScript data model and runtime guards |
+| `seo-audit-enhancer/schema.json` | Stored v2 JSON Schema |
+| `seo-audit-enhancer/SKILL.md` | V2 transformation prompt |
+| `src/components/audit/AuditAssembly.tsx` | Version-aware master component |
+| `src/components/audit/AuditReportV2.tsx` | Vertical v2 renderer |
 | `src/components/shared/Badges.tsx` | PriorityBadge, OwnerBadge |
 | `scripts/migrate-audits-to-json.ts` | HTML → JSONB migration (8 audits migrated) |
 | `supabase/migrations/003_add_audit_content.sql` | JSONB column migration |
@@ -255,9 +240,10 @@ Markdown upload → /api/audit-enhancer
 ```
 Markdown upload → /api/audit-enhancer
   → enhanceAuditMarkdown()
-    → AI call (returns JSON per updated SKILL.md)
-    → validate JSON against schema.json
-    → insertAudit() : stores full AuditContent JSON in audits.content JSONB
+    → AI call (returns issues + glossary + faq per SKILL.md)
+    → validate the v2 payload with runtime guards
+    → add trusted metadata + schemaVersion: 2
+    → insertAudit() : stores full AuditContentV2 JSON in audits.content JSONB
     → no file writes, no public/ artifacts
   → Response: { auditId, shareUrl, clientName, auditType }
 ```

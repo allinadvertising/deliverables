@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { supabaseServer } from "@/lib/supabase-server";
 import { AuditAssembly } from "@/components/audit/AuditAssembly";
-import type { AuditContent } from "@/lib/audit/types";
+import { isAuditContent, type AuditContent } from "@/lib/audit/types";
 
 export const dynamic = "force-dynamic";
 
@@ -60,24 +60,11 @@ export default async function PublicAuditPage({ searchParams }: Props) {
 
   const jsonContent = audit.content as AuditContent | null;
 
-  if (!jsonContent || !isValidAuditContent(jsonContent)) {
+  if (!isAuditContent(jsonContent)) {
     return <AuditNotMigrated />;
   }
 
   return <AuditAssembly content={jsonContent} />;
-}
-
-function isValidAuditContent(content: unknown): content is AuditContent {
-  if (!content || typeof content !== "object") return false;
-  const c = content as Record<string, unknown>;
-  return (
-    typeof c.meta === "object" &&
-    c.meta !== null &&
-    typeof c.executiveSummary === "object" &&
-    Array.isArray(c.actionItems) &&
-    Array.isArray(c.findings) &&
-    Array.isArray(c.solutions)
-  );
 }
 
 function AuditNotFound() {

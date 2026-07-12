@@ -66,7 +66,9 @@ deliverables/
 │   │   ├── NavBar.tsx                # "use client" top nav (logo + Dashboard + Enhance links)
 │   │   ├── audit/
 │   │   │   ├── AuditAssembly.tsx     # Server: orchestrates all sections from AuditContent JSON
-│   │   │   ├── AuditTabs.tsx         # "use client" tab bar (Overview/Actions/Findings/etc.)
+│   │   │   ├── AuditReportV2.tsx     # Server: vertical v2 issue narrative + glossary + FAQ
+│   │   │   ├── AuditIssueCardV2.tsx  # Server: four-part v2 issue story
+│   │   │   ├── AuditTabs.tsx         # Legacy-only tab bar (Overview/Actions/Findings/etc.)
 │   │   │   ├── AuditHeader.tsx       # Server: dark-blue cover page
 │   │   │   ├── AuditFooter.tsx       # Server: footer
 │   │   │   ├── AuditPrintDocument.tsx# Server: all sections laid out flat for @media print
@@ -189,39 +191,46 @@ deliverables/
 
 ## Core Data Model: `AuditContent`
 
-Defined in `src/lib/audit/types.ts`. Stored as JSONB in `audits.content`. This is the source of truth for all rendering.
+Defined in `src/lib/audit/types.ts`. Stored as JSONB in `audits.content`. New records use the discriminated v2 shape; records without `schemaVersion: 2` retain the legacy shape and renderer.
 
 ```typescript
-AuditContent {
+type AuditContent = AuditContentV2 | LegacyAuditContent
+
+AuditContentV2 {
+  schemaVersion: 2
   meta: {
-    clientName: string          // "Fossil Age Minerals"
-    auditType: string           // "Technical SEO Audit"
-    date: string                // "May 2026"
-    supportingFile: string|null // URL to Google Sheet / workbook
-    sourceNote: string|null     // Attribution note (never populated in practice)
-    // coverBadge: DEPRECATED May 2026 — do not use
+    clientName: string
+    auditType: string
+    date: string
+    supportingFile: string|null
+    sourceNote: string|null
   }
+  issues: {
+    what_is_the_issue: string
+    why_it_matters: string
+    how_we_will_fix_it: string
+    expected_outcome: string
+  }[]
+  glossary: GlossaryTerm[]
+  faq: FaqItem[]
+}
+
+LegacyAuditContent {
+  meta: AuditMeta
   executiveSummary: {
-    items: string[]             // 3-6 bullet insights
-    metricCards: MetricCard[]   // Exactly 4 or 8: { value, label, change }
-    severity?: {                // P0/P1/P2 counts (optional)
-      p0Count: number
-      p1Count: number
-      p2Count: number
-    }
+    items: string[]
+    metricCards: MetricCard[]
+    severity?: Severity
   }
-  actionItems: ActionItem[]     // { priority, title, category, scope, impact, secondaryImpact, owner }
-  findings: Finding[]           // { category, priority, title, rootCause, statistics?, whatThisMeans, representativeUrls?, impacts? }
-  solutions: SolutionGroup[]    // { category, steps: { title, description }[] }
-  beforeAfter: BeforeAfterPair[]// { label, before, after }
-  insightBox: string|null       // Strategic insight callout (rare)
-  glossary: GlossaryTerm[]      // { term, definition }
-  faq: FaqItem[]                // { question, answer }
+  actionItems: ActionItem[]
+  findings: Finding[]
+  solutions: SolutionGroup[]
+  beforeAfter: BeforeAfterPair[]
+  insightBox: string|null
+  glossary: GlossaryTerm[]
+  faq: FaqItem[]
 }
 ```
-
-**Priority values**: exactly `"P0"` (critical/red), `"P1"` (high/orange), `"P2"` (moderate/yellow).
-**Owner values**: exactly `"AIA"` or `"Client Dev"`.
 
 ---
 
@@ -266,9 +275,10 @@ User at /enhance
         2. Build user prompt with markdown + client/audit context
         3. Call OpenAI Responses API (background mode, polls until complete)
            OR DeepSeek Chat Completions API
-        4. Parse JSON response → validate AuditContent shape
-        5. upsertClient() → insertAudit(content: auditContent)
-        6. updateEnhancementRun(status: "completed", auditId)
+        4. Parse JSON response → validate issues/glossary/faq v2 payload
+        5. Add trusted metadata + schemaVersion: 2
+        6. upsertClient() → insertAudit(content: auditContent)
+        7. updateEnhancementRun(status: "completed", auditId)
   ← client polls GET /api/audit-enhancer/status?runId=xxx every 3s (14-min timeout)
   ← when completed: show success + "View in Dashboard" link
 ```
@@ -308,14 +318,18 @@ Public view (/audit?token=xxx):
 
 ## Render Architecture
 
-`AuditAssembly` is the single entry point for rendering an audit. It receives `AuditContent` and composes:
+`AuditAssembly` is the single entry point for rendering an audit. It branches on `schemaVersion` so existing records are not migrated or rewritten:
 
 ```
 AuditAssembly (server)
   ├── PrintAuditButton          (client — "use client")
   ├── AuditHeader               (server — dark cover page)
   ├── .audit-screen-only
-  │   └── AuditTabs             (client — tab navigation)
+  │   ├── AuditReportV2         (schemaVersion: 2 — vertical narrative)
+  │   │   ├── AuditIssueCardV2[]
+  │   │   ├── GlossaryGrid
+  │   │   └── FaqSection
+  │   └── AuditTabs             (legacy — tab navigation)
   │       ├── InsightBox        (conditionally)
   │       ├── ExecutiveSummary  (overview tab)
   │       ├── ActionItemsTable  (actions tab)
@@ -325,7 +339,8 @@ AuditAssembly (server)
   │       ├── GlossaryGrid      (glossary tab)
   │       └── FaqSection        (faq tab)
   ├── .audit-print-only         (hidden on screen, shown on print)
-  │   └── AuditPrintDocument    (server — same sections, laid out flat)
+  │   ├── AuditReportV2         (v2)
+  │   └── AuditPrintDocument    (legacy — sections laid out flat)
   ├── AuditFooter               (server)
   └── BackToTopButton           (client)
 ```

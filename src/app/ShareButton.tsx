@@ -20,9 +20,10 @@ export default function ShareButton({
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = token
-    ? `${window.location.origin}/audit?token=${token}`
-    : null;
+  const shareUrl =
+    token && typeof window !== "undefined"
+      ? `${window.location.origin}/audit?token=${encodeURIComponent(token)}`
+      : null;
 
   const generate = useCallback(async () => {
     setLoading(true);

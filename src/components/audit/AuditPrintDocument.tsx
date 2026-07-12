@@ -1,4 +1,4 @@
-import type { AuditContent } from "@/lib/audit/types";
+import type { LegacyAuditContent } from "@/lib/audit/types";
 import { ActionItemsTable } from "./ActionItemsTable";
 import { BeforeAfterGrid } from "./BeforeAfterGrid";
 import { ExecutiveSummary } from "./ExecutiveSummary";
@@ -9,7 +9,7 @@ import { InsightBox } from "./InsightBox";
 import { SolutionSteps } from "./SolutionSteps";
 
 type AuditPrintDocumentProps = {
-  content: AuditContent;
+  content: LegacyAuditContent;
 };
 
 export function AuditPrintDocument({ content }: AuditPrintDocumentProps) {

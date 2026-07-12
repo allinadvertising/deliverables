@@ -1,5 +1,5 @@
 import { supabaseServer } from "@/lib/supabase-server";
-import type { AuditContent } from "./types";
+import { isAuditContent, type AuditContent } from "./types";
 
 /**
  * Fetch an audit by its public share token.
@@ -24,7 +24,7 @@ export async function getAuditByToken(token: string): Promise<{
   return {
     id: data.id as string,
     title: data.title as string,
-    content: (data.content as AuditContent) ?? null,
+    content: isAuditContent(data.content) ? data.content : null,
     file_path: data.file_path as string,
     clientName:
       (data.client_name as { name?: string } | null)?.name ??
@@ -47,19 +47,7 @@ export async function getAuditContentByToken(
 
   if (!data?.content) return null;
 
-  const content = data.content as AuditContent;
-
-  // Basic structural validation
-  if (
-    typeof content.meta !== "object" ||
-    !content.meta ||
-    typeof content.executiveSummary !== "object" ||
-    !Array.isArray(content.actionItems)
-  ) {
-    return null;
-  }
-
-  return content;
+  return isAuditContent(data.content) ? data.content : null;
 }
 
 /**
@@ -91,7 +79,7 @@ export async function getAuditById(
   return {
     id: data.id as string,
     title: data.title as string,
-    content: (data.content as AuditContent) ?? null,
+    content: isAuditContent(data.content) ? data.content : null,
     file_path: data.file_path as string,
     clientName:
       (data.client_name as { name?: string } | null)?.name ??

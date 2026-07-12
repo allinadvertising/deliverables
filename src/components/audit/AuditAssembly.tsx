@@ -1,10 +1,11 @@
-import type { AuditContent } from "@/lib/audit/types";
+import { isAuditContentV2, type AuditContent } from "@/lib/audit/types";
 import { AuditHeader } from "./AuditHeader";
 import { AuditPrintDocument } from "./AuditPrintDocument";
 import { AuditTabs } from "./AuditTabs";
 import { AuditFooter } from "./AuditFooter";
 import { BackToTopButton } from "./BackToTopButton";
 import { PrintAuditButton } from "./PrintAuditButton";
+import { AuditReportV2 } from "./AuditReportV2";
 
 type AuditAssemblyProps = {
   content: AuditContent;
@@ -17,6 +18,7 @@ type AuditAssemblyProps = {
 export function AuditAssembly({ content }: AuditAssemblyProps) {
   const { meta } = content;
   const quarter = inferQuarterLabel(meta.date);
+  const isV2 = isAuditContentV2(content);
 
   return (
     <>
@@ -33,11 +35,15 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
       />
 
       <div className="audit-screen-only">
-        <AuditTabs content={content} />
+        {isV2 ? <AuditReportV2 content={content} /> : <AuditTabs content={content} />}
       </div>
 
       <div className="audit-print-only" aria-hidden="true">
-        <AuditPrintDocument content={content} />
+        {isV2 ? (
+          <AuditReportV2 content={content} />
+        ) : (
+          <AuditPrintDocument content={content} />
+        )}
       </div>
 
       <AuditFooter

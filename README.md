@@ -594,7 +594,13 @@ Revise ("Edit" button on an HTML-sourced audit):
 
 **Acceptance criteria:** `MAP.md` reflects the shipped routes/schema; the image-handling policy is written down (even if the answer is "defer," it must be a decision, not a silent gap).
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- Added `AuditMeta.externalRefs?: string[] | null` (same optional/backward-compatible pattern as `sourceFiles`/`sourceType`) and a new `AuditExternalRefsWarning.tsx` component — a collapsed-by-default banner (reusing the `AuditSourceFiles.tsx` `<details>` pattern) shown on the audit page itself, not just the one-time upload confirmation screen, so it's visible every time anyone views the deliverable. Non-blocking, per the plan — upload still succeeds.
+- **Verified with a real fixture built specifically to trigger it**: a tiny HTML file with a genuine external `<link rel=stylesheet>` and external `<script src>`. Uploaded via the pipeline, confirmed the banner rendered with the correct count ("referenced 2 external resources"), and confirmed it expands to list both exact URLs.
+- Image-handling policy written down in `MAP.md`'s Deprecated/Legacy Notes table: `image.src` is only populated from a real `data:`/`http(s)://` URI already in the source, never fabricated; base64 images are **not** extracted to Storage in this pass and round-trip through the model as-is; revisit only if token cost from image-heavy uploads becomes a real problem, with the exact extraction point (the `cleanHtml()` pass) named for whoever picks it up.
+- `MAP.md` updated throughout: routes table, `enhancement_runs` schema (`job_kind`/`instructions`), new "Supabase Storage" section, `AuditContentV3`/`AuditMeta` shape, every new lib/component file, both enhancement pipeline flows (create + revise) as ASCII diagrams matching the doc's existing style, and the render-architecture tree.
+- `npm run build`, `npx tsc --noEmit`, `npx eslint .` (full repo, not just touched files) all clean — same 4 pre-existing warnings as every prior phase, nothing new.
 
 ---
 

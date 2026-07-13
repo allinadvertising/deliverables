@@ -9,8 +9,9 @@
 
 Internal portal for **All In Advertising** staff to:
 1. Upload raw `.md` SEO audit files and convert them to structured JSON via an AI pipeline (OpenAI or DeepSeek).
-2. Manage the resulting audit deliverables: view, share, edit, and delete.
-3. Share audits with clients via an unguessable token URL — no client login required.
+2. Upload self-contained `.html` deliverables (any tool's export) and flatten them into the same on-brand component design via an LLM pipeline that produces a `blocks[]` array (schemaVersion 3) instead of arbitrary markup.
+3. Manage the resulting audit deliverables: view, share, edit (or, for HTML-sourced audits, re-run the LLM against the current content with new instructions instead of starting over), and delete.
+4. Share audits with clients via an unguessable token URL — no client login required.
 
 ---
 
@@ -39,9 +40,10 @@ deliverables/
 │   │   ├── page.tsx                  # Dashboard (/) — lists all audits, auth-gated
 │   │   ├── globals.css               # Tailwind v4 import + audit design system CSS classes
 │   │   ├── robots.ts                 # robots.txt: disallows /audit, /enhance, /api
+│   │   ├── AuditList.tsx             # "use client" — dashboard table + All/Markdown/HTML/Legacy filter
 │   │   ├── ShareButton.tsx           # "use client" — share token modal
 │   │   ├── DeleteAuditButton.tsx     # "use client" — delete with confirm dialog
-│   │   ├── EditAuditButton.tsx       # "use client" — edit supporting workbook link modal
+│   │   ├── EditAuditButton.tsx       # "use client" — branches on sourceType: workbook-link modal (markdown/legacy) or revise modal (html)
 │   │   ├── login/
 │   │   │   ├── page.tsx              # Login form (email + password, Supabase auth)
 │   │   │   └── loading.tsx
@@ -53,13 +55,18 @@ deliverables/
 │   │   │   └── page.tsx              # Authenticated viewer (/dashboard/audits/:id)
 │   │   ├── enhance/
 │   │   │   ├── page.tsx              # Enhance page shell (server component)
-│   │   │   └── EnhanceAuditForm.tsx  # "use client" — upload + poll UI
+│   │   │   ├── EnhanceSourceTabs.tsx # "use client" — Markdown/HTML tab toggle
+│   │   │   ├── EnhanceAuditForm.tsx  # "use client" — markdown upload + poll UI
+│   │   │   └── EnhanceHtmlForm.tsx   # "use client" — HTML upload + collapsed "extra instructions" dropdown + poll UI
 │   │   └── api/
 │   │       ├── audits/route.ts       # PATCH (edit workbook link), DELETE audit
 │   │       ├── share-token/route.ts  # POST/DELETE/PUT share token management
-│   │       └── audit-enhancer/
-│   │           ├── route.ts          # POST: trigger AI job (202 + jobId)
-│   │           └── status/route.ts   # GET: poll job status by runId
+│   │       ├── audit-enhancer/
+│   │       │   ├── route.ts          # POST: trigger markdown AI job (202 + jobId)
+│   │       │   └── status/route.ts   # GET: poll job status by runId — job-kind-agnostic, also used by the HTML pipeline
+│   │       └── html-enhancer/
+│   │           ├── route.ts          # POST: trigger HTML flattening AI job (202 + jobId)
+│   │           └── revise/route.ts   # POST: re-LLM an existing HTML-sourced audit with new instructions (auth required)
 │   ├── components/
 │   │   ├── AuthProvider.tsx          # "use client" React context: session, user, signOut
 │   │   ├── AuthHeader.tsx            # "use client" sign-in/out button in nav
@@ -68,6 +75,10 @@ deliverables/
 │   │   │   ├── AuditAssembly.tsx     # Server: orchestrates all sections from AuditContent JSON
 │   │   │   ├── AuditReportV2.tsx     # Server: vertical v2 issue narrative + glossary + FAQ
 │   │   │   ├── AuditIssueCardV2.tsx  # Server: four-part v2 issue story
+│   │   │   ├── AuditReportV3.tsx     # Server: v3 block renderer — groups blocks[] into .audit-page sections at each level-2 heading
+│   │   │   ├── HeadingBlock.tsx / ParagraphBlock.tsx / ListBlock.tsx / TableBlock.tsx / CalloutBlock.tsx / ImageBlock.tsx / QuoteBlock.tsx # Server: v3 block renderers (glossary/faq blocks delegate to GlossaryGrid/FaqSection directly)
+│   │   │   ├── AuditExternalRefsWarning.tsx # Server: collapsed warning when a v3 upload wasn't fully self-contained
+│   │   │   ├── AuditSourceFiles.tsx  # Server: collapsed list of source .md file names (v2 only)
 │   │   │   ├── AuditTabs.tsx         # Legacy-only tab bar (Overview/Actions/Findings/etc.)
 │   │   │   ├── AuditHeader.tsx       # Server: dark-blue cover page
 │   │   │   ├── AuditFooter.tsx       # Server: footer
@@ -87,19 +98,26 @@ deliverables/
 │   │   │   └── InsightBox.tsx        # Strategic insight callout (optional; Pimp My EV)
 │   │   └── shared/
 │   │       ├── BrandLogo.tsx         # SVG logo (normal + inverted prop)
-│   │       └── Badges.tsx            # Priority badge (P0/P1/P2) with color coding
+│   │       ├── Badges.tsx            # Priority badge (P0/P1/P2), Owner badge, SourceTypeBadge (legacy/markdown/html)
+│   │       └── EnhanceLoadingStatus.tsx # "use client" — shared polling-in-progress UI for both upload forms and the revise modal
 │   ├── lib/
 │   │   ├── supabase.ts               # Browser Supabase client (singleton via globalThis)
 │   │   ├── supabase-server.ts        # Server Supabase client (service role key — bypasses RLS)
 │   │   ├── supabase-middleware.ts    # Middleware/server-component client (cookie session)
+│   │   ├── storage.ts                # Supabase Storage helpers: uploadSourceHtml/getSourceHtml (private `audit-source-html` bucket)
 │   │   ├── db.ts                     # All Supabase CRUD functions (see DB Functions below)
-│   │   ├── db-types.ts               # Raw DB row types + AuditDisplay display type
+│   │   ├── db-types.ts               # Raw DB row types + AuditDisplay display type + AuditSourceType
 │   │   ├── audit/
-│   │   │   ├── types.ts              # AuditContent schema types (the full document model)
+│   │   │   ├── types.ts              # AuditContent schema types (v1 legacy, v2, and v3 block model)
 │   │   │   └── queries.ts            # getAuditByToken, getAuditContentByToken, getAuditById
-│   │   ├── audit-enhancer.ts         # Core AI logic: build prompts, call providers, persist
-│   │   ├── audit-enhancer-logs.ts    # File-based JSONL logger with secret redaction
-│   │   └── skill-content.ts          # Auto-generated: SKILL.md embedded as a string (AI prompt)
+│   │   ├── ai-provider-client.ts     # Shared OpenAI/DeepSeek calling engine (callModel, resolveModel, polling, AuditEnhancerError) — used by both audit-enhancer.ts and html-enhancer.ts
+│   │   ├── text-utils.ts             # Shared generic helpers: normalizeText/slugify/titleCase/stripExtension/normalizeHttpUrl/inferDateFromText
+│   │   ├── enhance-client.ts         # Shared client-side polling/parsing helpers used by every upload form + the revise modal
+│   │   ├── audit-enhancer.ts         # Markdown pipeline: build prompts, call the shared provider client, persist schemaVersion 2
+│   │   ├── html-enhancer.ts          # HTML pipeline: cheerio-clean, call the shared provider client, persist schemaVersion 3; also reviseHtmlDeliverable() for the re-LLM edit flow
+│   │   ├── audit-enhancer-logs.ts    # File-based JSONL logger with secret redaction (shared by both pipelines)
+│   │   ├── skill-content.ts          # Auto-generated: SKILL.md embedded as a string (markdown AI prompt)
+│   │   └── html-skill-content.ts     # Condensed runtime copy of HTML_SKILL.md (HTML AI prompt, includes Revision Mode)
 │   └── proxy.ts                      # Next.js middleware: auth gate for /, /enhance, /login
 ├── public/
 │   └── all-in-advertising-logo.svg   # Brand logo (referenced by BrandLogo.tsx and NavBar)
@@ -123,8 +141,10 @@ deliverables/
 | `/enhance` | Required | Upload markdown → AI enhancement |
 | `/audit?token=xxx` | None (public) | Client-facing audit viewer via share token |
 | `/dashboard/audits/:id` | Required | Staff audit viewer by audit ID |
-| `POST /api/audit-enhancer` | Required | Start AI enhancement job |
-| `GET /api/audit-enhancer/status?runId=xxx` | None | Poll enhancement job status |
+| `POST /api/audit-enhancer` | Required | Start markdown AI enhancement job |
+| `GET /api/audit-enhancer/status?runId=xxx` | None | Poll enhancement job status (job-kind-agnostic — used by markdown, HTML, and revise jobs) |
+| `POST /api/html-enhancer` | Required | Start HTML flattening AI job |
+| `POST /api/html-enhancer/revise` | Required | Re-LLM an existing HTML-sourced audit's content with new instructions |
 | `PATCH /api/audits` | Required | Update supporting workbook link |
 | `DELETE /api/audits` | Required | Delete an audit |
 | `POST /api/share-token` | Required | Generate share token |
@@ -177,15 +197,23 @@ deliverables/
 | Column | Type | Notes |
 |---|---|---|
 | `id` | uuid PK | |
-| `audit_id` | uuid FK → audits nullable | null until job completes |
+| `audit_id` | uuid FK → audits nullable | null until job completes for `create` jobs; set immediately for `revise` jobs (the audit already exists) |
 | `provider` | text | `"openai"` or `"deepseek"` |
 | `model` | text | e.g. `"gpt-5"` |
 | `status` | text | `"pending"` \| `"running"` \| `"completed"` \| `"failed"` |
 | `log_id` | text nullable | Logger ID for JSONL file lookup |
 | `output_path` | text nullable | (unused currently) |
 | `error_message` | text nullable | |
+| `job_kind` | text | `"create"` (default) or `"revise"` — added by migration `004_add_html_revision_support.sql` |
+| `instructions` | text nullable | The edit instructions for a `revise` job; null for `create` jobs |
 | `created_at` | timestamptz | |
 | `completed_at` | timestamptz nullable | |
+
+### Supabase Storage
+
+| Bucket | Access | Purpose |
+|---|---|---|
+| `audit-source-html` | Private, service-role only (no client-side access, no public policies) | Original self-contained HTML uploads, keyed by `enhancement_runs.id`. Referenced from `audits.content.meta.sourceHtmlPath`. Read back by the re-LLM revise flow to ground edits in the true source. |
 
 ---
 
@@ -194,17 +222,25 @@ deliverables/
 Defined in `src/lib/audit/types.ts`. Stored as JSONB in `audits.content`. New records use the discriminated v2 shape; records without `schemaVersion: 2` retain the legacy shape and renderer.
 
 ```typescript
-type AuditContent = AuditContentV2 | LegacyAuditContent
+type AuditContent = AuditContentV2 | AuditContentV3 | LegacyAuditContent
+
+// meta is shared across all three shapes; sourceFiles/sourceType/sourceHtmlPath/
+// externalRefs are all optional so legacy and v2 records validate unchanged.
+type AuditMeta = {
+  clientName: string
+  auditType: string
+  date: string
+  supportingFile: string|null
+  sourceNote: string|null
+  sourceFiles?: string[]|null       // v2: uploaded .md file names
+  sourceType?: "markdown"|"html"    // absent = legacy
+  sourceHtmlPath?: string|null      // v3: Supabase Storage object path for the original upload
+  externalRefs?: string[]|null      // v3: external <script src>/<link stylesheet> found in the upload
+}
 
 AuditContentV2 {
   schemaVersion: 2
-  meta: {
-    clientName: string
-    auditType: string
-    date: string
-    supportingFile: string|null
-    sourceNote: string|null
-  }
+  meta: AuditMeta
   issues: {
     what_is_the_issue: string
     why_it_matters: string
@@ -213,6 +249,16 @@ AuditContentV2 {
   }[]
   glossary: GlossaryTerm[]
   faq: FaqItem[]
+}
+
+// Flattened HTML deliverable content. An ordered array of typed blocks
+// instead of a fixed shape, since an HTML upload can be any deliverable
+// type, not just an SEO issue list.
+AuditContentV3 {
+  schemaVersion: 3
+  meta: AuditMeta   // sourceType is always "html" here
+  blocks: ContentBlock[]  // heading | paragraph | stat_cards | list | table
+                          // | callout | image | quote | glossary | faq
 }
 
 LegacyAuditContent {
@@ -243,7 +289,9 @@ LegacyAuditContent {
 | `upsertClient({ slug, name })` | Insert or update a client record; returns `clientId` |
 | `insertAudit({ clientId, auditType, title, year, month, filePath, fileSize, ownerId?, content? })` | Insert new audit row; returns `auditId` |
 | `deleteAuditByFilePath(filePath)` | Delete audit by file_path (legacy use) |
-| `insertEnhancementRun(params)` | Track new AI enhancement job |
+| `getAuditContent(auditId)` | Fetch `{ content, ownerId }` for an audit — used by the revise flow and the workbook-link PATCH |
+| `updateAuditContent(auditId, content)` | Overwrite an audit's `content` JSONB in place — used by the revise flow |
+| `insertEnhancementRun(params)` | Track new AI enhancement job; `jobKind` defaults to `"create"`, pass `"revise"` + `instructions` for edit jobs |
 | `getEnhancementRun(id)` | Fetch enhancement job with joined audit + client |
 | `updateEnhancementRun(id, params)` | Update job status, auditId, outputPath, errorMessage |
 
@@ -254,33 +302,72 @@ LegacyAuditContent {
 | `getAuditContentByToken(token)` | Fetch and validate AuditContent JSON by token |
 | `getAuditById(id, userId)` | Fetch audit for staff viewer; enforces ownership |
 
+### `src/lib/ai-provider-client.ts`
+| Function | Purpose |
+|---|---|
+| `callModel({ provider, model, systemPrompt, userPrompt, logger })` | Shared OpenAI/DeepSeek calling engine — request, background polling, timeout/error handling. Used by both `audit-enhancer.ts` and `html-enhancer.ts`; each builds its own prompts and passes them in. |
+| `resolveModel(provider, selectedModel?)` | Resolve model name with env var fallback |
+
 ### `src/lib/audit-enhancer.ts`
 | Function | Purpose |
 |---|---|
-| `enhanceAuditMarkdown(options)` | Full pipeline: prompt AI → parse JSON → upsert client → insert audit |
-| `resolveModel(provider, selectedModel?)` | Resolve model name with env var fallback |
+| `enhanceAuditMarkdown(options)` | Markdown pipeline: build prompts → `callModel` → parse JSON → validate v2 payload → upsert client → insert audit |
+
+### `src/lib/html-enhancer.ts`
+| Function | Purpose |
+|---|---|
+| `enhanceHtmlDeliverable(options)` | HTML create pipeline: cheerio-clean (strip script/style/event handlers, collect external refs) → upload original to Storage → `callModel` → validate v3 `blocks[]` payload → upsert client → insert audit |
+| `reviseHtmlDeliverable(options)` | Re-LLM edit pipeline: re-fetch + re-validate the audit's current v3 content, fetch the original HTML back from Storage, `callModel` in Revision Mode with current blocks + original HTML + instructions, validate, overwrite `content` in place |
 
 ---
 
 ## Data Flow: Enhancement Pipeline
 
 ```
-User at /enhance
-  → uploads .md file + optional clientName, auditType, supportingWorkbookLink
+Markdown create (User at /enhance, Markdown tab):
+  → uploads .md file(s) + optional clientName, auditType, supportingWorkbookLink
   → POST /api/audit-enhancer (multipart/form-data)
-    → inserts enhancement_run (status: "running")
+    → inserts enhancement_run (status: "running", job_kind: "create")
     → returns 202 { jobId, status: "running" }
     → after() background job starts:
         1. Read skill-content.ts (embedded SKILL.md) as system prompt
         2. Build user prompt with markdown + client/audit context
-        3. Call OpenAI Responses API (background mode, polls until complete)
-           OR DeepSeek Chat Completions API
+        3. callModel() → OpenAI Responses API (background mode) or DeepSeek
         4. Parse JSON response → validate issues/glossary/faq v2 payload
         5. Add trusted metadata + schemaVersion: 2
         6. upsertClient() → insertAudit(content: auditContent)
         7. updateEnhancementRun(status: "completed", auditId)
   ← client polls GET /api/audit-enhancer/status?runId=xxx every 3s (14-min timeout)
   ← when completed: show success + "View in Dashboard" link
+
+HTML create (User at /enhance, HTML tab):
+  → uploads one self-contained .html file + optional clientName/auditType/
+    supportingWorkbookLink + optional "extra instructions" (collapsed dropdown)
+  → POST /api/html-enhancer (multipart/form-data)
+    → inserts enhancement_run (status: "running", job_kind: "create")
+    → returns 202 { jobId, status: "running" }
+    → after() background job starts:
+        1. cleanHtml(): cheerio strips <script>/<style>/<iframe>/event handlers,
+           collects external <script src>/<link stylesheet> into externalRefs
+        2. uploadSourceHtml() → Supabase Storage (audit-source-html bucket)
+        3. callModel() with html-skill-content.ts as system prompt
+        4. Parse JSON response → validate blocks[] v3 payload
+        5. Add trusted metadata (schemaVersion: 3, sourceType: "html",
+           sourceHtmlPath, externalRefs) → upsertClient() → insertAudit()
+        6. updateEnhancementRun(status: "completed", auditId)
+  ← client polls the same /api/audit-enhancer/status endpoint (job-kind-agnostic)
+
+HTML revise ("Edit" button on an HTML-sourced audit → Revise Deliverable modal):
+  → { auditId, instructions } → POST /api/html-enhancer/revise (auth required)
+    → auth + ownership check, validate the audit is schemaVersion 3
+    → inserts enhancement_run (audit_id set immediately, job_kind: "revise",
+      instructions stored for the audit trail)
+    → after() background job: reviseHtmlDeliverable() re-fetches the audit's
+      current content, fetches the original HTML back from Storage, calls
+      callModel() in Revision Mode (current blocks + original HTML +
+      instructions → updated blocks, preserving everything not asked to change),
+      overwrites content in place (same auditId, no new row)
+  ← client polls the same status endpoint, then reloads on completion
 ```
 
 ---
@@ -324,11 +411,16 @@ Public view (/audit?token=xxx):
 AuditAssembly (server)
   ├── PrintAuditButton          (client — "use client")
   ├── AuditHeader               (server — dark cover page)
+  ├── AuditExternalRefsWarning  (v3 only — collapsed, shown when the upload wasn't fully self-contained)
   ├── .audit-screen-only
   │   ├── AuditReportV2         (schemaVersion: 2 — vertical narrative)
   │   │   ├── AuditIssueCardV2[]
   │   │   ├── GlossaryGrid
   │   │   └── FaqSection
+  │   ├── AuditReportV3         (schemaVersion: 3 — flattened HTML deliverable)
+  │   │   ├── groups blocks[] into .audit-page sections at each level-2 heading
+  │   │   ├── HeadingBlock / ParagraphBlock / ListBlock / TableBlock / CalloutBlock / ImageBlock / QuoteBlock
+  │   │   └── glossary/faq blocks delegate straight to GlossaryGrid/FaqSection
   │   └── AuditTabs             (legacy — tab navigation)
   │       ├── InsightBox        (conditionally)
   │       ├── ExecutiveSummary  (overview tab)
@@ -340,7 +432,9 @@ AuditAssembly (server)
   │       └── FaqSection        (faq tab)
   ├── .audit-print-only         (hidden on screen, shown on print)
   │   ├── AuditReportV2         (v2)
+  │   ├── AuditReportV3         (v3 — same component serves screen and print, like v2)
   │   └── AuditPrintDocument    (legacy — sections laid out flat)
+  ├── AuditSourceFiles          (v2 only — collapsed list of uploaded .md file names)
   ├── AuditFooter               (server)
   └── BackToTopButton           (client)
 ```
@@ -443,8 +537,10 @@ Log entries are auto-redacted: API keys, Bearer tokens, cookie values. Raw AI re
 |---|---|---|
 | `coverBadge` in AuditMeta | Deprecated May 2026 | Field in types.ts but ignored by rendering engine |
 | `sourceNote` in AuditMeta | Future use | Never populated in existing audits |
-| HTML file pipeline | Deprecated | Audits were previously stored as static HTML in `public/`; now all content is JSONB in Supabase |
+| HTML file pipeline (legacy, pre-2026) | Deprecated | Audits were previously stored as static HTML in `public/`; now all content is JSONB in Supabase. Not to be confused with the current self-contained HTML **upload/import** feature (`html-enhancer.ts`), which is a different, active feature that also happens to involve HTML. |
 | `deleteAuditByFilePath()` | Legacy | Used for old file-path based deletion; prefer deleting by ID |
+| `image` block `src` in v3 content | Policy decision, not a gap | Only populated when the model finds a real `data:` or `http(s)://` URI in the source HTML — never fabricated. Large embedded base64 images are **not** currently extracted to Storage and referenced by URL instead; they round-trip through the model as-is. If token cost from image-heavy uploads becomes a problem, revisit by extracting `<img>` data URIs to Storage during the `cleanHtml()` pass in `html-enhancer.ts` and rewriting `image.src` to point at the stored copy. |
+| Revision-history viewer | Out of scope, not a gap | `enhancement_runs` retains every HTML revision's instructions (`job_kind: "revise"`) for audit-trail purposes, but the dashboard only ever shows the current `content` — there is no diff/history browser UI. Add one only if separately requested. |
 
 ---
 

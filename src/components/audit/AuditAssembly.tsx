@@ -12,6 +12,7 @@ import { PrintAuditButton } from "./PrintAuditButton";
 import { AuditReportV2 } from "./AuditReportV2";
 import { AuditReportV3 } from "./AuditReportV3";
 import { AuditSourceFiles } from "./AuditSourceFiles";
+import { AuditExternalRefsWarning } from "./AuditExternalRefsWarning";
 
 type AuditAssemblyProps = {
   content: AuditContent;
@@ -40,6 +41,10 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
         quarter={quarter}
         supportingWorkbookLink={meta.supportingFile ?? undefined}
       />
+
+      {isV3 ? (
+        <AuditExternalRefsWarning externalRefs={meta.externalRefs} />
+      ) : null}
 
       <div className="audit-screen-only">
         {isV2 ? (

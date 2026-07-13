@@ -17,6 +17,7 @@ export type AuditMeta = {
   sourceFiles?: string[] | null; // Names of the .md files uploaded to create this audit; absent on audits created before this field existed
   sourceType?: "markdown" | "html"; // Absent = legacy/markdown-era record. "html" marks schemaVersion 3 documents.
   sourceHtmlPath?: string | null; // Supabase Storage object path for the original self-contained HTML upload (schemaVersion 3 only)
+  externalRefs?: string[] | null; // External <script src>/<link rel=stylesheet href> URLs found in the source HTML upload (schemaVersion 3 only) - the upload wasn't fully self-contained
 };
 
 export type MetricCard = {
@@ -272,6 +273,7 @@ function isAuditMeta(value: unknown): value is AuditMeta {
       "sourceFiles",
       "sourceType",
       "sourceHtmlPath",
+      "externalRefs",
     ]) &&
     isNonEmptyString(value.clientName) &&
     isNonEmptyString(value.auditType) &&
@@ -288,7 +290,11 @@ function isAuditMeta(value: unknown): value is AuditMeta {
       value.sourceType === "html") &&
     (value.sourceHtmlPath === undefined ||
       value.sourceHtmlPath === null ||
-      typeof value.sourceHtmlPath === "string")
+      typeof value.sourceHtmlPath === "string") &&
+    (value.externalRefs === undefined ||
+      value.externalRefs === null ||
+      (Array.isArray(value.externalRefs) &&
+        value.externalRefs.every(isNonEmptyString)))
   );
 }
 

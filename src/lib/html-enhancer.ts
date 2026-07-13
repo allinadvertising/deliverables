@@ -169,6 +169,7 @@ export async function enhanceHtmlDeliverable(
       auditType: context.auditType,
       clientName: context.clientName,
       date: context.dateLabel,
+      externalRefs: cleaned.externalRefs.length > 0 ? cleaned.externalRefs : null,
       sourceHtmlPath,
       sourceNote: null,
       sourceType: "html",

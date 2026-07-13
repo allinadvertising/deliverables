@@ -521,7 +521,12 @@ Revise ("Edit" button on an HTML-sourced audit):
 
 **Acceptance criteria:** a `schemaVersion: 3` document with at least one of every block type renders correctly on `/dashboard/audits/:id`, uses only existing brand CSS classes/tokens, and prints cleanly via the existing `PrintAuditButton`.
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- Built all seven new block components plus `AuditReportV3.tsx`, which groups the flat `blocks[]` array into `.audit-page` sections at each level-2 heading (matching how every other section in the portal is presented) and breaks `glossary`/`faq` blocks out into the existing `GlossaryGrid`/`FaqSection` components directly, since those already own their own `.audit-page` wrapper. `AuditAssembly.tsx`'s placeholder branch from Phase H0 is now the real renderer.
+- Verified visually in the browser against the real PoC audit kept from Phase H1 (163 blocks): KPI stat-card grid, the executive-summary paragraph, ordered/unordered lists, success/warning callouts, and a 10-row data table all render pixel-consistent with the rest of the portal's design system, through to the shared footer. One cosmetic nit observed and left as-is (not a code bug): one source sub-table with no real header row came back with empty-string headers, rendering as a blank blue header bar — a model output-quality nuance, not a schema or rendering defect, worth keeping an eye on but not worth guarding against speculatively.
+- Print path (`.audit-print-only`) uses the identical `AuditReportV3` component and the same existing `.audit-page`/`.audit-table` print CSS rules already exercised by v2 — correct by construction, not separately verified in an actual print preview.
+- `npm run build`, `npx tsc --noEmit`, `npx eslint` all clean.
 
 ---
 

@@ -10,6 +10,7 @@ import { AuditFooter } from "./AuditFooter";
 import { BackToTopButton } from "./BackToTopButton";
 import { PrintAuditButton } from "./PrintAuditButton";
 import { AuditReportV2 } from "./AuditReportV2";
+import { AuditReportV3 } from "./AuditReportV3";
 import { AuditSourceFiles } from "./AuditSourceFiles";
 
 type AuditAssemblyProps = {
@@ -44,7 +45,7 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
         {isV2 ? (
           <AuditReportV2 content={content} />
         ) : isV3 ? (
-          <AuditReportV3Placeholder />
+          <AuditReportV3 content={content} />
         ) : (
           <AuditTabs content={content} />
         )}
@@ -54,7 +55,7 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
         {isV2 ? (
           <AuditReportV2 content={content} />
         ) : isV3 ? (
-          <AuditReportV3Placeholder />
+          <AuditReportV3 content={content} />
         ) : (
           <AuditPrintDocument content={content} />
         )}
@@ -70,16 +71,6 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
 
       <BackToTopButton />
     </>
-  );
-}
-
-// Temporary stand-in for schemaVersion 3 (HTML-sourced) documents.
-// Replaced by the real block-renderer tree in Future Integrations Phase H2.
-function AuditReportV3Placeholder() {
-  return (
-    <div className="audit-page mx-auto max-w-[1160px] px-4 py-10 text-center text-[#65718a] sm:px-0">
-      HTML-sourced deliverable rendering is not implemented yet.
-    </div>
   );
 }
 

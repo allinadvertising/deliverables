@@ -364,7 +364,7 @@ All phases are sequential : each depends on the previous.
 
 ### Self-Contained HTML Deliverable Ingestion
 
-**Status: 🟡 Planned — no phase started** (plan drafted 2026-07-13)
+**Status: ✅ Shipped — all 8 phases (H0–H7) complete** (plan drafted 2026-07-13, built and verified same day)
 
 **Goal:** Let the team upload a self-contained HTML file (one file, inline styles, embedded/data-URI assets — e.g. an exported Google Doc, Notion page, Canva page, or ChatGPT canvas) and have it converted into the same componentized, on-brand presentation every other deliverable uses, instead of publishing arbitrary third-party markup as-is. Uses an LLM transformation pipeline (mirroring the existing Markdown enhancer) rather than hand-written DOM heuristics, because arbitrary uploaded HTML is too structurally inconsistent for fixed parsing rules to hold up. The upload form exposes a collapsed-by-default "extra instructions" field. A dedicated "Edit" action lets the team re-run the LLM against the *current* structured content plus new instructions — a real revision, not a from-scratch regeneration.
 
@@ -614,7 +614,18 @@ Revise ("Edit" button on an HTML-sourced audit):
 
 **Acceptance criteria:** all of the above pass manually; no regression in the existing Markdown flow.
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- **Real HTML sample coverage:** one genuine real-world sample was available for this build — `iTrainK9-google-ads-audit-2026-04-27 (1).html`, a dense dark-themed Google Ads dashboard (tabs, KPI rows, an SVG gauge, pills, 10+ data tables) — used across Phases H1, H2, H3, H5, and here, including two live re-LLM revisions. It rendered on-brand every time. Two additional small synthetic fixtures were built specifically to exercise guardrails a single real sample couldn't reach on its own: a non-self-contained file (external `<script src>`/`<link stylesheet>`, Phase H6) and an owned file for the cross-owner RLS test below. The plan's aspiration of "2-3 real samples from different tools" wasn't met — only one real deliverable was available in this environment; the synthetic fixtures cover the *code paths*, not the *stylistic diversity*, a genuinely different HTML export (Notion, Canva, ChatGPT canvas, etc.) would exercise. Recommend running one before this ships to real users.
+- Dashboard HTML filter and source badges: verified in Phase H4 against real data (the PoC audit showed a gold "HTML" badge; the Markdown filter correctly excluded it).
+- Full create → dashboard → edit-with-instructions → re-render loop: verified in Phase H5 with two live revisions (an insertion landing at the exact requested position, then a removal restoring the exact original block count) plus visual confirmation in the browser both times.
+- **Storage contains the original file:** confirmed by downloading `sourceHtmlPath` directly from the `audit-source-html` bucket and finding the original page title inside it (75,666 bytes). Also confirmed the bucket is genuinely private — an anonymous (unauthenticated, anon-key) download attempt was rejected with "Object not found."
+- **RLS / ownership blocks cross-owner access to the revise endpoint:** this required a real test, not just code review, since the API key model here is service-role-based rather than Postgres RLS on `enhancement_runs`. Created a second QA user, gave user A an audit with a real `owner_id` (previous test audits had all been created via unauthenticated `curl`, which left `owner_id` null — "legacy unowned," not a real ownership test), logged in as user B in a separate browser tab, and confirmed: (1) user B's dashboard doesn't even list user A's owned audit, and (2) directly calling `/api/html-enhancer/revise` against it as user B returns `403 "You can only edit your own audits."` Also confirmed unauthenticated requests get `401`.
+- Markdown pipeline regression: re-verified unchanged in Phase H5 (fresh markdown upload, dashboard badge, and the unchanged workbook-link Edit modal all confirmed in the same session as the HTML-side checks).
+- All QA scaffolding (two test Supabase Auth users, every synthetic test audit) deleted after use. The real PoC audit is left in the database as a working example.
+- `npm run build`, `npx tsc --noEmit`, `npx eslint .` all clean throughout every phase of this build, re-confirmed here as the final check.
+
+**Feature status: all 8 phases (H0–H7) complete as of 2026-07-13.** Self-contained HTML deliverable ingestion is live: `/enhance` → HTML tab → upload → flattened on-brand deliverable → dashboard (filterable, badged) → "Revise Deliverable" for incremental re-LLM edits.
 
 ---
 

@@ -1,4 +1,8 @@
-import { isAuditContentV2, type AuditContent } from "@/lib/audit/types";
+import {
+  isAuditContentV2,
+  isAuditContentV3,
+  type AuditContent,
+} from "@/lib/audit/types";
 import { AuditHeader } from "./AuditHeader";
 import { AuditPrintDocument } from "./AuditPrintDocument";
 import { AuditTabs } from "./AuditTabs";
@@ -20,6 +24,7 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
   const { meta } = content;
   const quarter = inferQuarterLabel(meta.date);
   const isV2 = isAuditContentV2(content);
+  const isV3 = isAuditContentV3(content);
 
   return (
     <>
@@ -36,12 +41,20 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
       />
 
       <div className="audit-screen-only">
-        {isV2 ? <AuditReportV2 content={content} /> : <AuditTabs content={content} />}
+        {isV2 ? (
+          <AuditReportV2 content={content} />
+        ) : isV3 ? (
+          <AuditReportV3Placeholder />
+        ) : (
+          <AuditTabs content={content} />
+        )}
       </div>
 
       <div className="audit-print-only" aria-hidden="true">
         {isV2 ? (
           <AuditReportV2 content={content} />
+        ) : isV3 ? (
+          <AuditReportV3Placeholder />
         ) : (
           <AuditPrintDocument content={content} />
         )}
@@ -57,6 +70,16 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
 
       <BackToTopButton />
     </>
+  );
+}
+
+// Temporary stand-in for schemaVersion 3 (HTML-sourced) documents.
+// Replaced by the real block-renderer tree in Future Integrations Phase H2.
+function AuditReportV3Placeholder() {
+  return (
+    <div className="audit-page mx-auto max-w-[1160px] px-4 py-10 text-center text-[#65718a] sm:px-0">
+      HTML-sourced deliverable rendering is not implemented yet.
+    </div>
   );
 }
 

@@ -15,6 +15,8 @@ export type AuditMeta = {
   supportingFile: string | null;
   sourceNote: string | null; // Never populated in existing audits : retained for future use
   sourceFiles?: string[] | null; // Names of the .md files uploaded to create this audit; absent on audits created before this field existed
+  sourceType?: "markdown" | "html"; // Absent = legacy/markdown-era record. "html" marks schemaVersion 3 documents.
+  sourceHtmlPath?: string | null; // Supabase Storage object path for the original self-contained HTML upload (schemaVersion 3 only)
 };
 
 export type MetricCard = {
@@ -124,7 +126,38 @@ export type AuditContentV2 = AuditTransformationV2Payload & {
   meta: AuditMeta;
 };
 
-export type AuditContent = LegacyAuditContent | AuditContentV2;
+// ─── Version 3: block-based content (HTML deliverable ingestion) ──────────
+//
+// Self-contained HTML uploads may be any deliverable type, not just an SEO
+// issue list, so v3 documents are an ordered array of typed content blocks
+// instead of the fixed issues/glossary/faq shape used by v2.
+
+export type ContentBlock =
+  | { type: "heading"; level: 2 | 3; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "stat_cards"; cards: MetricCard[] }
+  | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "table"; caption: string | null; headers: string[]; rows: string[][] }
+  | { type: "callout"; tone: "info" | "warning" | "success"; text: string }
+  | { type: "image"; src: string; alt: string; caption: string | null }
+  | { type: "quote"; text: string; attribution: string | null }
+  | { type: "glossary"; terms: GlossaryTerm[] }
+  | { type: "faq"; items: FaqItem[] };
+
+export type ContentBlockType = ContentBlock["type"];
+
+/** Payload returned by the v3 transformation model before server metadata is added. */
+export type AuditTransformationV3Payload = {
+  blocks: ContentBlock[];
+};
+
+/** Versioned shape used only for HTML-sourced audits. */
+export type AuditContentV3 = AuditTransformationV3Payload & {
+  schemaVersion: 3;
+  meta: AuditMeta;
+};
+
+export type AuditContent = LegacyAuditContent | AuditContentV2 | AuditContentV3;
 
 export function isAuditTransformationV2Payload(
   value: unknown,
@@ -153,6 +186,24 @@ export function isAuditContentV2(value: unknown): value is AuditContentV2 {
   );
 }
 
+export function isAuditTransformationV3Payload(
+  value: unknown,
+): value is AuditTransformationV3Payload {
+  if (!isRecord(value)) return false;
+
+  return hasOnlyKeys(value, ["blocks"]) && isValidBlockArray(value.blocks);
+}
+
+export function isAuditContentV3(value: unknown): value is AuditContentV3 {
+  return (
+    isRecord(value) &&
+    hasOnlyKeys(value, ["schemaVersion", "meta", "blocks"]) &&
+    value.schemaVersion === 3 &&
+    isAuditMeta(value.meta) &&
+    isValidBlockArray(value.blocks)
+  );
+}
+
 export function isLegacyAuditContent(
   value: unknown,
 ): value is LegacyAuditContent {
@@ -170,7 +221,11 @@ export function isLegacyAuditContent(
 }
 
 export function isAuditContent(value: unknown): value is AuditContent {
-  return isAuditContentV2(value) || isLegacyAuditContent(value);
+  return (
+    isAuditContentV2(value) ||
+    isAuditContentV3(value) ||
+    isLegacyAuditContent(value)
+  );
 }
 
 function isAuditIssueV2(value: unknown): value is AuditIssueV2 {
@@ -215,6 +270,8 @@ function isAuditMeta(value: unknown): value is AuditMeta {
       "supportingFile",
       "sourceNote",
       "sourceFiles",
+      "sourceType",
+      "sourceHtmlPath",
     ]) &&
     isNonEmptyString(value.clientName) &&
     isNonEmptyString(value.auditType) &&
@@ -225,7 +282,112 @@ function isAuditMeta(value: unknown): value is AuditMeta {
     (value.sourceFiles === undefined ||
       value.sourceFiles === null ||
       (Array.isArray(value.sourceFiles) &&
-        value.sourceFiles.every(isNonEmptyString)))
+        value.sourceFiles.every(isNonEmptyString))) &&
+    (value.sourceType === undefined ||
+      value.sourceType === "markdown" ||
+      value.sourceType === "html") &&
+    (value.sourceHtmlPath === undefined ||
+      value.sourceHtmlPath === null ||
+      typeof value.sourceHtmlPath === "string")
+  );
+}
+
+function isValidBlockArray(value: unknown): value is ContentBlock[] {
+  return (
+    Array.isArray(value) && value.length > 0 && value.every(isContentBlock)
+  );
+}
+
+function isContentBlock(value: unknown): value is ContentBlock {
+  if (!isRecord(value) || typeof value.type !== "string") return false;
+
+  switch (value.type) {
+    case "heading":
+      return (
+        hasOnlyKeys(value, ["type", "level", "text"]) &&
+        (value.level === 2 || value.level === 3) &&
+        isNonEmptyString(value.text)
+      );
+    case "paragraph":
+      return (
+        hasOnlyKeys(value, ["type", "text"]) && isNonEmptyString(value.text)
+      );
+    case "stat_cards":
+      return (
+        hasOnlyKeys(value, ["type", "cards"]) &&
+        Array.isArray(value.cards) &&
+        value.cards.length > 0 &&
+        value.cards.every(isMetricCard)
+      );
+    case "list":
+      return (
+        hasOnlyKeys(value, ["type", "ordered", "items"]) &&
+        typeof value.ordered === "boolean" &&
+        Array.isArray(value.items) &&
+        value.items.length > 0 &&
+        value.items.every(isNonEmptyString)
+      );
+    case "table":
+      return (
+        hasOnlyKeys(value, ["type", "caption", "headers", "rows"]) &&
+        (typeof value.caption === "string" || value.caption === null) &&
+        Array.isArray(value.headers) &&
+        value.headers.every((header) => typeof header === "string") &&
+        Array.isArray(value.rows) &&
+        value.rows.every(
+          (row) =>
+            Array.isArray(row) &&
+            row.every((cell) => typeof cell === "string"),
+        )
+      );
+    case "callout":
+      return (
+        hasOnlyKeys(value, ["type", "tone", "text"]) &&
+        (value.tone === "info" ||
+          value.tone === "warning" ||
+          value.tone === "success") &&
+        isNonEmptyString(value.text)
+      );
+    case "image":
+      return (
+        hasOnlyKeys(value, ["type", "src", "alt", "caption"]) &&
+        isNonEmptyString(value.src) &&
+        typeof value.alt === "string" &&
+        (typeof value.caption === "string" || value.caption === null)
+      );
+    case "quote":
+      return (
+        hasOnlyKeys(value, ["type", "text", "attribution"]) &&
+        isNonEmptyString(value.text) &&
+        (typeof value.attribution === "string" ||
+          value.attribution === null)
+      );
+    case "glossary":
+      return (
+        hasOnlyKeys(value, ["type", "terms"]) &&
+        Array.isArray(value.terms) &&
+        value.terms.length > 0 &&
+        value.terms.every(isGlossaryTerm)
+      );
+    case "faq":
+      return (
+        hasOnlyKeys(value, ["type", "items"]) &&
+        Array.isArray(value.items) &&
+        value.items.length > 0 &&
+        value.items.every(isFaqItem)
+      );
+    default:
+      return false;
+  }
+}
+
+function isMetricCard(value: unknown): value is MetricCard {
+  return (
+    isRecord(value) &&
+    hasOnlyKeys(value, ["value", "label", "change"]) &&
+    isNonEmptyString(value.value) &&
+    isNonEmptyString(value.label) &&
+    (typeof value.change === "string" || value.change === null)
   );
 }
 

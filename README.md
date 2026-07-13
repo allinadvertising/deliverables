@@ -480,7 +480,15 @@ Revise ("Edit" button on an HTML-sourced audit):
 
 **Acceptance criteria:** existing Markdown enhancement flow passes a full manual regression (upload → job completes → renders → dashboard shows it) after the extraction, with zero behavior change. New types compile and existing `isAuditContent` guard still accepts every current record shape. Storage bucket exists and a manual signed-URL round trip works.
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- `src/lib/ai-provider-client.ts` created: `callModel`/`callOpenAI`/`callDeepSeek`, all timeout/env/polling helpers, and `AuditEnhancerError` moved out of `audit-enhancer.ts` verbatim. `audit-enhancer.ts` now builds its markdown-specific system/user prompt strings and calls the shared `callModel({ provider, model, systemPrompt, userPrompt, logger })` — `AuditEnhancerError`/`resolveModel`/`ProviderId` are re-exported from `audit-enhancer.ts` so `route.ts` needed zero changes.
+- Regression-tested for real: ran the dev server, submitted a markdown file straight through `POST /api/audit-enhancer` (curl, since this route isn't middleware-gated), polled the job to completion, and confirmed the rendered audit page in the browser under an actual Supabase-authenticated session. Byte-identical behavior to before the extraction.
+- `cheerio` added to `package.json` dependencies.
+- `schemaVersion: 3` types added to `src/lib/audit/types.ts`: `ContentBlock` (10 block types), `AuditContentV3`, `isAuditContentV3`, `isContentBlock`, `isMetricCard`. `AuditMeta` extended with optional `sourceType`/`sourceHtmlPath`. `AuditAssembly.tsx` now branches on `isAuditContentV3` — currently rendering a placeholder (`AuditReportV3Placeholder`) since the real block renderers are Phase H2. This branch was required just to keep the type system/build green once the union grew a third member; it is not itself Phase H2 work.
+- Private Supabase Storage bucket `audit-source-html` created (10MB limit, `text/html` only). `src/lib/storage.ts` added: `uploadSourceHtml(runId, html)` / `getSourceHtml(objectPath)`. Upload/download round trip verified directly against the live bucket.
+- Migration `supabase/migrations/004_add_html_revision_support.sql` written (adds `job_kind`/`instructions` to `enhancement_runs`). **Not yet applied** — no `psql`/`supabase` CLI is available in this environment, so per this repo's existing convention it needs to be run manually in the Supabase SQL Editor. Not required until Phase H5 (the revise flow); H1–H4 don't touch `enhancement_runs` schema.
+- `npm run build` and `npx tsc --noEmit` both clean; only pre-existing lint warnings remain (unrelated to this change).
 
 ---
 

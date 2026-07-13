@@ -11,10 +11,10 @@ Return one JSON object with exactly one top-level array: blocks. The server adds
 Each blocks entry must be exactly one of these ten shapes, no additional or missing fields:
 { "type": "heading", "level": 2 | 3, "text": "..." }
 { "type": "paragraph", "text": "..." }
-{ "type": "stat_cards", "cards": [ { "value": "...", "label": "...", "change": "..." | null } ] }
+{ "type": "stat_cards", "cards": [ { "value": "...", "label": "...", "change": "..." | null, "sentiment": "positive" | "negative" | "neutral" | null } ] }
 { "type": "list", "ordered": boolean, "items": ["...", ...] }
 { "type": "table", "caption": "..." | null, "headers": ["...", ...], "rows": [["...", ...], ...] }
-{ "type": "callout", "tone": "info" | "warning" | "success", "text": "..." }
+{ "type": "callout", "tone": "info" | "warning" | "success", "text": "...", "label": "..." | null }
 { "type": "image", "src": "...", "alt": "...", "caption": "..." | null }
 { "type": "quote", "text": "...", "attribution": "..." | null }
 { "type": "glossary", "terms": [ { "term": "...", "definition": "..." } ] }
@@ -23,7 +23,9 @@ Each blocks entry must be exactly one of these ten shapes, no additional or miss
 Field rules:
 - heading.level is 2 for a top-level section, 3 for a sub-section. Never emit an h1 - the portal's own header carries the document title.
 - table headers and every row cell must be plain strings; strip inline formatting, pills, or icons down to their text.
+- cards.sentiment classifies what the change means for the business, not the arithmetic sign - a rising cost-per-lead is "negative" even though the number went up, a falling cost-per-lead is "positive" even though the number went down, spend simply increasing with no stated quality judgment is usually "neutral". Use null only when the source gives no basis to judge.
 - callout.tone maps the source's own severity/status language: critical/risk to "warning", positive/performing to "success", neutral/informational to "info".
+- callout.label is a short (2-4 word) contextual caption describing what this specific callout represents (e.g. "Risk to address", "What's working"), not a generic restatement of the tone. May be null.
 - image.src must be copied exactly from a real src attribute in the source (a data: URI or absolute http(s):// URL). Never fabricate a path - omit the image block entirely if none is usable this way.
 
 Flattening rules - map the source's visual language to blocks:

@@ -133,13 +133,25 @@ export type AuditContentV2 = AuditTransformationV2Payload & {
 // issue list, so v3 documents are an ordered array of typed content blocks
 // instead of the fixed issues/glossary/faq shape used by v2.
 
+export type StatCardSentiment = "positive" | "negative" | "neutral";
+
+export type StatCard = {
+  value: string;
+  label: string;
+  change: string | null;
+  /** How this specific change should read to the reader - e.g. cost going
+   * down is "positive" even though the number itself is negative. Optional
+   * so older v3 records without it still render (falls back to neutral). */
+  sentiment?: StatCardSentiment;
+};
+
 export type ContentBlock =
   | { type: "heading"; level: 2 | 3; text: string }
   | { type: "paragraph"; text: string }
-  | { type: "stat_cards"; cards: MetricCard[] }
+  | { type: "stat_cards"; cards: StatCard[] }
   | { type: "list"; ordered: boolean; items: string[] }
   | { type: "table"; caption: string | null; headers: string[]; rows: string[][] }
-  | { type: "callout"; tone: "info" | "warning" | "success"; text: string }
+  | { type: "callout"; tone: "info" | "warning" | "success"; text: string; label?: string | null }
   | { type: "image"; src: string; alt: string; caption: string | null }
   | { type: "quote"; text: string; attribution: string | null }
   | { type: "glossary"; terms: GlossaryTerm[] }
@@ -323,7 +335,7 @@ function isContentBlock(value: unknown): value is ContentBlock {
         hasOnlyKeys(value, ["type", "cards"]) &&
         Array.isArray(value.cards) &&
         value.cards.length > 0 &&
-        value.cards.every(isMetricCard)
+        value.cards.every(isStatCard)
       );
     case "list":
       return (
@@ -348,11 +360,14 @@ function isContentBlock(value: unknown): value is ContentBlock {
       );
     case "callout":
       return (
-        hasOnlyKeys(value, ["type", "tone", "text"]) &&
+        hasOnlyKeys(value, ["type", "tone", "text", "label"]) &&
         (value.tone === "info" ||
           value.tone === "warning" ||
           value.tone === "success") &&
-        isNonEmptyString(value.text)
+        isNonEmptyString(value.text) &&
+        (value.label === undefined ||
+          value.label === null ||
+          typeof value.label === "string")
       );
     case "image":
       return (
@@ -387,13 +402,17 @@ function isContentBlock(value: unknown): value is ContentBlock {
   }
 }
 
-function isMetricCard(value: unknown): value is MetricCard {
+function isStatCard(value: unknown): value is StatCard {
   return (
     isRecord(value) &&
-    hasOnlyKeys(value, ["value", "label", "change"]) &&
+    hasOnlyKeys(value, ["value", "label", "change", "sentiment"]) &&
     isNonEmptyString(value.value) &&
     isNonEmptyString(value.label) &&
-    (typeof value.change === "string" || value.change === null)
+    (typeof value.change === "string" || value.change === null) &&
+    (value.sentiment === undefined ||
+      value.sentiment === "positive" ||
+      value.sentiment === "negative" ||
+      value.sentiment === "neutral")
   );
 }
 

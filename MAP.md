@@ -75,8 +75,11 @@ deliverables/
 │   │   │   ├── AuditAssembly.tsx     # Server: orchestrates all sections from AuditContent JSON
 │   │   │   ├── AuditReportV2.tsx     # Server: vertical v2 issue narrative + glossary + FAQ
 │   │   │   ├── AuditIssueCardV2.tsx  # Server: four-part v2 issue story
-│   │   │   ├── AuditReportV3.tsx     # Server: v3 block renderer — groups blocks[] into .audit-page sections at each level-2 heading
-│   │   │   ├── HeadingBlock.tsx / ParagraphBlock.tsx / ListBlock.tsx / TableBlock.tsx / CalloutBlock.tsx / ImageBlock.tsx / QuoteBlock.tsx # Server: v3 block renderers (glossary/faq blocks delegate to GlossaryGrid/FaqSection directly)
+│   │   │   ├── AuditReportV3.tsx     # Server: v3 block renderer — groups blocks[] into numbered .audit-page sections at each level-2 heading (and glossary/faq blocks)
+│   │   │   ├── AuditSectionHeaderV3.tsx # Server: numbered "01/02/..." section header used by every v3 section
+│   │   │   ├── HeadingBlock.tsx / ParagraphBlock.tsx / ListBlock.tsx / TableBlock.tsx / CalloutBlock.tsx / ImageBlock.tsx / QuoteBlock.tsx # Server: v3 block renderers (v3-exclusive — safe to restyle without touching v2)
+│   │   │   ├── MetricCardV3.tsx      # Server: sentiment-aware stat card (v3 stat_cards block) — distinct from the shared v2 MetricCard.tsx
+│   │   │   ├── AuditGlossaryV3.tsx / AuditFaqV3.tsx # Server: v3-only glossary/FAQ card styling — distinct from the shared v2 GlossaryGrid.tsx/FaqSection.tsx
 │   │   │   ├── AuditExternalRefsWarning.tsx # Server: collapsed warning when a v3 upload wasn't fully self-contained
 │   │   │   ├── AuditSourceFiles.tsx  # Server: collapsed list of source .md file names (v2 only)
 │   │   │   ├── AuditTabs.tsx         # Legacy-only tab bar (Overview/Actions/Findings/etc.)
@@ -261,6 +264,15 @@ AuditContentV3 {
                           // | callout | image | quote | glossary | faq
 }
 
+// stat_cards.cards are StatCard, not the shared v2 MetricCard - they carry an
+// extra optional `sentiment: "positive"|"negative"|"neutral"` classifying what
+// the change *means* (falling cost-per-lead is positive despite the minus
+// sign), not its arithmetic sign. callout blocks carry an optional `label`
+// (short contextual caption, e.g. "Risk to address") on top of `tone`. Both
+// added 2026-07-13 for the v3 component fine-tuning pass; optional so older
+// v3 records without them still render (fall back to neutral / tone-default
+// label in MetricCardV3.tsx / CalloutBlock.tsx).
+
 LegacyAuditContent {
   meta: AuditMeta
   executiveSummary: {
@@ -418,9 +430,10 @@ AuditAssembly (server)
   │   │   ├── GlossaryGrid
   │   │   └── FaqSection
   │   ├── AuditReportV3         (schemaVersion: 3 — flattened HTML deliverable)
-  │   │   ├── groups blocks[] into .audit-page sections at each level-2 heading
-  │   │   ├── HeadingBlock / ParagraphBlock / ListBlock / TableBlock / CalloutBlock / ImageBlock / QuoteBlock
-  │   │   └── glossary/faq blocks delegate straight to GlossaryGrid/FaqSection
+  │   │   ├── groups blocks[] into numbered .audit-page sections at each level-2 heading (glossary/faq blocks get one too)
+  │   │   ├── AuditSectionHeaderV3 — "01/02/..." header shared by every section
+  │   │   ├── HeadingBlock / ParagraphBlock / ListBlock / TableBlock / CalloutBlock / ImageBlock / QuoteBlock / MetricCardV3
+  │   │   └── glossary/faq blocks render via AuditGlossaryV3/AuditFaqV3 (v3-only styling, not the shared v2 components)
   │   └── AuditTabs             (legacy — tab navigation)
   │       ├── InsightBox        (conditionally)
   │       ├── ExecutiveSummary  (overview tab)

@@ -38,6 +38,7 @@ export function AuditAssembly({ content }: AuditAssemblyProps) {
         auditType={meta.auditType}
         clientName={meta.clientName}
         date={meta.date}
+        enhanced={isV3}
         quarter={quarter}
         supportingWorkbookLink={meta.supportingFile ?? undefined}
       />

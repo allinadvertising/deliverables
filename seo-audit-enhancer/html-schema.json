@@ -70,11 +70,12 @@
               "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["value", "label", "change"],
+                "required": ["value", "label", "change", "sentiment"],
                 "properties": {
                   "value": { "type": "string", "minLength": 1 },
                   "label": { "type": "string", "minLength": 1 },
-                  "change": { "type": ["string", "null"] }
+                  "change": { "type": ["string", "null"] },
+                  "sentiment": { "enum": ["positive", "negative", "neutral", null] }
                 }
               }
             }
@@ -111,11 +112,12 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["type", "tone", "text"],
+          "required": ["type", "tone", "text", "label"],
           "properties": {
             "type": { "const": "callout" },
             "tone": { "enum": ["info", "warning", "success"] },
-            "text": { "type": "string", "minLength": 1 }
+            "text": { "type": "string", "minLength": 1 },
+            "label": { "type": ["string", "null"] }
           }
         },
         {

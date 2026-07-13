@@ -6,9 +6,10 @@ import { TableBlock } from "./TableBlock";
 import { CalloutBlock } from "./CalloutBlock";
 import { ImageBlock } from "./ImageBlock";
 import { QuoteBlock } from "./QuoteBlock";
-import { MetricCard } from "./MetricCard";
-import { GlossaryGrid } from "./GlossaryGrid";
-import { FaqSection } from "./FaqSection";
+import { MetricCardV3 } from "./MetricCardV3";
+import { AuditGlossaryV3 } from "./AuditGlossaryV3";
+import { AuditFaqV3 } from "./AuditFaqV3";
+import { AuditSectionHeaderV3 } from "./AuditSectionHeaderV3";
 
 type AuditReportV3Props = {
   content: AuditContentV3;
@@ -18,40 +19,52 @@ type GlossaryBlock = Extract<ContentBlock, { type: "glossary" }>;
 type FaqBlock = Extract<ContentBlock, { type: "faq" }>;
 
 type Section =
-  | { kind: "glossary"; block: GlossaryBlock }
-  | { kind: "faq"; block: FaqBlock }
+  | { kind: "glossary"; block: GlossaryBlock; heading: string }
+  | { kind: "faq"; block: FaqBlock; heading: string }
   | { kind: "generic"; heading: string | null; blocks: ContentBlock[] };
+
+type NumberedSection = Section & { sectionNumber: number };
+
+function numberSections(sections: Section[]): NumberedSection[] {
+  let sectionNumber = 0;
+
+  return sections.map((section) => {
+    if (section.heading != null) sectionNumber += 1;
+    return { ...section, sectionNumber };
+  });
+}
 
 /**
  * Renders a flattened HTML-sourced (schemaVersion 3) deliverable. Blocks are
  * grouped into `.audit-page` sections at each top-level (level 2) heading so
  * the report reads like every other section in the portal instead of one
- * long unbroken card. `glossary`/`faq` blocks break out into the existing
- * GlossaryGrid/FaqSection components directly - they already own their own
- * `.audit-page` wrapper.
+ * long unbroken card. Every section (including glossary/faq) gets a shared
+ * numbered header (01, 02, ...) per the v3 fine-tuning design.
  */
 export function AuditReportV3({ content }: AuditReportV3Props) {
-  const sections = groupBlocks(content.blocks);
+  const sections = numberSections(groupBlocks(content.blocks));
 
   return (
     <main className="mx-auto my-10 max-w-[1160px] px-4 sm:px-0">
       {sections.map((section, index) => {
-        if (section.kind === "glossary") {
-          return <GlossaryGrid key={index} terms={section.block.terms} />;
-        }
-
-        if (section.kind === "faq") {
-          return <FaqSection key={index} items={section.block.items} />;
-        }
-
         return (
           <div className="audit-page" key={index}>
             {section.heading ? (
-              <h2 className="audit-section-title">{section.heading}</h2>
+              <AuditSectionHeaderV3
+                index={section.sectionNumber}
+                title={section.heading}
+              />
             ) : null}
-            {section.blocks.map((block, blockIndex) => (
-              <BlockRenderer block={block} key={blockIndex} />
-            ))}
+
+            {section.kind === "glossary" ? (
+              <AuditGlossaryV3 terms={section.block.terms} />
+            ) : section.kind === "faq" ? (
+              <AuditFaqV3 items={section.block.items} />
+            ) : (
+              section.blocks.map((block, blockIndex) => (
+                <BlockRenderer block={block} key={blockIndex} />
+              ))
+            )}
           </div>
         );
       })}
@@ -77,13 +90,21 @@ function groupBlocks(blocks: ContentBlock[]): Section[] {
   for (const block of blocks) {
     if (block.type === "glossary") {
       flushCurrent();
-      sections.push({ block, kind: "glossary" });
+      sections.push({
+        block,
+        heading: "Glossary: Technical Terms, Simplified",
+        kind: "glossary",
+      });
       continue;
     }
 
     if (block.type === "faq") {
       flushCurrent();
-      sections.push({ block, kind: "faq" });
+      sections.push({
+        block,
+        heading: "Frequently Asked Questions",
+        kind: "faq",
+      });
       continue;
     }
 
@@ -113,12 +134,13 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
       return <ParagraphBlock text={block.text} />;
     case "stat_cards":
       return (
-        <div className="audit-metric-grid my-8 grid grid-cols-4 gap-[18px] max-lg:grid-cols-2 max-sm:grid-cols-1">
+        <div className="audit-metric-grid my-8 grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1">
           {block.cards.map((card, index) => (
-            <MetricCard
+            <MetricCardV3
               change={card.change}
               key={index}
               label={card.label}
+              sentiment={card.sentiment}
               value={card.value}
             />
           ))}
@@ -135,7 +157,9 @@ function BlockRenderer({ block }: { block: ContentBlock }) {
         />
       );
     case "callout":
-      return <CalloutBlock text={block.text} tone={block.tone} />;
+      return (
+        <CalloutBlock label={block.label} text={block.text} tone={block.tone} />
+      );
     case "image":
       return (
         <ImageBlock alt={block.alt} caption={block.caption} src={block.src} />

@@ -30,10 +30,10 @@ Each entry in `blocks` must be one of these exact shapes (no additional fields p
 ```json
 { "type": "heading", "level": 2, "text": "..." }
 { "type": "paragraph", "text": "..." }
-{ "type": "stat_cards", "cards": [ { "value": "...", "label": "...", "change": "..." } ] }
+{ "type": "stat_cards", "cards": [ { "value": "...", "label": "...", "change": "...", "sentiment": "positive" } ] }
 { "type": "list", "ordered": false, "items": ["...", "..."] }
 { "type": "table", "caption": "...", "headers": ["...", "..."], "rows": [["...", "..."]] }
-{ "type": "callout", "tone": "info", "text": "..." }
+{ "type": "callout", "tone": "info", "text": "...", "label": "..." }
 { "type": "image", "src": "...", "alt": "...", "caption": "..." }
 { "type": "quote", "text": "...", "attribution": "..." }
 { "type": "glossary", "terms": [ { "term": "...", "definition": "..." } ] }
@@ -43,8 +43,10 @@ Each entry in `blocks` must be one of these exact shapes (no additional fields p
 Field rules:
 - `heading.level` is `2` or `3` only (2 for a top-level section, 3 for a sub-section). Never emit an `h1` - the portal's own header already carries the document title.
 - `cards.change` may be `null` when the source shows no delta.
+- `cards.sentiment` is one of `positive`, `negative`, `neutral`, or `null` - classify it by what the change actually *means* for the business, not by the arithmetic sign of the number. A rising cost-per-lead is `negative` even though the number went up; a falling cost-per-lead is `positive` even though the number went down. Spend simply increasing with no stated quality judgment is usually `neutral`. Use `null` only when the source gives no basis to judge (no delta shown, or a purely informational count).
 - `table.caption` may be `null`. `headers` and every row in `rows` must be plain strings (strip any inline formatting, pills, or icons down to their text).
 - `callout.tone` is exactly one of `info`, `warning`, `success` - map the source's own severity/status language onto the closest of these three.
+- `callout.label` is a short (2-4 word) contextual caption for the callout, e.g. "Risk to address", "What's working", "Heads up" - describe what this specific callout represents, not a generic restatement of the tone. May be `null` if nothing more specific than the tone itself applies.
 - `image.src` must be copied exactly from a real `src` attribute in the source HTML (a `data:` URI or an absolute `http(s)://` URL). Never fabricate a path. If no image in the source is usable this way, omit the block entirely rather than guessing a src.
 - `quote.attribution` may be `null` when the source does not name a speaker.
 

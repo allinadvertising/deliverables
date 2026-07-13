@@ -1,4 +1,5 @@
 import type { Priority, Owner } from "@/lib/audit/types";
+import type { AuditSourceType } from "@/lib/db-types";
 
 const priorityColors: Record<Priority, string> = {
   P0: "bg-[var(--p0-bg)] text-[var(--p0)] border-[var(--p0-border)]",
@@ -27,6 +28,28 @@ export function OwnerBadge({ owner }: { owner: Owner }) {
       className={`inline-flex min-h-[28px] items-center justify-center rounded-full border px-3 py-[5px] text-xs font-extrabold uppercase leading-none tracking-[0.06em] whitespace-nowrap ${ownerColors[owner]}`}
     >
       {owner === "AIA" ? "AIA" : "Client Dev"}
+    </span>
+  );
+}
+
+const sourceTypeStyles: Record<AuditSourceType, string> = {
+  legacy: "bg-slate-100 text-slate-500 border-slate-300",
+  markdown: "bg-[var(--brand-blue-light)] text-[var(--brand-blue)] border-[#bfd6f0]",
+  html: "bg-[#fef7e8] text-[#9a6a00] border-[#f5df83]",
+};
+
+const sourceTypeLabels: Record<AuditSourceType, string> = {
+  legacy: "Legacy",
+  markdown: "Markdown",
+  html: "HTML",
+};
+
+export function SourceTypeBadge({ sourceType }: { sourceType: AuditSourceType }) {
+  return (
+    <span
+      className={`inline-flex min-h-[24px] w-fit items-center justify-center rounded-full border px-2.5 py-1 text-[11px] font-extrabold uppercase leading-none tracking-[0.06em] whitespace-nowrap ${sourceTypeStyles[sourceType]}`}
+    >
+      {sourceTypeLabels[sourceType]}
     </span>
   );
 }

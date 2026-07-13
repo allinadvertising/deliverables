@@ -41,6 +41,8 @@ export type DbEnhancementRun = {
   completed_at: string | null;
 };
 
+export type AuditSourceType = "legacy" | "markdown" | "html";
+
 // Display type for the audit list : a flat projection of audit + client.
 export type AuditDisplay = {
   id: string;
@@ -53,6 +55,7 @@ export type AuditDisplay = {
   updatedTime: number;
   size: string;
   shareToken: string | null;
+  sourceType: AuditSourceType;
   supportingWorkbookLink: string | null;
   views: number;
 };

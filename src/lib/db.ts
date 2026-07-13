@@ -1,5 +1,5 @@
 import { supabaseServer } from "./supabase-server";
-import type { AuditDisplay, EnhancementStatus } from "./db-types";
+import type { AuditDisplay, AuditSourceType, EnhancementStatus } from "./db-types";
 
 // ── Audit listing (replaces filesystem scan) ──────────────────────
 
@@ -52,12 +52,18 @@ export async function getAudits(userId?: string): Promise<AuditDisplay[]> {
     const updatedAt = (row.updated_at ?? row.created_at ?? "") as string;
     const updatedTime = new Date(updatedAt).getTime();
     const content = (row.content ?? null) as
-      | { meta?: { supportingFile?: unknown } }
+      | { meta?: { supportingFile?: unknown }; schemaVersion?: unknown }
       | null;
     const supportingWorkbookLink =
       typeof content?.meta?.supportingFile === "string"
         ? content.meta.supportingFile
         : null;
+    const sourceType: AuditSourceType =
+      content?.schemaVersion === 3
+        ? "html"
+        : content?.schemaVersion === 2
+          ? "markdown"
+          : "legacy";
     const pathLabel = [clientSlug, String(year), month ?? ""]
       .filter(Boolean)
       .join(" / ");
@@ -73,6 +79,7 @@ export async function getAudits(userId?: string): Promise<AuditDisplay[]> {
       updatedTime,
       size: formatBytes(fileSize),
       shareToken: (row.share_token as string | null) ?? null,
+      sourceType,
       supportingWorkbookLink,
       views: extractViewCount(row.audit_views),
     } satisfies AuditDisplay;

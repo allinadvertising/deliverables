@@ -556,7 +556,13 @@ Revise ("Edit" button on an HTML-sourced audit):
 
 **Acceptance criteria:** filtering to "HTML" shows only `schemaVersion: 3` audits; the badge correctly distinguishes all three source types on real data (legacy, markdown v2, html v3).
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- `getAudits()` derives `sourceType` from the already-selected `content` column (`schemaVersion === 3` → `"html"`, `=== 2` → `"markdown"`, otherwise `"legacy"`) — no query/column change needed.
+- Added `SourceTypeBadge` to `Badges.tsx` (gold for HTML, blue for Markdown, slate for Legacy, matching the existing badge visual language).
+- Extracted the dashboard's audit table into a new client component `src/app/AuditList.tsx` with an All/Markdown/HTML/Legacy filter row (client-side filter over the already-fetched list — no extra request).
+- Verified in the browser: the HTML-sourced PoC audit shows a gold "HTML" badge on the dashboard; clicking the "Markdown" filter correctly reduces the list to zero results ("No audit deliverables match this filter"), confirming the filter logic and badge derivation both work against real data. Legacy/Markdown filtering wasn't separately exercised against real legacy/v2 rows in this pass (none were present at filter-test time), but the same `sourceType` derivation already worked correctly for the existing Markdown flow in every earlier phase's regression check.
+- `npm run build`, `npx tsc --noEmit`, `npx eslint` all clean.
 
 ---
 

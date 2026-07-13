@@ -220,9 +220,11 @@ All 9 refactoring phases completed. Audits render from JSONB via React component
 
 ---
 
-## Next Step: Deprecate HTML Pipeline : JSON-Only Enhancement
+## Deprecate HTML Pipeline : JSON-Only Enhancement (Completed)
 
-The view layer already uses React components + Supabase JSONB. The next step is to make the enhancement flow produce JSON directly, eliminating the legacy file-based HTML pipeline entirely.
+The view layer already uses React components + Supabase JSONB. This phase made the enhancement flow produce JSON directly, eliminating the legacy file-based HTML pipeline entirely.
+
+**Status: ✅ Complete** (verified 2026-07-13 — `saveAuditArtifacts`/`buildAuditBody`/`assembleFinalHtml`/`assertInside` no longer exist in `audit-enhancer.ts`; all legacy template files and `scripts/sync-audits.mjs` are deleted; no `predev`/`prebuild` sync scripts remain in `package.json`. Phase statuses below corrected accordingly — they were previously left marked "Pending" after the work actually shipped.)
 
 ### Current Enhancement Flow (to be replaced)
 
@@ -290,7 +292,7 @@ Markdown upload → /api/audit-enhancer
 - Remove `buildAuditBody()`, `assembleFinalHtml()`, `saveAuditArtifacts()` functions
 - Remove `assertInside()` path-safety helper (no longer writing to disk)
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete
 
 ---
 
@@ -305,7 +307,7 @@ Markdown upload → /api/audit-enhancer
 - Update `EnhanceAuditForm.tsx` to display the new response shape
 - Remove any file-path display from the UI
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete
 
 ---
 
@@ -321,7 +323,7 @@ Markdown upload → /api/audit-enhancer
 - Keep `public/all-in-advertising-logo.svg` (used by BrandLogo component)
 - Keep HTML audit files in `public/` as archive (do not delete)
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete
 
 ---
 
@@ -336,7 +338,7 @@ Markdown upload → /api/audit-enhancer
 - Verify share token generation/revocation still works
 - Verify delete still works (removes from Supabase)
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete
 
 ---
 
@@ -358,4 +360,236 @@ All phases are sequential : each depends on the previous.
 
 ---
 
-*Created: 2026-05-18 | Last updated: 2026-05-18*
+## Future Integrations
+
+### Self-Contained HTML Deliverable Ingestion
+
+**Status: 🟡 Planned — no phase started** (plan drafted 2026-07-13)
+
+**Goal:** Let the team upload a self-contained HTML file (one file, inline styles, embedded/data-URI assets — e.g. an exported Google Doc, Notion page, Canva page, or ChatGPT canvas) and have it converted into the same componentized, on-brand presentation every other deliverable uses, instead of publishing arbitrary third-party markup as-is. Uses an LLM transformation pipeline (mirroring the existing Markdown enhancer) rather than hand-written DOM heuristics, because arbitrary uploaded HTML is too structurally inconsistent for fixed parsing rules to hold up. The upload form exposes a collapsed-by-default "extra instructions" field. A dedicated "Edit" action lets the team re-run the LLM against the *current* structured content plus new instructions — a real revision, not a from-scratch regeneration.
+
+This plan is written so any future session can jump to this section and resume work; update the phase **Status** markers as work lands so this stays an accurate oversight view. Re-run this "dig into the codebase" analysis if a lot of drift has happened since 2026-07-13 — the inventory below is a snapshot, not a permanent truth.
+
+#### Confirmed Architecture Decisions
+
+| Decision | Choice | Why |
+|---|---|---|
+| Parsing strategy | **LLM pipeline only** (no hand-written DOM heuristics) | Mirrors the proven Markdown enhancer. Arbitrary HTML from different tools/exports is too inconsistent for fixed heuristics; a light DOM pass is still used, but only for cleanup/validation (below), not structural parsing. |
+| Output schema | **New `schemaVersion: 3` block-based model** | Self-contained HTML uploads may be any deliverable type (proposal, report, deck excerpt), not just an SEO issue list. Forcing everything into the existing `issues/glossary/faq` v2 shape would distort non-audit content. A `blocks[]` array is generic enough to cover most on-brand deliverable layouts while still rendering through the shared design system. |
+| Dashboard surface | **Filter/tab on the existing `/` dashboard**, not a new route | Reuses the existing table, `Share`/`Edit`/`Delete` actions, and ownership/auth logic. `EditAuditButton` branches its behavior on source type instead of being duplicated. |
+| Raw HTML retention | **Store the original upload in Supabase Storage** | The re-LLM edit flow needs to ground revisions in the true source, not just the AI's last interpretation — otherwise fidelity degrades over multiple edit rounds. Also gives provenance/debugging value the Markdown pipeline doesn't have (it never persists the original `.md`). |
+
+#### Codebase Inventory — Reusable As-Is
+
+| Piece | Location | Reuse notes |
+|---|---|---|
+| Upload → background job → poll-for-status pattern | `src/app/api/audit-enhancer/route.ts`, `.../status/route.ts` | Same shape for the new `/api/html-enhancer` routes: 202 + `jobId`, `after()` background execution, `enhancement_runs` row per job. |
+| Enhancement run tracking | `src/lib/db.ts` (`insertEnhancementRun`, `updateEnhancementRun`, `getEnhancementRun`) + `enhancement_runs` table | Reusable once extended with `job_kind`/`instructions` (see Missing Pieces). |
+| Client/audit persistence | `upsertClient()`, `insertAudit()` in `src/lib/db.ts` | `insertAudit()` already accepts an arbitrary `content` JSONB payload — no change needed to store `schemaVersion: 3` documents. |
+| Redacted JSONL logging | `src/lib/audit-enhancer-logs.ts` (`createAuditEnhancerLogger`) | File-type agnostic already. Use directly, unchanged. |
+| Versioned content model + runtime guards | `src/lib/audit/types.ts` | The v1 → v2 discriminated-union pattern (`isAuditContentV2`, `hasOnlyKeys` allowlists) is the exact template for adding `isAuditContentV3`. |
+| Version-aware render dispatch | `src/components/audit/AuditAssembly.tsx` | Already branches on `schemaVersion`; add one more branch for `=== 3`. |
+| Design system / CSS tokens | `src/app/globals.css`, `.audit-page` / `.audit-card` / `.audit-table` / `.audit-section-title` classes, brand color tokens | This *is* "the deliverables web app design and CSS rules" the plan should adapt HTML into — no new design system needed, only new components that use these existing classes. |
+| Presentational components directly reusable as block renderers | `MetricCard.tsx` (→ `stat_cards` block), `GlossaryGrid.tsx` (→ `glossary` block), `FaqSection.tsx` (→ `faq` block), `InsightBox.tsx` (→ styling reference for `callout`) | Cuts down how many net-new components Phase H2 actually needs. |
+| Collapsed-dropdown-with-field UI pattern | `src/components/audit/AuditSourceFiles.tsx` (shipped 2026-07-12) | Exact pattern the brief asks for ("dropdown collapsed by default with a text field"). Native `<details>/<summary>` wrapping a `<textarea>` — no client JS/state required beyond what `EnhanceAuditForm` already does for its file input. |
+| Multi-file / file-count client validation pattern | `src/app/enhance/EnhanceAuditForm.tsx` (`handleFileChange`, warning state) | Template for the HTML form's single-file + extension/size validation. |
+| Poll-until-complete client logic | `EnhanceAuditForm.tsx` (`pollEnhancementJob`, `parseEnhanceResponse`, `LoadingStatus`) | Currently duplicated per form; worth extracting to a shared `src/lib/enhance-client.ts` when the HTML form is built so it isn't triplicated (create + revise both need it). |
+| Ownership-gated mutation pattern | `src/app/api/audits/route.ts` (`PATCH`/`DELETE`) | Template for the new `/api/html-enhancer/revise` route's auth + `owner_id` check. |
+| Dashboard row actions | `src/app/page.tsx`, `ShareButton.tsx`, `EditAuditButton.tsx`, `DeleteAuditButton.tsx` | `EditAuditButton` gets a second code path; `ShareButton`/`DeleteAuditButton` work unchanged for HTML-sourced rows. |
+
+#### Codebase Inventory — Missing Pieces (net-new work)
+
+| Gap | Detail |
+|---|---|
+| No HTML parsing/sanitization library | `package.json` has zero DOM/HTML libraries (no `cheerio`, `jsdom`, `DOMPurify`, `sanitize-html`). Need to add one — recommend `cheerio`, used narrowly (see Phase H1). |
+| No object/file storage usage anywhere | Nothing in `src/` calls Supabase Storage. Needs a new private bucket, upload helper, and read-back helper (service-role signed URL or direct server-side fetch) — this is genuinely new infrastructure, not an extension of an existing pattern. |
+| Provider-calling logic is private, not reusable | `callModel`, `callOpenAI`, `callDeepSeek`, `buildSystemPrompt`, `buildUserPrompt`, and all timeout/env/polling helpers in `src/lib/audit-enhancer.ts` are module-private (`function`, not `export function` — only `resolveModel` and the top-level `enhanceAuditMarkdown` are exported). A second pipeline **cannot** import them today. Either extract a shared `src/lib/ai-provider-client.ts` first, or the HTML pipeline duplicates ~700 lines of OpenAI/DeepSeek request, retry, and polling logic. Extraction is the only acceptable option — flagged as a hard prerequisite in Phase H0. |
+| No block-based content schema | `schemaVersion: 3`, the `ContentBlock` union, its runtime validators, and every block-rendering component are 100% new. |
+| No revision/"edit with instructions" capability exists anywhere | `EditAuditButton` + `PATCH /api/audits` today only ever mutate `content.meta.supportingFile` (the workbook link). There is no code path that re-invokes an LLM against existing content. This entire flow is net new. |
+| `enhancement_runs` schema has no room for revision jobs | No `job_kind` (create vs. revise) or `instructions` column. Needs a migration. |
+| Dashboard has no source-type awareness | `getAudits()` / `AuditDisplay` (`src/lib/db-types.ts`) don't select or expose `schemaVersion` at all today — the list view can't currently tell a Markdown-sourced audit from anything else. |
+
+#### Target Data Model
+
+```typescript
+// src/lib/audit/types.ts additions
+
+export type ContentBlock =
+  | { type: "heading"; level: 2 | 3; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "stat_cards"; cards: MetricCard[] }          // reuses existing MetricCard shape
+  | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "table"; caption: string | null; headers: string[]; rows: string[][] }
+  | { type: "callout"; tone: "info" | "warning" | "success"; text: string }
+  | { type: "image"; src: string; alt: string; caption: string | null }
+  | { type: "quote"; text: string; attribution: string | null }
+  | { type: "glossary"; terms: GlossaryTerm[] }           // reuses existing GlossaryGrid
+  | { type: "faq"; items: FaqItem[] };                    // reuses existing FaqSection
+
+export type AuditContentV3 = {
+  schemaVersion: 3;
+  meta: AuditMeta & {
+    sourceType: "html";
+    sourceHtmlPath: string | null; // Supabase Storage object path for the original upload
+  };
+  blocks: ContentBlock[];
+};
+
+export type AuditContent = LegacyAuditContent | AuditContentV2 | AuditContentV3;
+```
+
+`image.src` must point to a stored/hosted asset (Supabase Storage or the data URI as-uploaded), never to an external URL the client's HTML happened to reference — external references break once the deliverable outlives the source page.
+
+#### Target Pipeline Flows
+
+```
+Create:
+  Upload .html + optional instructions → /api/html-enhancer
+    → validate: single file, extension, size limit, self-containment check (cheerio pass:
+      flag <script src>, <link rel=stylesheet href>, non-data-URI <img src> as external refs)
+    → strip <script>/<style>/comments (noise + prompt-injection reduction, not structural parsing)
+    → upload original file to Supabase Storage → sourceHtmlPath
+    → insertEnhancementRun(job_kind: "create", status: "running") → 202 { jobId }
+    → after(): call shared AI provider client with HTML + instructions
+      → parse/validate blocks[] JSON against html-schema.json
+      → insertAudit(content: { schemaVersion: 3, meta, blocks })
+      → updateEnhancementRun(status: "completed", auditId)
+  ← client polls /api/html-enhancer/status?runId=xxx (reuse existing poll pattern)
+
+Revise ("Edit" button on an HTML-sourced audit):
+  { auditId, instructions } → /api/html-enhancer/revise
+    → auth + ownership check (same pattern as PATCH /api/audits)
+    → load current audits.content (must be schemaVersion 3) + fetch original HTML from Storage
+    → insertEnhancementRun(job_kind: "revise", audit_id: auditId, instructions, status: "running")
+    → after(): call shared AI provider client in "revision mode": prior blocks[] JSON +
+      original HTML (grounding) + new instructions → updated blocks[] JSON
+      → validate → update audits.content (same auditId, no new row)
+      → updateEnhancementRun(status: "completed")
+  ← client polls the same status endpoint, then reloads the dashboard/viewer
+```
+
+#### Phased Implementation
+
+##### Phase H0: Foundations (prerequisite refactor + infra)
+
+- Extract `callModel`, `callOpenAI`, `callDeepSeek`, timeout/env helpers, and polling logic out of `src/lib/audit-enhancer.ts` into a shared `src/lib/ai-provider-client.ts`. Update `audit-enhancer.ts` to import from it — **no behavior change** to the existing Markdown flow (regression risk to watch: response parsing/error diagnostics must stay byte-identical).
+- Add `cheerio` to `package.json` (used narrowly: noise-stripping + self-containment validation, not structural parsing).
+- Create a private Supabase Storage bucket (e.g. `audit-source-html`) with an RLS policy mirroring the `audits` table (owner + service-role access only). Add a small `src/lib/storage.ts` helper: `uploadSourceHtml()`, `getSourceHtml()`.
+- Add `src/lib/audit/types.ts`: `ContentBlock`, `AuditContentV3`, `isAuditContentV3`, per-block-type guards. Extend the `AuditContent` union and `isAuditContent`.
+- Migration `supabase/migrations/004_add_html_revision_support.sql`: add `job_kind TEXT NOT NULL DEFAULT 'create'` and `instructions TEXT` to `enhancement_runs`. (No `audits` table migration needed — `sourceType`/`sourceHtmlPath` live inside the existing `content` JSONB column, same pattern as `sourceFiles` on the Markdown side.)
+
+**Acceptance criteria:** existing Markdown enhancement flow passes a full manual regression (upload → job completes → renders → dashboard shows it) after the extraction, with zero behavior change. New types compile and existing `isAuditContent` guard still accepts every current record shape. Storage bucket exists and a manual signed-URL round trip works.
+
+**Status:** ⬜ Pending
+
+---
+
+##### Phase H1: HTML Upload API + LLM Transformation Skill
+
+- `seo-audit-enhancer/HTML_SKILL.md` — new system prompt: convert cleaned HTML into `blocks[]` per the schema, explicitly instructed to describe content, not copy inline styles/markup.
+- `seo-audit-enhancer/html-schema.json` — JSON Schema for the `blocks[]` payload (mirrors the existing `schema.json` convention).
+- `src/lib/html-enhancer.ts` (new) — `enhanceHtmlDeliverable(options)`: size/extension validation, cheerio noise-strip + self-containment check, Storage upload, prompt assembly, call the shared provider client from Phase H0, validate response, `upsertClient()` + `insertAudit()`.
+- `src/app/api/html-enhancer/route.ts` (new) — mirrors `audit-enhancer/route.ts` request handling exactly (multipart parse, single-file validation, `after()` background job, `insertEnhancementRun(job_kind: "create")`).
+- `src/app/api/html-enhancer/status/route.ts` (new) — mirrors the existing status route (can likely be a thin generic wrapper since `getEnhancementRun` is already job-kind-agnostic).
+
+**Acceptance criteria:** uploading a real self-contained HTML export (Google Doc / Notion / Canva sample) produces a valid `schemaVersion: 3` row in `audits.content`; invalid/oversized/non-self-contained files are rejected with a clear error before any AI call; the original file is retrievable from Storage via `sourceHtmlPath`.
+
+**Status:** ⬜ Pending
+
+---
+
+##### Phase H2: Block Renderer Components
+
+- New: `HeadingBlock.tsx`, `ParagraphBlock.tsx`, `ListBlock.tsx`, `TableBlock.tsx` (generic — distinct from the audit-specific `ActionItemsTable`), `ImageBlock.tsx`, `QuoteBlock.tsx`, `CalloutBlock.tsx`.
+- New: `AuditReportV3.tsx` — iterates `content.blocks`, dispatches each to its renderer; reuses `MetricCard`/`GlossaryGrid`/`FaqSection` directly for the block types that map onto them.
+- `AuditAssembly.tsx`: add the `schemaVersion === 3` branch alongside the existing v2/legacy branch. Confirm the same screen/print duality v2 uses (one component serves both `.audit-screen-only` and `.audit-print-only`) is sufficient for v3 — no separate print document expected.
+
+**Acceptance criteria:** a `schemaVersion: 3` document with at least one of every block type renders correctly on `/dashboard/audits/:id`, uses only existing brand CSS classes/tokens, and prints cleanly via the existing `PrintAuditButton`.
+
+**Status:** ⬜ Pending
+
+---
+
+##### Phase H3: Upload Form (`/enhance`)
+
+- Add a source-type toggle (Markdown / HTML) to `src/app/enhance/page.tsx`.
+- New `EnhanceHtmlForm.tsx` (client component): single `.html`/`.htm` file input with client-side extension/size checks (same pattern as `EnhanceAuditForm`'s file handling), `clientName`/`auditType`/`supportingWorkbookLink` fields (identical to the Markdown form), and — per the brief — a `<details>` collapsed-by-default dropdown (same pattern as `AuditSourceFiles.tsx`) containing a `<textarea name="instructions" placeholder="Optional: tone, sections to emphasize, things to exclude…">`.
+- Extract the poll/parse helpers shared with `EnhanceAuditForm.tsx` into `src/lib/enhance-client.ts` at this point rather than copy-pasting a third time (create + revise both need polling).
+
+**Acceptance criteria:** the instructions field is collapsed on page load, expands on click, and its value reaches `/api/html-enhancer` when filled in; leaving it collapsed/empty still submits successfully.
+
+**Status:** ⬜ Pending
+
+---
+
+##### Phase H4: Dashboard Filter + Source Badge
+
+- `src/lib/db.ts` `getAudits()`: extend the query to select `content->>'schemaVersion'` (or `content->'meta'->>'sourceType'`) alongside existing columns.
+- `src/lib/db-types.ts` `AuditDisplay`: add `sourceType: "markdown" | "html" | "legacy"`.
+- `src/app/page.tsx`: add an "All / Markdown / HTML" filter control and a small source badge per row (reuse the existing badge visual style from `src/components/shared/Badges.tsx` if it fits, otherwise a minimal new pill).
+
+**Acceptance criteria:** filtering to "HTML" shows only `schemaVersion: 3` audits; the badge correctly distinguishes all three source types on real data (legacy, markdown v2, html v3).
+
+**Status:** ⬜ Pending
+
+---
+
+##### Phase H5: Re-LLM Edit Flow
+
+- `src/app/api/html-enhancer/revise/route.ts` (new): auth + ownership check (reuse the `PATCH /api/audits` pattern), load current content + original HTML from Storage, call the shared provider client in "revision mode" (`HTML_SKILL.md` gets a "Revision Mode" section: given prior `blocks[]`, the original HTML, and new instructions, return updated `blocks[]`), validate, update `audits.content` in place, log an `enhancement_runs` row with `job_kind: "revise"` and the `instructions` text.
+- `EditAuditButton.tsx`: branch on `sourceType`. HTML-sourced audits get a new modal (textarea + "Regenerate" button) that posts to the revise endpoint and polls status via the Phase H3 shared client helper, then reloads. Markdown-sourced audits keep today's workbook-link editor unchanged.
+
+**Acceptance criteria:** submitting an edit instruction against an HTML-sourced audit updates `audits.content` without requiring the original file to be re-uploaded; the Markdown-sourced `Edit` flow is provably unchanged (regression check); each revision is visible in `enhancement_runs` with its instructions text for audit-trail purposes.
+
+**Status:** ⬜ Pending
+
+---
+
+##### Phase H6: Guardrails & Docs
+
+- Surface the self-containment warning from Phase H1 in the upload UI as a non-blocking banner ("This HTML references external resources; they may not render correctly") rather than a hard rejection, unless the team decides external refs should be a hard error.
+- Decide and document an image-handling policy: large embedded base64 images inflate LLM token usage; consider extracting `<img>` data URIs to Storage during the Phase H1 cheerio pass and referencing them by URL in `image` blocks instead of round-tripping base64 through the model.
+- Update `MAP.md` with the new routes, tables/columns, and component tree once shipped.
+- Explicitly out of scope for v1: a revision-history diff/viewer UI. `enhancement_runs` retains every revision's instructions for later use, but the dashboard only ever shows current content — do not build a history browser unless separately requested.
+
+**Acceptance criteria:** `MAP.md` reflects the shipped routes/schema; the image-handling policy is written down (even if the answer is "defer," it must be a decision, not a silent gap).
+
+**Status:** ⬜ Pending
+
+---
+
+##### Phase H7: Integration Test
+
+- Upload 2-3 real self-contained HTML samples from different sources (e.g. a Google Docs export, a Notion export, a ChatGPT canvas export) and confirm each renders on-brand.
+- Confirm the dashboard HTML filter and source badges work on real data.
+- Run the full create → dashboard → edit-with-instructions → re-render loop end to end.
+- Confirm Storage contains the original file and RLS blocks cross-owner access to the revise endpoint.
+- Confirm the Markdown pipeline (upload, dashboard listing, edit-workbook-link) still works unchanged.
+
+**Acceptance criteria:** all of the above pass manually; no regression in the existing Markdown flow.
+
+**Status:** ⬜ Pending
+
+---
+
+### Dependency Map
+
+```
+H0 (foundations: shared provider client, Storage, types) → H1 (upload API + skill)
+H1 → H2 (block renderers) and H1 → H3 (upload form) can proceed in parallel
+H2 + H3 → H4 (dashboard filter)
+H1 → H5 (revise flow) — needs Storage + the create pipeline first
+H4 + H5 → H6 (guardrails/docs) → H7 (integration test)
+```
+
+### Commands Reference
+
+| Command | Action |
+|---------|--------|
+| "Start Phase H0" | Begin the shared provider-client extraction + Storage/type foundations |
+| "Start Phase HN" | Begin the specified HTML-ingestion phase |
+| "Phase HN complete" | Mark phase as done |
+
+---
+
+*Created: 2026-05-18 | Last updated: 2026-07-13*

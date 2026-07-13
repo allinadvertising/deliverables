@@ -1,19 +1,23 @@
 import * as cheerio from "cheerio";
 import { htmlSkillContent } from "./html-skill-content";
 import {
+  isAuditContentV3,
   isAuditTransformationV3Payload,
   type AuditContentV3,
+  type ContentBlock,
 } from "./audit/types";
 import {
   serializeError,
   type AuditEnhancerLogger,
 } from "./audit-enhancer-logs";
 import {
+  getAuditContent,
   insertAudit,
+  updateAuditContent,
   updateEnhancementRun,
   upsertClient,
 } from "./db";
-import { uploadSourceHtml } from "./storage";
+import { getSourceHtml, uploadSourceHtml } from "./storage";
 import {
   AuditEnhancerError,
   callModel,
@@ -230,6 +234,160 @@ export async function enhanceHtmlDeliverable(
     schemaVersion: 3,
     title: `${context.clientName} - ${context.auditType}`,
   };
+}
+
+export type ReviseHtmlOptions = {
+  auditId: string;
+  instructions: string;
+  logger?: AuditEnhancerLogger;
+  model?: string;
+  provider: ProviderId;
+};
+
+/**
+ * Re-runs the LLM against an existing HTML-sourced (schemaVersion 3) audit's
+ * current blocks[] plus the original uploaded HTML, applying only the
+ * requested change instead of re-flattening from scratch. The caller
+ * (the /revise route) is responsible for auth/ownership checks before
+ * scheduling this - this function re-fetches and re-validates the content
+ * itself rather than trusting a value passed in from an earlier check,
+ * since it runs in a background job that may execute after some delay.
+ */
+export async function reviseHtmlDeliverable(
+  options: ReviseHtmlOptions,
+): Promise<EnhanceHtmlResult> {
+  await options.logger?.info("html_revision_started", {
+    auditId: options.auditId,
+    instructionsChars: options.instructions.length,
+    provider: options.provider,
+  });
+
+  const audit = await getAuditContent(options.auditId);
+
+  if (!audit || !isAuditContentV3(audit.content)) {
+    throw new AuditEnhancerError(
+      "This audit is not an HTML-sourced deliverable and cannot be revised this way.",
+      400,
+      withLogDiagnostics(options.logger),
+    );
+  }
+
+  const content = audit.content;
+  const originalHtml = content.meta.sourceHtmlPath
+    ? await getSourceHtml(content.meta.sourceHtmlPath).catch((err) => {
+        options.logger?.warn("source_html_fetch_failed", serializeError(err));
+        return null;
+      })
+    : null;
+
+  const modelOutput = await callModel({
+    logger: options.logger,
+    model: options.model,
+    provider: options.provider,
+    systemPrompt: buildSystemPrompt(htmlSkillContent),
+    userPrompt: buildRevisionUserPrompt({
+      auditType: content.meta.auditType,
+      clientName: content.meta.clientName,
+      currentBlocks: content.blocks,
+      instructions: options.instructions,
+      originalHtml,
+    }),
+  });
+
+  let transformedOutput: unknown;
+
+  try {
+    transformedOutput = JSON.parse(stripCodeFence(modelOutput));
+  } catch {
+    const parseErrorPath = await options.logger?.saveRaw(
+      "html-revision-json-parse-error",
+      modelOutput,
+    );
+    throw new AuditEnhancerError(
+      "AI did not return valid JSON. Check the raw response log.",
+      502,
+      withLogDiagnostics(options.logger, {
+        provider: options.provider,
+        providerResponsePath: parseErrorPath,
+      }),
+    );
+  }
+
+  if (!isAuditTransformationV3Payload(transformedOutput)) {
+    const validationErrorPath = await options.logger?.saveRaw(
+      "html-revision-v3-validation-error",
+      modelOutput,
+    );
+    throw new AuditEnhancerError(
+      "AI returned JSON but it does not match the v3 block shape (blocks).",
+      502,
+      withLogDiagnostics(options.logger, {
+        provider: options.provider,
+        providerResponsePath: validationErrorPath,
+      }),
+    );
+  }
+
+  const updatedContent: AuditContentV3 = {
+    ...content,
+    blocks: transformedOutput.blocks,
+  };
+
+  await updateAuditContent(options.auditId, updatedContent);
+
+  await options.logger?.info("html_revision_stored", {
+    auditId: options.auditId,
+    blocks: updatedContent.blocks.length,
+  });
+
+  return {
+    auditId: options.auditId,
+    auditType: content.meta.auditType,
+    clientName: content.meta.clientName,
+    logId: options.logger?.id,
+    logPath: options.logger?.filePath,
+    model: resolveModel(options.provider, options.model),
+    provider: options.provider,
+    schemaVersion: 3,
+    title: `${content.meta.clientName} - ${content.meta.auditType}`,
+  };
+}
+
+function buildRevisionUserPrompt(options: {
+  auditType: string;
+  clientName: string;
+  currentBlocks: ContentBlock[];
+  instructions: string;
+  originalHtml: string | null;
+}) {
+  return [
+    "Revise the existing version 3 block JSON for All In Advertising per the instructions below. This is Revision Mode: apply only the requested change and preserve everything else exactly, per the skill's Revision Mode rules.",
+    "",
+    `Client name: ${options.clientName}`,
+    `Audit type: ${options.auditType}`,
+    "",
+    "Requested change:",
+    options.instructions,
+    "",
+    "Current blocks JSON (the prior flattening output - preserve everything not affected by the requested change):",
+    "```json",
+    JSON.stringify({ blocks: options.currentBlocks }),
+    "```",
+    options.originalHtml
+      ? [
+          "",
+          "Original source HTML (for grounding/fact-checking only, scripts/styles already stripped):",
+          "```html",
+          cleanHtml(options.originalHtml).bodyHtml,
+          "```",
+        ].join("\n")
+      : "",
+    "",
+    "Return one JSON object matching the v3 model-output schema: a single top-level `blocks` array containing the complete updated set of blocks, not a diff.",
+    "Do not wrap the JSON in markdown fences unless required by the provider.",
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 type CleanedHtml = {

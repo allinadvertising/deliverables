@@ -95,6 +95,7 @@ export function AuditList({ audits }: { audits: AuditDisplay[] }) {
                   />
                   <EditAuditButton
                     auditId={audit.id}
+                    sourceType={audit.sourceType}
                     supportingWorkbookLink={audit.supportingWorkbookLink}
                     title={`${audit.client} ${audit.title}`}
                   />

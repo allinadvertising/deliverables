@@ -28,6 +28,8 @@ export type EnhancementStatus =
   | "completed"
   | "failed";
 
+export type EnhancementJobKind = "create" | "revise";
+
 export type DbEnhancementRun = {
   id: string;
   audit_id: string | null;
@@ -37,6 +39,8 @@ export type DbEnhancementRun = {
   log_id: string | null;
   output_path: string | null;
   error_message: string | null;
+  job_kind: EnhancementJobKind;
+  instructions: string | null;
   created_at: string;
   completed_at: string | null;
 };

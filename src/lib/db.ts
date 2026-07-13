@@ -1,5 +1,10 @@
 import { supabaseServer } from "./supabase-server";
-import type { AuditDisplay, AuditSourceType, EnhancementStatus } from "./db-types";
+import type {
+  AuditDisplay,
+  AuditSourceType,
+  EnhancementJobKind,
+  EnhancementStatus,
+} from "./db-types";
 
 // ── Audit listing (replaces filesystem scan) ──────────────────────
 
@@ -171,6 +176,40 @@ export async function insertAudit(params: {
   return data.id as string;
 }
 
+export async function getAuditContent(auditId: string): Promise<{
+  content: Record<string, unknown> | null;
+  ownerId: string | null;
+} | null> {
+  const { data, error } = await supabaseServer
+    .from("audits")
+    .select("content, owner_id")
+    .eq("id", auditId)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    content: (data.content as Record<string, unknown> | null) ?? null,
+    ownerId: (data.owner_id as string | null) ?? null,
+  };
+}
+
+export async function updateAuditContent(
+  auditId: string,
+  content: Record<string, unknown>,
+): Promise<void> {
+  const { error } = await supabaseServer
+    .from("audits")
+    .update({ content, updated_at: new Date().toISOString() })
+    .eq("id", auditId);
+
+  if (error) {
+    throw new Error(`Failed to update audit content: ${error.message}`);
+  }
+}
+
 export async function deleteAuditByFilePath(filePath: string): Promise<void> {
   const { error } = await supabaseServer
     .from("audits")
@@ -192,6 +231,8 @@ export async function insertEnhancementRun(params: {
   logId: string | null;
   outputPath: string | null;
   errorMessage?: string | null;
+  jobKind?: EnhancementJobKind;
+  instructions?: string | null;
 }): Promise<string> {
   const { data, error } = await supabaseServer
     .from("enhancement_runs")
@@ -203,6 +244,8 @@ export async function insertEnhancementRun(params: {
       log_id: params.logId,
       output_path: params.outputPath,
       error_message: params.errorMessage ?? null,
+      job_kind: params.jobKind ?? "create",
+      instructions: params.instructions ?? null,
       completed_at:
         params.status === "completed" || params.status === "failed"
           ? new Date().toISOString()

@@ -573,7 +573,15 @@ Revise ("Edit" button on an HTML-sourced audit):
 
 **Acceptance criteria:** submitting an edit instruction against an HTML-sourced audit updates `audits.content` without requiring the original file to be re-uploaded; the Markdown-sourced `Edit` flow is provably unchanged (regression check); each revision is visible in `enhancement_runs` with its instructions text for audit-trail purposes.
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- Migration `004_add_html_revision_support.sql` applied to Supabase (confirmed by querying `enhancement_runs.job_kind`/`instructions` directly before building against them).
+- `HTML_SKILL.md` and `html-skill-content.ts` both got the promised "Revision Mode" section. `reviseHtmlDeliverable()` added to `html-enhancer.ts`: re-fetches and re-validates the audit's current content itself (doesn't trust a value passed from the route's earlier check, since it runs in a background job), fetches the original HTML back from Storage via `sourceHtmlPath`, and calls the same shared `callModel` with a revision-mode prompt containing the current `blocks[]` + original HTML + instructions.
+- `db.ts` got `getAuditContent()`/`updateAuditContent()` helpers and `insertEnhancementRun()` now accepts `jobKind`/`instructions`.
+- `EditAuditButton.tsx` now branches on `sourceType`: HTML-sourced audits get a new "Revise Deliverable" modal (textarea + Regenerate, reusing `EnhanceLoadingStatus` and the Phase H3 poll helper); Markdown-sourced audits render the exact same workbook-link editor as before, unchanged.
+- **Real end-to-end verification, both directions:** drove `/api/html-enhancer/revise` from inside the authenticated browser session (the endpoint requires auth, unlike the create routes) via `fetch()`, asking it to insert a specific marker callout right after the Executive Summary heading. Result: block count went 163 → 164, the marker landed at exactly the right position with the requested tone, and the `enhancement_runs` row recorded `job_kind: "revise"` with the full instructions text. Then issued a second revision asking to remove that marker — block count returned to exactly 163, marker gone, everything else intact. This proves the flow is a true incremental edit, not a from-scratch regeneration.
+- **Regression-verified the Markdown Edit flow is unchanged**: created a fresh Markdown-sourced audit, confirmed its dashboard row still opens the original workbook-link modal (not the revise modal), while the HTML row's Edit button correctly opens the new revise modal with "Regenerate" disabled until text is entered.
+- `npm run build`, `npx tsc --noEmit`, `npx eslint` all clean.
 
 ---
 

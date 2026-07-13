@@ -11,9 +11,7 @@ import {
   type ProviderId,
 } from "@/lib/enhance-client";
 
-const maxFiles = 3;
-
-type EnhanceResult = {
+type EnhanceHtmlResult = {
   auditId: string;
   auditType: string;
   clientName: string;
@@ -21,7 +19,6 @@ type EnhanceResult = {
   logPath?: string;
   model: string;
   provider: ProviderId;
-  shareToken?: string;
   title: string;
 };
 
@@ -36,35 +33,36 @@ type EnhanceError = {
 
 const defaultProvider: ProviderId = "openai";
 const defaultModel = "gpt-5.6-sol";
+const maxFileBytes = 8 * 1024 * 1024;
 
-export default function EnhanceAuditForm() {
+export default function EnhanceHtmlForm() {
   const [error, setError] = useState<EnhanceError | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
-  const [result, setResult] = useState<EnhanceResult | null>(null);
+  const [result, setResult] = useState<EnhanceHtmlResult | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [fileNames, setFileNames] = useState<string[]>([]);
+  const [fileName, setFileName] = useState<string | null>(null);
   const [fileWarning, setFileWarning] = useState<string | null>(null);
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
 
     if (!files || files.length === 0) {
-      setFileNames([]);
+      setFileName(null);
       setFileWarning(null);
       return;
     }
 
-    if (files.length > maxFiles) {
+    const file = files[0];
+
+    if (file.size > maxFileBytes) {
       event.target.value = "";
-      setFileNames([]);
-      setFileWarning(
-        `You can upload up to ${maxFiles} markdown files. Please select ${maxFiles} or fewer.`,
-      );
+      setFileName(null);
+      setFileWarning("That file is over 8 MB. Keep uploads under 8 MB.");
       return;
     }
 
     setFileWarning(null);
-    setFileNames(Array.from(files).map((file) => file.name));
+    setFileName(file.name);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -75,7 +73,7 @@ export default function EnhanceAuditForm() {
     setSubmitting(true);
 
     try {
-      const response = await fetch("/api/audit-enhancer", {
+      const response = await fetch("/api/html-enhancer", {
         body: new FormData(event.currentTarget),
         method: "POST",
       });
@@ -89,7 +87,7 @@ export default function EnhanceAuditForm() {
           message:
             errorPayload.error ||
             [
-              "Audit enhancement failed before returning JSON.",
+              "HTML enhancement failed before returning JSON.",
               errorPayload.responseStatus
                 ? `HTTP ${errorPayload.responseStatus} ${errorPayload.responseStatusText ?? ""}`.trim()
                 : "",
@@ -121,7 +119,7 @@ export default function EnhanceAuditForm() {
             title: completed.title,
           });
           event.currentTarget.reset();
-          setFileNames([]);
+          setFileName(null);
           setFileWarning(null);
           return;
         }
@@ -130,24 +128,24 @@ export default function EnhanceAuditForm() {
           logId: completed.logId ?? undefined,
           message:
             completed.error ||
-            "Audit enhancement failed before the job completed.",
+            "HTML enhancement failed before the job completed.",
         });
         return;
       }
 
-      setResult(payload as EnhanceResult);
+      setResult(payload as EnhanceHtmlResult);
       event.currentTarget.reset();
-      setFileNames([]);
+      setFileName(null);
       setFileWarning(null);
     } catch (caughtError) {
       const message =
         caughtError instanceof Error
           ? caughtError.message
-          : "Audit enhancement failed.";
+          : "HTML enhancement failed.";
       setError({
         message:
           message === "Failed to fetch"
-            ? "The enhancement request connection closed before the server returned a response. On Vercel this usually means the /api/audit-enhancer function exceeded its runtime limit. Check the Vercel function logs for /api/audit-enhancer."
+            ? "The enhancement request connection closed before the server returned a response. On Vercel this usually means the /api/html-enhancer function exceeded its runtime limit. Check the Vercel function logs for /api/html-enhancer."
             : message,
       });
     } finally {
@@ -163,7 +161,7 @@ export default function EnhanceAuditForm() {
         onSubmit={handleSubmit}
       >
         <div className="border-b border-[#d9e2ef] bg-[#18355f] px-5 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white">
-          Markdown Source
+          HTML Source
         </div>
 
         <div className="grid gap-5 p-5 sm:p-6">
@@ -172,12 +170,11 @@ export default function EnhanceAuditForm() {
 
           <label className="grid gap-2">
             <span className="text-sm font-black text-[#16243d]">
-              Audit files
+              Deliverable file
             </span>
             <input
-              accept=".md,.markdown,text/markdown,text/plain"
+              accept=".html,.htm,text/html"
               className="w-full border border-[#c9d7e9] bg-[#f8fbff] px-3 py-3 text-sm font-medium text-[#16243d] file:mr-4 file:border-0 file:bg-[#3e71b8] file:px-4 file:py-2 file:text-sm file:font-black file:text-white"
-              multiple
               name="file"
               onChange={handleFileChange}
               required
@@ -187,15 +184,15 @@ export default function EnhanceAuditForm() {
               <p className="text-xs font-bold text-[#dc2626]">
                 {fileWarning}
               </p>
-            ) : fileNames.length > 0 ? (
+            ) : fileName ? (
               <p className="text-xs font-bold text-[#475775]">
-                {fileNames.length} file{fileNames.length > 1 ? "s" : ""}{" "}
-                selected: {fileNames.join(", ")}
+                Selected: {fileName}
               </p>
             ) : (
               <p className="text-xs font-medium text-[#65718a]">
-                Upload up to {maxFiles} .md files. They will be combined in
-                the order selected.
+                Upload one self-contained .html file (inline styles, no
+                external assets). It will be flattened into the portal&apos;s
+                component design.
               </p>
             )}
           </label>
@@ -220,7 +217,7 @@ export default function EnhanceAuditForm() {
               <input
                 className="w-full border border-[#c9d7e9] bg-white px-3 py-3 text-sm font-medium text-[#16243d] outline-none focus:border-[#3e71b8]"
                 name="auditType"
-                placeholder="Technical SEO Audit"
+                placeholder="Google Ads Audit"
                 type="text"
               />
             </label>
@@ -238,12 +235,34 @@ export default function EnhanceAuditForm() {
             />
           </label>
 
+          <details className="group border border-[#c9d7e9] bg-[#f8fbff]">
+            <summary className="cursor-pointer select-none list-none px-4 py-3 text-sm font-black text-[#16243d] marker:content-none">
+              <span className="mr-1 inline-block transition-transform group-open:rotate-90">
+                &rsaquo;
+              </span>
+              Extra instructions (optional)
+            </summary>
+            <div className="border-t border-[#c9d7e9] px-4 py-4">
+              <textarea
+                className="w-full resize-y border border-[#c9d7e9] bg-white px-3 py-3 text-sm font-medium text-[#16243d] outline-none focus:border-[#3e71b8]"
+                name="instructions"
+                placeholder="Tone, sections to emphasize or exclude, terminology preferences..."
+                rows={4}
+              />
+              <p className="mt-2 text-xs font-medium text-[#65718a]">
+                Applied as styling and scope guidance on top of the standard
+                flattening rules. Cannot change the output format or
+                fabricate data.
+              </p>
+            </div>
+          </details>
+
           <button
             className="w-full bg-[#f6b328] px-5 py-3 text-sm font-black uppercase tracking-[0.12em] text-[#16243d] transition-colors hover:bg-[#e6a51d] disabled:cursor-not-allowed disabled:bg-[#d9e2ef] disabled:text-[#65718a]"
             disabled={submitting}
             type="submit"
           >
-            {submitting ? "Enhancing Audit" : "Enhance Audit"}
+            {submitting ? "Enhancing Deliverable" : "Enhance Deliverable"}
           </button>
         </div>
       </form>
@@ -312,7 +331,7 @@ export default function EnhanceAuditForm() {
 
           {!submitting && !error && !result ? (
             <div className="border-l-4 border-[#f6b328] bg-[#fff8e8] px-4 py-3 text-sm font-bold text-[#6b4a00]">
-              Awaiting markdown upload.
+              Awaiting HTML upload.
             </div>
           ) : null}
         </div>

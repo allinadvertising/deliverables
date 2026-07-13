@@ -538,7 +538,13 @@ Revise ("Edit" button on an HTML-sourced audit):
 
 **Acceptance criteria:** the instructions field is collapsed on page load, expands on click, and its value reaches `/api/html-enhancer` when filled in; leaving it collapsed/empty still submits successfully.
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- Added `EnhanceSourceTabs.tsx` (client) to `/enhance` — a simple Markdown/HTML tab toggle over the two form components, rather than a route split.
+- Built `EnhanceHtmlForm.tsx`: single-file input with client-side size validation (8 MB ceiling, matching the server limit), the same `clientName`/`auditType`/`supportingWorkbookLink` fields as the Markdown form, and the `<details>` collapsed-by-default "Extra instructions" dropdown with a `textarea name="instructions"` — verified visually collapsed on load and expanding on click.
+- Extracted `parseEnhanceResponse`/`isEnhanceJob`/`pollEnhancementJob`/`sleep`/types into `src/lib/enhance-client.ts`, and the loading-status UI into `src/components/shared/EnhanceLoadingStatus.tsx`. Rewrote `EnhanceAuditForm.tsx` to import both instead of keeping its own copies — this was Phase H3 planned work landing a form early, not scope creep.
+- **Real functional test of the instructions plumbing** (not just UI presence): resubmitted the PoC HTML file via `curl` with `instructions=` set to "Only include the Executive Summary section... and Critical Issues... Ignore every other tab/section entirely." Result: 33 blocks (vs. 163 unscoped), headings limited to exactly the Executive Summary and the five Critical Issues findings — confirms the instructions field genuinely reaches the model and is honored, not just accepted and ignored. Also confirms the earlier client-name parenthetical-stripping fix: `clientName` came back as `"iTrainK9"` cleanly this time.
+- `npm run build`, `npx tsc --noEmit`, `npx eslint` all clean.
 
 ---
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { NavBar } from "@/components/NavBar";
-import EnhanceAuditForm from "./EnhanceAuditForm";
+import EnhanceSourceTabs from "./EnhanceSourceTabs";
 
 export const metadata: Metadata = {
   title: "Audit HTML Enhancer | All In Advertising",
@@ -23,7 +23,7 @@ export default function EnhancePage() {
           </h1>
         </header>
 
-        <EnhanceAuditForm />
+        <EnhanceSourceTabs />
       </div>
     </main>
   );

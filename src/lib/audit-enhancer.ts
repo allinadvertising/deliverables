@@ -22,6 +22,14 @@ import {
   type AuditEnhancerErrorDiagnostics,
   type ProviderId,
 } from "./ai-provider-client";
+import {
+  inferDateFromText,
+  normalizeHttpUrl,
+  normalizeText,
+  slugify,
+  stripExtension,
+  titleCase,
+} from "./text-utils";
 
 export {
   AuditEnhancerError,
@@ -266,7 +274,7 @@ export async function enhanceAuditMarkdown(
 function buildAuditContext(options: EnhanceAuditOptions) {
   const now = new Date();
   const timeZone = "America/Bogota";
-  const auditDate = inferAuditDate(options.markdown, now, timeZone);
+  const auditDate = inferDateFromText(options.markdown, now, timeZone);
   const dateLabel = `${auditDate.monthName} ${auditDate.year}`;
   const monthSlug = auditDate.monthName.toLowerCase();
   const year = String(auditDate.year);
@@ -395,121 +403,8 @@ function inferAuditType(markdown: string) {
   return "Technical SEO Audit";
 }
 
-function normalizeText(value?: string) {
-  return value?.replace(/\s+/g, " ").trim() ?? "";
-}
-
-function stripExtension(fileName: string) {
-  return fileName.replace(/\.[^.]+$/, "");
-}
-
 function getAuditFileSlug(auditType: string, fileName: string) {
   return slugify(auditType) || slugify(stripExtension(fileName)) || "seo-audit";
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/&/g, " and ")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
-}
-
-function titleCase(value: string) {
-  return value
-    .replace(/[-_]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/\b\w/g, (character) => character.toUpperCase());
-}
-
-function inferAuditDate(markdown: string, fallback: Date, timeZone: string) {
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const monthPattern = monthNames.join("|");
-  const monthYear = markdown.match(
-    new RegExp(`\\b(${monthPattern})\\s+(?:\\d{1,2},\\s*)?(20\\d{2})\\b`, "i"),
-  );
-
-  if (monthYear) {
-    const monthIndex = monthNames.findIndex(
-      (month) => month.toLowerCase() === monthYear[1].toLowerCase(),
-    );
-
-    if (monthIndex >= 0) {
-      return {
-        monthName: monthNames[monthIndex],
-        monthNumber: monthIndex + 1,
-        year: Number(monthYear[2]),
-      };
-    }
-  }
-
-  const numericDate = markdown.match(/\b(20\d{2})[-/](0?[1-9]|1[0-2])(?:[-/]\d{1,2})?\b/);
-
-  if (numericDate) {
-    const monthNumber = Number(numericDate[2]);
-
-    return {
-      monthName: monthNames[monthNumber - 1],
-      monthNumber,
-      year: Number(numericDate[1]),
-    };
-  }
-
-  const monthNumber = Number(
-    new Intl.DateTimeFormat("en", {
-      month: "numeric",
-      timeZone,
-    }).format(fallback),
-  );
-
-  return {
-    monthName: new Intl.DateTimeFormat("en", {
-      month: "long",
-      timeZone,
-    }).format(fallback),
-    monthNumber,
-    year: Number(
-      new Intl.DateTimeFormat("en", {
-        timeZone,
-        year: "numeric",
-      }).format(fallback),
-    ),
-  };
-}
-
-function normalizeHttpUrl(value?: string) {
-  const text = normalizeText(value);
-
-  if (!text) {
-    return "";
-  }
-
-  try {
-    const parsed = new URL(text);
-
-    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-      return parsed.toString();
-    }
-  } catch {
-    return "";
-  }
-
-  return "";
 }
 
 function buildSupportingWorkbookButton(url: string) {

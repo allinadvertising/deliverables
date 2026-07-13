@@ -498,11 +498,18 @@ Revise ("Edit" button on an HTML-sourced audit):
 - `seo-audit-enhancer/html-schema.json` — JSON Schema for the `blocks[]` payload (mirrors the existing `schema.json` convention).
 - `src/lib/html-enhancer.ts` (new) — `enhanceHtmlDeliverable(options)`: size/extension validation, cheerio noise-strip + self-containment check, Storage upload, prompt assembly, call the shared provider client from Phase H0, validate response, `upsertClient()` + `insertAudit()`.
 - `src/app/api/html-enhancer/route.ts` (new) — mirrors `audit-enhancer/route.ts` request handling exactly (multipart parse, single-file validation, `after()` background job, `insertEnhancementRun(job_kind: "create")`).
-- `src/app/api/html-enhancer/status/route.ts` (new) — mirrors the existing status route (can likely be a thin generic wrapper since `getEnhancementRun` is already job-kind-agnostic).
+- ~~`src/app/api/html-enhancer/status/route.ts`~~ — not built. `getEnhancementRun` is already job-kind-agnostic, so the existing `/api/audit-enhancer/status?runId=` route works unchanged for HTML jobs too (verified by polling a real HTML job through it). Reused directly instead of duplicating a thin wrapper.
 
 **Acceptance criteria:** uploading a real self-contained HTML export (Google Doc / Notion / Canva sample) produces a valid `schemaVersion: 3` row in `audits.content`; invalid/oversized/non-self-contained files are rejected with a clear error before any AI call; the original file is retrievable from Storage via `sourceHtmlPath`.
 
-**Status:** ⬜ Pending
+**Status:** ✅ Complete (2026-07-13)
+
+- Built `HTML_SKILL.md` + condensed runtime `src/lib/html-skill-content.ts`, `html-schema.json`, `src/lib/html-enhancer.ts` (`enhanceHtmlDeliverable`), and `src/app/api/html-enhancer/route.ts`.
+- Extracted `normalizeText`/`slugify`/`titleCase`/`stripExtension`/`normalizeHttpUrl`/`inferDateFromText` out of `audit-enhancer.ts` into a new shared `src/lib/text-utils.ts` — these were generic, not markdown-specific, and `html-enhancer.ts` needed the identical logic. `audit-enhancer.ts` now imports them; re-verified the markdown flow still passes end to end after this move too.
+- `cleanHtml()` uses cheerio to strip `<script>`/`<style>`/`<iframe>`/`<noscript>`, strip `on*` event-handler attributes and `javascript:` hrefs/srcs, and collect external `<script src>`/`<link rel=stylesheet href>` references into a `externalRefs` list (logged now; surfaced as a UI warning in Phase H6).
+- **Real end-to-end test against the PoC file** (`iTrainK9-google-ads-audit-2026-04-27 (1).html`, a dense dark-themed Google Ads dashboard with tabs, KPI rows, an SVG gauge, pills, and 10+ data tables): submitted via `curl` to `POST /api/html-enhancer`, polled to completion (~2 min), inspected the stored row directly in Supabase. Result: `schemaVersion: 3`, 163 blocks (53 heading, 48 paragraph, 27 callout, 22 list, 10 table, 3 stat_cards), auditType correctly inferred as "Google Ads Audit", every block passed `isAuditTransformationV3Payload` validation on the first attempt. This audit (`id: 13030c12-012d-4f60-9529-5f60130ff0c5`) is kept in the database as a real fixture for Phase H2's renderer work instead of re-running the LLM call again.
+- Markdown pipeline regression-checked again after the `text-utils.ts` extraction (separate from the Phase H0 check): curl upload → job completion → verified via status endpoint. Clean.
+- `npm run build`, `npx tsc --noEmit`, and `npx eslint` all clean (only the same pre-existing warnings from Phase H0).
 
 ---
 

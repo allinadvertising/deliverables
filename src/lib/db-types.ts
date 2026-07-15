@@ -63,3 +63,30 @@ export type AuditDisplay = {
   supportingWorkbookLink: string | null;
   views: number;
 };
+
+// ── Direct HTML deliverable pipeline (no LLM reconstruction) ──────────
+
+export type DbHtmlDeliverable = {
+  id: string;
+  client_id: string;
+  client_slug: string;
+  audit_slug: string;
+  date_slug: string; // "mm-dd"
+  title: string;
+  storage_path: string;
+  file_size: number;
+  owner_id: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+// Display type for the dashboard's HTML deliverables list.
+export type HtmlDeliverableDisplay = {
+  id: string;
+  url: string;
+  title: string;
+  client: string;
+  dateSlug: string;
+  updatedAt: string;
+  size: string;
+};

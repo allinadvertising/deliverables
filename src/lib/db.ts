@@ -1,9 +1,11 @@
 import { supabaseServer } from "./supabase-server";
+import { deleteBrandedHtml } from "./storage";
 import type {
   AuditDisplay,
   AuditSourceType,
   EnhancementJobKind,
   EnhancementStatus,
+  HtmlDeliverableDisplay,
 } from "./db-types";
 
 // ── Audit listing (replaces filesystem scan) ──────────────────────
@@ -333,6 +335,168 @@ export async function updateEnhancementRun(
   if (error) {
     console.error(`Failed to update enhancement run "${id}":`, error);
   }
+}
+
+// ── Direct HTML deliverables (no-LLM pipeline) ──────────────────────
+
+/**
+ * Inserts a row for the direct HTML pipeline, retrying with a numeric
+ * suffix on the audit slug if (client_slug, date_slug, audit_slug) already
+ * exists — mirrors the race/collision handling in upsertClient() above.
+ */
+export async function insertHtmlDeliverable(params: {
+  clientId: string;
+  clientSlug: string;
+  auditSlug: string;
+  dateSlug: string;
+  title: string;
+  storagePath: string;
+  fileSize: number;
+  ownerId?: string;
+}): Promise<{ id: string; auditSlug: string }> {
+  const maxAttempts = 10;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    const auditSlug =
+      attempt === 0 ? params.auditSlug : `${params.auditSlug}-${attempt + 1}`;
+
+    const { data, error } = await supabaseServer
+      .from("html_deliverables")
+      .insert({
+        audit_slug: auditSlug,
+        client_id: params.clientId,
+        client_slug: params.clientSlug,
+        date_slug: params.dateSlug,
+        file_size: params.fileSize,
+        owner_id: params.ownerId ?? null,
+        storage_path: params.storagePath,
+        title: params.title,
+      })
+      .select("id")
+      .single();
+
+    if (!error) {
+      return { auditSlug, id: data.id as string };
+    }
+
+    // Unique-violation on (client_slug, date_slug, audit_slug): retry with
+    // the next suffix instead of overwriting or failing the upload.
+    if (error.code !== "23505") {
+      throw new Error(`Failed to insert HTML deliverable: ${error.message}`);
+    }
+  }
+
+  throw new Error(
+    "Failed to insert HTML deliverable: exhausted slug collision retries.",
+  );
+}
+
+export async function getHtmlDeliverableBySlug(params: {
+  clientSlug: string;
+  dateSlug: string;
+  auditSlug: string;
+}): Promise<{ storagePath: string; title: string } | null> {
+  const { data, error } = await supabaseServer
+    .from("html_deliverables")
+    .select("storage_path, title")
+    .eq("client_slug", params.clientSlug)
+    .eq("date_slug", params.dateSlug)
+    .eq("audit_slug", params.auditSlug)
+    .maybeSingle();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return { storagePath: data.storage_path as string, title: data.title as string };
+}
+
+export async function listHtmlDeliverables(
+  userId?: string,
+): Promise<HtmlDeliverableDisplay[]> {
+  let query = supabaseServer
+    .from("html_deliverables")
+    .select(
+      `
+      id,
+      title,
+      client_slug,
+      audit_slug,
+      date_slug,
+      file_size,
+      updated_at,
+      owner_id,
+      clients ( name )
+    `,
+    );
+
+  if (userId) {
+    query = query.or(`owner_id.eq.${userId},owner_id.is.null`);
+  }
+
+  const { data, error } = await query.order("updated_at", { ascending: false });
+
+  if (error) {
+    console.error("Failed to fetch HTML deliverables from Supabase:", error);
+    return [];
+  }
+
+  return (data ?? []).map((row: Record<string, unknown>) => {
+    const client = (row.clients as { name?: string } | null) ?? {};
+    const clientSlug = row.client_slug as string;
+    const dateSlug = row.date_slug as string;
+    const auditSlug = row.audit_slug as string;
+
+    return {
+      client: (client.name ?? clientSlug) as string,
+      dateSlug,
+      id: row.id as string,
+      size: formatBytes((row.file_size ?? 0) as number),
+      title: row.title as string,
+      updatedAt: formatDate(row.updated_at as string),
+      url: `/html-audits/${clientSlug}/${dateSlug}/${auditSlug}`,
+    } satisfies HtmlDeliverableDisplay;
+  });
+}
+
+export async function deleteHtmlDeliverable(
+  id: string,
+  userId?: string,
+): Promise<{ ok: true } | { ok: false; error: string; status: number }> {
+  const { data: row } = await supabaseServer
+    .from("html_deliverables")
+    .select("owner_id, storage_path")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!row) {
+    return { error: "HTML deliverable not found.", ok: false, status: 404 };
+  }
+
+  if (row.owner_id && row.owner_id !== userId) {
+    return {
+      error: "You can only delete your own HTML deliverables.",
+      ok: false,
+      status: 403,
+    };
+  }
+
+  const { error } = await supabaseServer
+    .from("html_deliverables")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    return {
+      error: "Failed to delete HTML deliverable.",
+      ok: false,
+      status: 500,
+    };
+  }
+
+  await deleteBrandedHtml(row.storage_path as string);
+
+  return { ok: true };
 }
 
 // ── Helpers ───────────────────────────────────────────────────────

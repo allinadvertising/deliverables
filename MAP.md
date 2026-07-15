@@ -9,9 +9,10 @@
 
 Internal portal for **All In Advertising** staff to:
 1. Upload raw `.md` SEO audit files and convert them to structured JSON via an AI pipeline (OpenAI or DeepSeek).
-2. Upload self-contained `.html` deliverables (any tool's export) and flatten them into the same on-brand component design via an LLM pipeline that produces a `blocks[]` array (schemaVersion 3) instead of arbitrary markup.
-3. Manage the resulting audit deliverables: view, share, edit (or, for HTML-sourced audits, re-run the LLM against the current content with new instructions instead of starting over), and delete.
-4. Share audits with clients via an unguessable token URL — no client login required.
+2. Upload self-contained `.html` deliverables (any tool's export) and flatten them into the same on-brand component design via an LLM pipeline that produces a `blocks[]` array (schemaVersion 3) instead of arbitrary markup. **Legacy path as of 2026-07-15** — still fully functional for existing schemaVersion-3 audits, but no longer the active upload UI (see #3).
+3. Publish self-contained `.html` deliverables directly — no LLM involved. The upload is served close to verbatim at a path-based route (`/html-audits/<client-slug>/<mm-dd>/<audit-slug>`) with only a brand CSS stylesheet injected into `<head>`. This is the active HTML upload path (`src/lib/brand-html.ts`, `/api/html-audits`) and a separate, parallel pipeline from #2 — it does not touch the `audits` table, `AuditContent` schema, or `AuditAssembly` renderer.
+4. Manage the resulting audit deliverables: view, share, edit (or, for HTML-sourced audits, re-run the LLM against the current content with new instructions instead of starting over), and delete.
+5. Share audits with clients via an unguessable token URL — no client login required (except direct HTML deliverables, which use a human-readable path instead of a token — see Routes).
 
 ---
 
@@ -37,13 +38,17 @@ deliverables/
 ├── src/
 │   ├── app/                          # Next.js App Router
 │   │   ├── layout.tsx                # Root layout: wraps everything in <AuthProvider>
-│   │   ├── page.tsx                  # Dashboard (/) — lists all audits, auth-gated
+│   │   ├── page.tsx                  # Dashboard (/) — lists all audits + direct HTML deliverables, auth-gated
 │   │   ├── globals.css               # Tailwind v4 import + audit design system CSS classes
-│   │   ├── robots.ts                 # robots.txt: disallows /audit, /enhance, /api
-│   │   ├── AuditList.tsx             # "use client" — dashboard table + All/Markdown/HTML/Legacy filter
+│   │   ├── robots.ts                 # robots.txt: disallows /audit, /html-audits, /enhance, /api
+│   │   ├── AuditList.tsx             # "use client" — dashboard table + All/Markdown/HTML/Legacy filter (LLM-sourced audits)
+│   │   ├── HtmlAuditList.tsx         # Server — dashboard table for direct (no-LLM) HTML deliverables
+│   │   ├── DeleteHtmlAuditButton.tsx # "use client" — delete a direct HTML deliverable with confirm dialog
 │   │   ├── ShareButton.tsx           # "use client" — share token modal
 │   │   ├── DeleteAuditButton.tsx     # "use client" — delete with confirm dialog
 │   │   ├── EditAuditButton.tsx       # "use client" — branches on sourceType: workbook-link modal (markdown/legacy) or revise modal (html)
+│   │   ├── html-audits/
+│   │   │   └── [clientSlug]/[dateSlug]/[auditSlug]/route.ts # GET: serve a published direct HTML deliverable as raw text/html (public, no auth)
 │   │   ├── login/
 │   │   │   ├── page.tsx              # Login form (email + password, Supabase auth)
 │   │   │   └── loading.tsx
@@ -55,18 +60,21 @@ deliverables/
 │   │   │   └── page.tsx              # Authenticated viewer (/dashboard/audits/:id)
 │   │   ├── enhance/
 │   │   │   ├── page.tsx              # Enhance page shell (server component)
-│   │   │   ├── EnhanceSourceTabs.tsx # "use client" — Markdown/HTML tab toggle
+│   │   │   ├── EnhanceSourceTabs.tsx # "use client" — Markdown/HTML tab toggle; HTML tab renders EnhanceHtmlDirectForm
 │   │   │   ├── EnhanceAuditForm.tsx  # "use client" — markdown upload + poll UI
-│   │   │   └── EnhanceHtmlForm.tsx   # "use client" — HTML upload + collapsed "extra instructions" dropdown + poll UI
+│   │   │   ├── EnhanceHtmlDirectForm.tsx # "use client" — direct HTML upload (client/title/date only, no AI, synchronous) — the active HTML tab
+│   │   │   └── EnhanceHtmlForm.tsx   # "use client" — legacy LLM HTML upload + collapsed "extra instructions" dropdown + poll UI — kept working, no longer wired into the tab
 │   │   └── api/
 │   │       ├── audits/route.ts       # PATCH (edit workbook link), DELETE audit
 │   │       ├── share-token/route.ts  # POST/DELETE/PUT share token management
 │   │       ├── audit-enhancer/
 │   │       │   ├── route.ts          # POST: trigger markdown AI job (202 + jobId)
-│   │       │   └── status/route.ts   # GET: poll job status by runId — job-kind-agnostic, also used by the HTML pipeline
-│   │       └── html-enhancer/
-│   │           ├── route.ts          # POST: trigger HTML flattening AI job (202 + jobId)
-│   │           └── revise/route.ts   # POST: re-LLM an existing HTML-sourced audit with new instructions (auth required)
+│   │       │   └── status/route.ts   # GET: poll job status by runId — job-kind-agnostic, also used by the LLM HTML pipeline
+│   │       ├── html-enhancer/
+│   │       │   ├── route.ts          # POST: trigger HTML flattening AI job (202 + jobId) — legacy tab, still functional, no longer linked from the UI
+│   │       │   └── revise/route.ts   # POST: re-LLM an existing HTML-sourced audit with new instructions (auth required)
+│   │       └── html-audits/
+│   │           └── route.ts          # POST: publish a direct HTML deliverable (no AI, synchronous); DELETE: remove one
 │   ├── components/
 │   │   ├── AuthProvider.tsx          # "use client" React context: session, user, signOut
 │   │   ├── AuthHeader.tsx            # "use client" sign-in/out button in nav
@@ -107,7 +115,8 @@ deliverables/
 │   │   ├── supabase.ts               # Browser Supabase client (singleton via globalThis)
 │   │   ├── supabase-server.ts        # Server Supabase client (service role key — bypasses RLS)
 │   │   ├── supabase-middleware.ts    # Middleware/server-component client (cookie session)
-│   │   ├── storage.ts                # Supabase Storage helpers: uploadSourceHtml/getSourceHtml (private `audit-source-html` bucket)
+│   │   ├── storage.ts                # Supabase Storage helpers: uploadSourceHtml/getSourceHtml (private `audit-source-html` bucket, LLM pipeline) and uploadBrandedHtml/getBrandedHtml/deleteBrandedHtml (private `audit-branded-html` bucket, direct pipeline)
+│   │   ├── brand-html.ts             # injectBrandStyle(html): appends a brand `<style>` block to an uploaded deliverable's `<head>` via cheerio — direct pipeline only, no structural changes
 │   │   ├── db.ts                     # All Supabase CRUD functions (see DB Functions below)
 │   │   ├── db-types.ts               # Raw DB row types + AuditDisplay display type + AuditSourceType
 │   │   ├── audit/
@@ -144,17 +153,20 @@ deliverables/
 | `/enhance` | Required | Upload markdown → AI enhancement |
 | `/audit?token=xxx` | None (public) | Client-facing audit viewer via share token |
 | `/dashboard/audits/:id` | Required | Staff audit viewer by audit ID |
+| `/html-audits/:clientSlug/:dateSlug/:auditSlug` | None (public) | Direct HTML deliverable viewer — serves the branded HTML verbatim as `text/html`, not via React |
 | `POST /api/audit-enhancer` | Required | Start markdown AI enhancement job |
 | `GET /api/audit-enhancer/status?runId=xxx` | None | Poll enhancement job status (job-kind-agnostic — used by markdown, HTML, and revise jobs) |
-| `POST /api/html-enhancer` | Required | Start HTML flattening AI job |
+| `POST /api/html-enhancer` | Required | Start HTML flattening AI job (legacy, no longer linked from the UI) |
 | `POST /api/html-enhancer/revise` | Required | Re-LLM an existing HTML-sourced audit's content with new instructions |
+| `POST /api/html-audits` | Required | Publish a direct HTML deliverable — no AI, synchronous, returns the `/html-audits/...` URL |
+| `DELETE /api/html-audits` | Required | Delete a direct HTML deliverable (row + Storage object) |
 | `PATCH /api/audits` | Required | Update supporting workbook link |
 | `DELETE /api/audits` | Required | Delete an audit |
 | `POST /api/share-token` | Required | Generate share token |
 | `DELETE /api/share-token` | Required | Revoke share token |
 | `PUT /api/share-token` | Required | Regenerate share token (invalidates old) |
 
-**Middleware** (`proxy.ts`) only gates `/`, `/enhance`, `/login`. Everything else passes through, including `/audit` and all `/api/*` routes.
+**Middleware** (`proxy.ts`) only gates `/`, `/enhance`, `/login`. Everything else passes through, including `/audit`, `/html-audits`, and all `/api/*` routes — `/api/html-audits` and the `/html-audits/...` viewer enforce auth/ownership in the route handlers themselves where needed (upload/delete are auth-gated; the public viewer is intentionally not).
 
 ---
 
@@ -212,11 +224,29 @@ deliverables/
 | `created_at` | timestamptz | |
 | `completed_at` | timestamptz nullable | |
 
+### `html_deliverables` (direct pipeline — separate from `audits`)
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid PK | |
+| `client_id` | uuid FK → clients | |
+| `client_slug` | text | denormalized copy of `clients.slug` for fast route lookup |
+| `audit_slug` | text | slugified title; collision-suffixed (`-2`, `-3`, ...) if not unique for the client+date |
+| `date_slug` | text | `"mm-dd"` — no year, see Common Gotchas |
+| `title` | text | staff-entered, no AI inference |
+| `storage_path` | text | Supabase Storage object path in `audit-branded-html` |
+| `file_size` | integer | bytes, of the branded HTML |
+| `owner_id` | uuid nullable | Supabase auth user ID |
+| `created_at` / `updated_at` | timestamptz | |
+
+Unique constraint on `(client_slug, date_slug, audit_slug)`.
+
 ### Supabase Storage
 
 | Bucket | Access | Purpose |
 |---|---|---|
-| `audit-source-html` | Private, service-role only (no client-side access, no public policies) | Original self-contained HTML uploads, keyed by `enhancement_runs.id`. Referenced from `audits.content.meta.sourceHtmlPath`. Read back by the re-LLM revise flow to ground edits in the true source. |
+| `audit-source-html` | Private, service-role only (no client-side access, no public policies) | Original self-contained HTML uploads, keyed by `enhancement_runs.id`. Referenced from `audits.content.meta.sourceHtmlPath`. Read back by the re-LLM revise flow to ground edits in the true source. (LLM pipeline.) |
+| `audit-branded-html` | Private, service-role only | Brand-CSS-injected HTML for the direct pipeline, keyed by `{clientSlug}/{dateSlug}/{auditSlug}.html` (mirrors the route path). Read back by the `/html-audits/...` viewer on every request. |
 
 ---
 
@@ -306,6 +336,10 @@ LegacyAuditContent {
 | `insertEnhancementRun(params)` | Track new AI enhancement job; `jobKind` defaults to `"create"`, pass `"revise"` + `instructions` for edit jobs |
 | `getEnhancementRun(id)` | Fetch enhancement job with joined audit + client |
 | `updateEnhancementRun(id, params)` | Update job status, auditId, outputPath, errorMessage |
+| `insertHtmlDeliverable(params)` | Direct pipeline: insert a `html_deliverables` row; retries with a `-2`/`-3` slug suffix on unique-violation (23505) instead of failing or overwriting |
+| `getHtmlDeliverableBySlug({ clientSlug, dateSlug, auditSlug })` | Direct pipeline: look up `storage_path` for the `/html-audits/...` viewer |
+| `listHtmlDeliverables(userId?)` | Direct pipeline: dashboard listing, same owner-or-null filter as `getAudits` |
+| `deleteHtmlDeliverable(id, userId?)` | Direct pipeline: ownership check + row delete + Storage object cleanup |
 
 ### `src/lib/audit/queries.ts`
 | Function | Purpose |
@@ -369,6 +403,21 @@ HTML create (User at /enhance, HTML tab):
         6. updateEnhancementRun(status: "completed", auditId)
   ← client polls the same /api/audit-enhancer/status endpoint (job-kind-agnostic)
 
+Direct HTML publish (User at /enhance, HTML tab — the active one):
+  → uploads one self-contained .html file + clientName + title (both required,
+    no AI inference) + optional date (defaults to today)
+  → POST /api/html-audits (multipart/form-data, auth required)
+    1. slugify(clientName) → clientSlug, slugify(title) → auditSlug
+    2. resolve dateSlug ("mm-dd") from the date field or today (America/Bogota)
+    3. injectBrandStyle(): cheerio appends a brand <style> block to <head>
+       (creating one if absent) — no other structural changes
+    4. upsertClient() (same function as the other two pipelines)
+    5. uploadBrandedHtml() → Supabase Storage (audit-branded-html bucket),
+       keyed by `{clientSlug}/{dateSlug}/{auditSlug}.html`
+    6. insertHtmlDeliverable() — retries with a slug suffix on collision
+    7. returns 200 { url: "/html-audits/{clientSlug}/{dateSlug}/{auditSlug}" }
+       synchronously — no job/poll dance, since there's no AI call
+
 HTML revise ("Edit" button on an HTML-sourced audit → Revise Deliverable modal):
   → { auditId, instructions } → POST /api/html-enhancer/revise (auth required)
     → auth + ownership check, validate the audit is schemaVersion 3
@@ -399,6 +448,13 @@ Public view (/audit?token=xxx):
   page.tsx (server) → supabaseServer.from("audits").select().eq("share_token", token)
   → trackView() fire-and-forget (inserts to audit_views)
   → <AuditAssembly content={content} />
+
+Direct HTML deliverable view (/html-audits/:clientSlug/:dateSlug/:auditSlug):
+  No auth, no React render : a Route Handler, not a page.tsx
+  route.ts (GET) → getHtmlDeliverableBySlug({ clientSlug, dateSlug, auditSlug })
+  → getBrandedHtml(storagePath) from the audit-branded-html bucket
+  → new Response(html, { headers: { "content-type": "text/html" } })
+  No view tracking (no audit_views row : that table is scoped to `audits`).
 ```
 
 ---
@@ -574,3 +630,7 @@ Log entries are auto-redacted: API keys, Bearer tokens, cookie values. Raw AI re
 7. **Print layout is a separate component.** `AuditPrintDocument` is not `AuditTabs`. Both render the same data but with different layouts. Changes to section components affect both automatically.
 
 8. **Tailwind v4 syntax.** Config is in `postcss.config.mjs`. The CSS entry point is `@import "tailwindcss"` (not `@tailwind base/components/utilities`). Arbitrary values still work (`bg-[#f6b328]`).
+
+9. **Direct HTML deliverables serve raw, unsanitized markup.** `/html-audits/...` returns the uploaded HTML (plus an injected `<style>`) as a real `text/html` response, not through React — any `<script>` in the upload executes verbatim in the visitor's browser. This is intentional (fidelity to the original deliverable, upload is staff-only/auth-gated), unlike the LLM pipeline's `cleanHtml()` which strips scripts before the content ever reaches the model. Don't "fix" this by adding sanitization without discussing the tradeoff first.
+
+10. **`html_deliverables.date_slug` has no year.** The route is `/html-audits/<client>/<mm-dd>/<slug>` by design. Two deliverables for the same client on the same calendar day in different years collide on the unique constraint — `insertHtmlDeliverable()` handles this by appending `-2`/`-3` to the slug, not by adding a year. If this becomes a real problem, revisit the route shape rather than working around it in application code.

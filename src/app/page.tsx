@@ -1,7 +1,8 @@
-import { getAudits } from "@/lib/db";
+import { getAudits, listHtmlDeliverables } from "@/lib/db";
 import { createClient } from "@/lib/supabase-middleware";
 import { NavBar } from "@/components/NavBar";
 import { AuditList } from "./AuditList";
+import { HtmlAuditList } from "./HtmlAuditList";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +11,10 @@ export default async function Home() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const audits = await getAudits(user?.id);
+  const [audits, htmlDeliverables] = await Promise.all([
+    getAudits(user?.id),
+    listHtmlDeliverables(user?.id),
+  ]);
   const clientCount = new Set(audits.map((audit) => audit.client)).size;
 
   return (
@@ -89,6 +93,28 @@ export default async function Home() {
             </div>
           )}
         </section>
+
+        {htmlDeliverables.length > 0 ? (
+          <section aria-labelledby="html-audit-list-title" className="pb-12">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2
+                  id="html-audit-list-title"
+                  className="text-2xl font-black text-[#16243d]"
+                >
+                  Direct HTML Deliverables
+                </h2>
+                <p className="mt-1 text-sm text-[#65718a]">
+                  Published close to verbatim with brand CSS applied - no AI
+                  reconstruction.
+                </p>
+              </div>
+              <div className="h-1 w-28 bg-[#f6b328]" aria-hidden="true" />
+            </div>
+
+            <HtmlAuditList deliverables={htmlDeliverables} />
+          </section>
+        ) : null}
       </div>
     </main>
   );

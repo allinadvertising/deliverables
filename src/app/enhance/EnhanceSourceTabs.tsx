@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import EnhanceAuditForm from "./EnhanceAuditForm";
-import EnhanceHtmlForm from "./EnhanceHtmlForm";
+import EnhanceHtmlDirectForm from "./EnhanceHtmlDirectForm";
 
 type SourceType = "markdown" | "html";
 
@@ -27,7 +27,7 @@ export default function EnhanceSourceTabs() {
         />
       </div>
 
-      {source === "markdown" ? <EnhanceAuditForm /> : <EnhanceHtmlForm />}
+      {source === "markdown" ? <EnhanceAuditForm /> : <EnhanceHtmlDirectForm />}
     </div>
   );
 }

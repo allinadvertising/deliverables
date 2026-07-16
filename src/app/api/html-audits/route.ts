@@ -73,9 +73,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const dateSlug = resolveDateSlug(stringValue(formData.get("date")));
+  const { dateLabel, dateSlug } = resolveDate(stringValue(formData.get("date")));
   const html = Buffer.from(await file.arrayBuffer()).toString("utf8");
-  const brandedHtml = injectBrandStyle(html);
+  const brandedHtml = injectBrandStyle(html, { clientName, dateLabel, title });
   const storagePath = `${clientSlug}/${dateSlug}/${auditSlug}.html`;
 
   let clientId: string;
@@ -163,22 +163,46 @@ function stringValue(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value : "";
 }
 
-/** Accepts an optional "YYYY-MM-DD" date input field; defaults to today. */
-function resolveDateSlug(dateInput: string): string {
+/**
+ * Accepts an optional "YYYY-MM-DD" date input field; defaults to today.
+ * Returns both the "mm-dd" route slug and a human-readable label for the
+ * branded header (e.g. "July 15, 2026").
+ */
+function resolveDate(dateInput: string): { dateLabel: string; dateSlug: string } {
   const trimmed = dateInput.trim();
+  const explicit = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
-    const [, month, day] = trimmed.split("-");
-    return `${month}-${day}`;
+  if (explicit) {
+    const [, year, month, day] = explicit;
+    const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+
+    return {
+      dateLabel: new Intl.DateTimeFormat("en-US", {
+        day: "numeric",
+        month: "long",
+        timeZone: "UTC",
+        year: "numeric",
+      }).format(date),
+      dateSlug: `${month}-${day}`,
+    };
   }
 
-  const parts = new Intl.DateTimeFormat("en-CA", {
+  const now = new Date();
+  const slugParts = new Intl.DateTimeFormat("en-CA", {
     day: "2-digit",
     month: "2-digit",
     timeZone: "America/Bogota",
-  }).formatToParts(new Date());
-  const month = parts.find((part) => part.type === "month")?.value ?? "01";
-  const day = parts.find((part) => part.type === "day")?.value ?? "01";
+  }).formatToParts(now);
+  const month = slugParts.find((part) => part.type === "month")?.value ?? "01";
+  const day = slugParts.find((part) => part.type === "day")?.value ?? "01";
 
-  return `${month}-${day}`;
+  return {
+    dateLabel: new Intl.DateTimeFormat("en-US", {
+      day: "numeric",
+      month: "long",
+      timeZone: "America/Bogota",
+      year: "numeric",
+    }).format(now),
+    dateSlug: `${month}-${day}`,
+  };
 }

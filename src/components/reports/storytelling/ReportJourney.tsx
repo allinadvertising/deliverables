@@ -1,4 +1,4 @@
-import { journeyWorkstreams } from "@/lib/reports/toico-july-2026";
+import type { JourneyWorkstream } from "@/lib/reports/types";
 
 const journeySteps = [
   { key: "started", label: "Where we started" },
@@ -7,7 +7,11 @@ const journeySteps = [
   { key: "next", label: "What's next" },
 ] as const;
 
-export function ReportJourney() {
+type ReportJourneyProps = {
+  journeyWorkstreams: JourneyWorkstream[];
+};
+
+export function ReportJourney({ journeyWorkstreams }: ReportJourneyProps) {
   return (
     <section
       className="audit-page story-report-page"

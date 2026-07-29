@@ -1,7 +1,4 @@
-import {
-  kpiRows,
-  visualDirections,
-} from "@/lib/reports/toico-july-2026";
+import type { KpiRow, VisualDirection } from "@/lib/reports/types";
 
 const changeStyles = {
   positive: "bg-[#edf9f1] text-[#16803d]",
@@ -9,7 +6,17 @@ const changeStyles = {
   neutral: "bg-slate-100 text-slate-600",
 };
 
-export function ReportDashboard() {
+type ReportDashboardProps = {
+  kpiDisclosure: string;
+  kpiRows: KpiRow[];
+  visualDirections: VisualDirection[];
+};
+
+export function ReportDashboard({
+  kpiDisclosure,
+  kpiRows,
+  visualDirections,
+}: ReportDashboardProps) {
   return (
     <>
       <section
@@ -56,9 +63,7 @@ export function ReportDashboard() {
         </div>
 
         <p className="mb-0 mt-4 text-xs leading-relaxed text-slate-500">
-          Visible non-brand clicks use query-level data only. Google withholds
-          some search terms for privacy, so this row shows direction rather than
-          the site&apos;s full non-brand total.
+          {kpiDisclosure}
         </p>
       </section>
 

@@ -1,9 +1,14 @@
-import {
+import type { TechnicalItem } from "@/lib/reports/types";
+
+type ReportAppendixProps = {
+  dataNotes: string[];
+  technicalItems: TechnicalItem[];
+};
+
+export function ReportAppendix({
   dataNotes,
   technicalItems,
-} from "@/lib/reports/toico-july-2026";
-
-export function ReportAppendix() {
+}: ReportAppendixProps) {
   return (
     <>
       <section

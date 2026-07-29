@@ -1,7 +1,5 @@
-import {
-  executiveSummary,
-  powerLines,
-} from "@/lib/reports/toico-july-2026";
+import { EditorialText } from "@/components/shared/EditorialText";
+import type { PowerLine } from "@/lib/reports/types";
 
 const statusStyles = {
   positive: {
@@ -18,7 +16,17 @@ const statusStyles = {
   },
 };
 
-export function ReportExecutive() {
+type ReportExecutiveProps = {
+  action: string;
+  executiveSummary: string;
+  powerLines: PowerLine[];
+};
+
+export function ReportExecutive({
+  action,
+  executiveSummary,
+  powerLines,
+}: ReportExecutiveProps) {
   return (
     <>
       <section
@@ -34,7 +42,7 @@ export function ReportExecutive() {
         </h2>
 
         <p className="mb-0 text-xl font-extrabold leading-relaxed text-slate-900 sm:text-2xl">
-          {executiveSummary}
+          <EditorialText text={executiveSummary} />
         </p>
 
         <div className="mt-8 border-l-4 border-[#f6b328] bg-[#fef7e8] p-5">
@@ -42,8 +50,7 @@ export function ReportExecutive() {
             One action that matters most
           </p>
           <p className="mb-0 text-base font-bold leading-relaxed text-slate-800">
-            Rewrite the Aluminum Slide-In Vacuum Tank search listing so its
-            rapidly growing first-page visibility produces qualified visits.
+            {action}
           </p>
         </div>
       </section>

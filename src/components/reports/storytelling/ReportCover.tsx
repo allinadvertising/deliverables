@@ -1,7 +1,11 @@
 import { BrandLogo } from "@/components/shared/BrandLogo";
-import { reportMeta } from "@/lib/reports/toico-july-2026";
+import type { ReportMeta } from "@/lib/reports/types";
 
-export function ReportCover() {
+type ReportCoverProps = {
+  meta: ReportMeta;
+};
+
+export function ReportCover({ meta }: ReportCoverProps) {
   return (
     <header className="audit-page audit-cover relative">
       <span
@@ -20,23 +24,23 @@ export function ReportCover() {
 
       <div className="mb-5 inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[2.5px] text-[#f6b328]">
         <span aria-hidden="true" className="h-px w-[18px] bg-[#f6b328]/60" />
-        {reportMeta.reportType}
+        {meta.reportType}
         <span aria-hidden="true" className="h-px w-[18px] bg-[#f6b328]/60" />
       </div>
 
       <h1 className="mb-3 text-5xl font-black leading-none tracking-normal sm:text-6xl">
-        {reportMeta.client}
+        {meta.client}
       </h1>
 
       <p className="mb-8 max-w-2xl text-xl font-medium leading-relaxed text-white/85 sm:text-2xl">
-        Rankings advanced. Click capture is the next move.
+        {meta.coverHeadline}
       </p>
 
       <div className="text-sm font-medium text-white/70">
-        {reportMeta.currentPeriod}
+        {meta.currentPeriod}
       </div>
       <div className="mt-2 text-[13px] font-medium text-white/50">
-        Compared with {reportMeta.previousPeriod}
+        Compared with {meta.previousPeriod}
       </div>
 
       <div className="mt-12 border-t border-white/20 pt-5 text-xs font-bold uppercase tracking-[0.12em] text-white/60">

@@ -7,6 +7,7 @@ import { ReportDashboard } from "@/components/reports/storytelling/ReportDashboa
 import { ReportExecutive } from "@/components/reports/storytelling/ReportExecutive";
 import { ReportJourney } from "@/components/reports/storytelling/ReportJourney";
 import { ReportObstacles } from "@/components/reports/storytelling/ReportObstacles";
+import type { SeoStoryReportData } from "@/lib/reports/types";
 
 const sections = [
   { href: "#summary", label: "Summary" },
@@ -18,14 +19,18 @@ const sections = [
   { href: "#appendix", label: "Appendix" },
 ];
 
-export function SeoStoryReport() {
+type SeoStoryReportProps = {
+  report: SeoStoryReportData;
+};
+
+export function SeoStoryReport({ report }: SeoStoryReportProps) {
   return (
     <>
       <div className="audit-no-print mx-auto mt-6 flex max-w-[1160px] justify-end px-4 sm:px-0">
         <PrintAuditButton ariaLabel="Print SEO performance report as PDF" />
       </div>
 
-      <ReportCover />
+      <ReportCover meta={report.meta} />
 
       <nav
         aria-label="Report sections"
@@ -45,17 +50,28 @@ export function SeoStoryReport() {
       </nav>
 
       <main>
-        <ReportExecutive />
-        <ReportJourney />
-        <ReportDashboard />
-        <ReportObstacles />
-        <ReportAppendix />
+        <ReportExecutive
+          action={report.meta.action}
+          executiveSummary={report.executiveSummary}
+          powerLines={report.powerLines}
+        />
+        <ReportJourney journeyWorkstreams={report.journeyWorkstreams} />
+        <ReportDashboard
+          kpiDisclosure={report.kpiDisclosure}
+          kpiRows={report.kpiRows}
+          visualDirections={report.visualDirections}
+        />
+        <ReportObstacles obstacles={report.obstacles} />
+        <ReportAppendix
+          dataNotes={report.dataNotes}
+          technicalItems={report.technicalItems}
+        />
       </main>
 
       <AuditFooter
         auditType="Organic Search Performance Report"
-        clientName="TOICO"
-        quarter="July 20-26, 2026"
+        clientName={report.meta.client}
+        quarter={report.meta.currentPeriod}
       />
       <BackToTopButton />
     </>

@@ -1,47 +1,18 @@
-export type PowerLine = {
-  area: string;
-  statement: string;
-  status: "positive" | "watch" | "unavailable";
-};
-
-export type JourneyWorkstream = {
-  name: string;
-  next: string;
-  result: string;
-  started: string;
-  work: string;
-};
-
-export type KpiRow = {
-  businessMeaning: string;
-  change: string;
-  current: string;
-  metric: string;
-  previous: string;
-  status: "positive" | "watch" | "neutral";
-};
-
-export type VisualDirection = {
-  chart: string;
-  insight: string;
-  title: string;
-};
-
-export type Obstacle = {
-  eta: string;
-  impact: string;
-  obstacle: string;
-  remediation: string;
-};
-
-export type TechnicalItem = {
-  fix: string;
-  issue: string;
-  why: string;
-};
+import type {
+  JourneyWorkstream,
+  KpiRow,
+  Obstacle,
+  PowerLine,
+  SeoStoryReportData,
+  TechnicalItem,
+  VisualDirection,
+} from "@/lib/reports/types";
 
 export const reportMeta = {
+  action:
+    "Rewrite the Aluminum Slide-In Vacuum Tank search listing so its rapidly growing first-page visibility produces qualified visits.",
   client: "TOICO",
+  coverHeadline: "Rankings advanced. Click capture is the next move.",
   currentPeriod: "July 20-26, 2026",
   previousPeriod: "July 13-19, 2026",
   property: "https://toico.com/",
@@ -295,3 +266,17 @@ export const dataNotes = [
   "Query-level brand and non-brand metrics include only visible queries because Google withholds some search terms for privacy.",
   "No conversion, revenue, completed-task, or post-deployment crawl data was supplied.",
 ];
+
+export const toicoJuly2026Report: SeoStoryReportData = {
+  dataNotes,
+  executiveSummary,
+  journeyWorkstreams,
+  kpiDisclosure:
+    "Visible non-brand clicks use query-level data only. Google withholds some search terms for privacy, so this row shows direction rather than the site's full non-brand total.",
+  kpiRows,
+  meta: reportMeta,
+  obstacles,
+  powerLines,
+  technicalItems,
+  visualDirections,
+};

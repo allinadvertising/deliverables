@@ -1,0 +1,251 @@
+import type { SeoStoryReportData } from "@/lib/reports/types";
+
+export const snowieJune2026Report: SeoStoryReportData = {
+  meta: {
+    action:
+      "Run one search-listing optimization sprint across the homepage, machine category, and Flavor Browser.",
+    client: "Snowie",
+    coverHeadline:
+      "Nonbrand discovery is scaling. Click efficiency is the next level.",
+    currentPeriod: "June 1-30, 2026",
+    previousPeriod: "May 1-31, 2026",
+    property: "https://snowie.com/",
+    reportType: "Monthly Organic Search Performance Report",
+    source: "Google Search Console",
+  },
+  executiveSummary:
+    "June delivered 8,178 organic clicks, up 11.9% from May, as search visibility expanded 24.1% and average ranking improved from 7.1 to 6.9. Growth came from nonbrand discovery: visible nonbrand clicks rose 37.6%, led by the Flavor Browser, shaved ice machines category, and flavor syrup category. The main drag was branded click capture: the query 'snowie' lost 284 clicks and the homepage lost 167 even as its impressions grew 22.6%. The next priority is a focused search-listing test for the homepage and highest-impression category pages.",
+  powerLines: [
+    {
+      area: "Traffic",
+      statement:
+        "Organic clicks grew 11.9%, with the Flavor Browser and shaved ice machines category adding 685 visits together.",
+      status: "positive",
+    },
+    {
+      area: "Conversions",
+      statement: "Insufficient data for this reporting period.",
+      status: "unavailable",
+    },
+    {
+      area: "Rankings",
+      statement:
+        "Average ranking improved to 6.9 while visible nonbrand clicks grew 37.6%, showing broader discovery beyond Snowie's name.",
+      status: "positive",
+    },
+    {
+      area: "Technical health",
+      statement:
+        "The legacy homepage URL is consolidated, but live product grids still expose application error text and the Vendor Locator title remains malformed.",
+      status: "watch",
+    },
+  ],
+  journeyWorkstreams: [
+    {
+      name: "Monthly growth",
+      started:
+        "May produced 7,307 clicks from 285,989 search appearances at an average ranking of 7.1.",
+      work:
+        "We separated June growth into brand, nonbrand, landing-page, and device-level drivers.",
+      result:
+        "Clicks increased 11.9%, visibility grew 24.1%, and average ranking improved by 0.2 positions.",
+      next:
+        "Protect the June gains while measuring click efficiency on the pages creating the new visibility.",
+    },
+    {
+      name: "Commercial discovery",
+      started:
+        "Visible nonbrand searches generated 1,538 clicks in May, led by machine, syrup, and flavor terms.",
+      work:
+        "We isolated the categories and generic searches responsible for June's incremental demand.",
+      result:
+        "Visible nonbrand clicks rose 37.6%; Flavor Browser gained 359 clicks and shaved ice machines gained 326.",
+      next:
+        "Strengthen internal links and search listings for the category pages already proving demand.",
+    },
+    {
+      name: "Click capture",
+      started:
+        "The homepage earned 2,443 clicks from 97,547 search appearances at a 2.50% click rate.",
+      work:
+        "We compared branded demand with the homepage's larger June visibility footprint.",
+      result:
+        "Homepage impressions grew 22.6%, but clicks fell 6.8% as click rate declined to 1.90%.",
+      next:
+        "Test a clearer homepage title and description while preserving the stronger nonbrand message.",
+    },
+  ],
+  kpiRows: [
+    {
+      metric: "Organic clicks",
+      previous: "7,307",
+      current: "8,178",
+      change: "+11.9%",
+      businessMeaning:
+        "Search delivered 871 more visits in June.",
+      status: "positive",
+    },
+    {
+      metric: "Search appearances",
+      previous: "285,989",
+      current: "354,888",
+      change: "+24.1%",
+      businessMeaning:
+        "Snowie reached substantially more search demand.",
+      status: "positive",
+    },
+    {
+      metric: "Average ranking",
+      previous: "7.1",
+      current: "6.9",
+      change: "+0.2 positions",
+      businessMeaning:
+        "Snowie's average result moved higher within the first page.",
+      status: "positive",
+    },
+    {
+      metric: "Click rate",
+      previous: "2.55%",
+      current: "2.30%",
+      change: "-0.25 points",
+      businessMeaning:
+        "Visits grew, but not as quickly as search visibility.",
+      status: "watch",
+    },
+    {
+      metric: "Visible nonbrand clicks",
+      previous: "1,538",
+      current: "2,116",
+      change: "+37.6%",
+      businessMeaning:
+        "More customers found Snowie through product needs instead of its name.",
+      status: "positive",
+    },
+    {
+      metric: "Mobile clicks",
+      previous: "5,678",
+      current: "6,500",
+      change: "+14.5%",
+      businessMeaning:
+        "Mobile generated 822 of the site's 871 additional visits.",
+      status: "positive",
+    },
+  ],
+  kpiDisclosure:
+    "Search Console reports clicks and search appearances, not leads or revenue. Visible nonbrand metrics include only search terms Google exposes, and mobile clicks are a diagnostic subset of the site total.",
+  visualDirections: [
+    {
+      title: "Monthly growth",
+      chart:
+        "Clustered bars comparing clicks and search appearances for May and June, with percentage-change labels above each pair.",
+      insight:
+        "Show that June produced meaningful traffic growth while visibility expanded even faster.",
+    },
+    {
+      title: "Nonbrand expansion",
+      chart:
+        "Waterfall chart showing the 578-click visible nonbrand gain, led by Flavor Browser, shaved ice machines, flavor syrups, and Mini Pro.",
+      insight:
+        "Connect June's growth to product and category discovery rather than branded demand.",
+    },
+    {
+      title: "Homepage efficiency",
+      chart:
+        "Three paired bars for homepage clicks, search appearances, and click rate, with the May-to-June ranking change annotated.",
+      insight:
+        "Make the homepage's 22,013-impression gain and 167-click loss visible in the same frame.",
+    },
+    {
+      title: "Device performance",
+      chart:
+        "Grouped bars for desktop, mobile, and tablet clicks by month, with impression and click-rate changes shown as labels.",
+      insight:
+        "Show that mobile supplied 94% of the incremental clicks while its visibility grew 38.5%.",
+    },
+  ],
+  obstacles: [
+    {
+      obstacle:
+        "Branded homepage click capture weakened. The query 'snowie' lost 284 clicks and homepage click rate fell from 2.50% to 1.90%.",
+      impact:
+        "The homepage lost 167 visits despite gaining 22,013 search appearances, offsetting part of the nonbrand growth.",
+      remediation:
+        "Rewrite the homepage title and description around the Snowie brand, commercial equipment, flavors, and business value.",
+      eta:
+        "Reassess in the first complete monthly report after the listing update.",
+    },
+    {
+      obstacle:
+        "High-impression category pages still capture a small share of visibility. Flavor Browser click rate was 1.19% and shaved ice machines was 1.40%.",
+      impact:
+        "The two pages generated 138,586 appearances, so small click-rate gains can produce meaningful qualified traffic.",
+      remediation:
+        "Test stronger category titles and descriptions, align above-the-fold copy with search intent, and reinforce internal links.",
+      eta:
+        "Measure the first full calendar month after release.",
+    },
+    {
+      obstacle:
+        "Mobile visibility grew 38.5%, but mobile click rate fell from 3.15% to 2.60%.",
+      impact:
+        "Mobile drove most of June's growth, but the expanding search footprint is not yet converting at May's rate.",
+      remediation:
+        "Review mobile search listings and landing-page experience for the homepage and highest-impression categories.",
+      eta:
+        "Complete QA in the next release and compare the following full month.",
+    },
+    {
+      obstacle:
+        "Live product modules expose repeated application error text, and the Vendor Locator title is missing the brand name before a possessive.",
+      impact:
+        "Search engines and customers can receive unfinished page copy that weakens trust and result quality.",
+      remediation:
+        "Correct the product-card constant, suppress production error output, repair the title template, and recrawl the affected templates.",
+      eta:
+        "One development sprint after ownership is confirmed.",
+    },
+  ],
+  technicalItems: [
+    {
+      issue:
+        "The legacy /home-page/ URL produced 65 clicks in May but no June Search Console rows and now redirects to the root homepage.",
+      why:
+        "Consolidating duplicate homepage signals gives search engines one preferred destination.",
+      fix:
+        "Keep the redirect and canonical in place, remove remaining internal links to the legacy URL, and monitor the root homepage.",
+    },
+    {
+      issue:
+        "Product-card HTML repeatedly includes an undefined-constant error for NEW_ARRIVAL_DAYS_THRESHOLD.",
+      why:
+        "Customers and search engines can encounter internal application text instead of finished product information.",
+      fix:
+        "Define or replace the missing constant, disable production error display, and validate product grids after release.",
+    },
+    {
+      issue:
+        "The Vendor Locator search title is missing the brand name before a possessive.",
+      why:
+        "An incomplete title weakens the result's clarity for people looking for shaved ice nearby.",
+      fix:
+        "Repair the title template and confirm the rendered title, description, and main heading.",
+    },
+    {
+      issue:
+        "No crawl, indexing, Core Web Vitals, conversion, or completed-task evidence was supplied for May or June.",
+      why:
+        "The report cannot connect technical activity to business outcomes or confirm broader site health.",
+      fix:
+        "Add deployment dates, crawl exports, indexing coverage, performance data, and lead or revenue outcomes to each monthly report.",
+    },
+  ],
+  dataNotes: [
+    "Performance source: Google Search Console property https://snowie.com/.",
+    "Current period: June 1-30, 2026. Previous period: May 1-31, 2026.",
+    "The comparison uses complete calendar months; May contains one more day than June.",
+    "Search Console data was final when exported on July 29, 2026.",
+    "Query-level brand and nonbrand observations use visible search terms because Google withholds some terms for privacy.",
+    "Live HTML inspection on July 29, 2026 supplied the redirect, product-card, and Vendor Locator observations.",
+    "No conversion, revenue, completed-task, crawl, indexing, or Core Web Vitals data was supplied.",
+  ],
+};

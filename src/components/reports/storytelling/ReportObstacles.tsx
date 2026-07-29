@@ -1,6 +1,10 @@
-import { obstacles } from "@/lib/reports/toico-july-2026";
+import type { Obstacle } from "@/lib/reports/types";
 
-export function ReportObstacles() {
+type ReportObstaclesProps = {
+  obstacles: Obstacle[];
+};
+
+export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
   return (
     <section
       className="audit-page story-report-page"

@@ -590,5 +590,23 @@ body {
     .audit-page img {
       max-width: 100% !important;
     }
+
+    .kickoff-page article,
+    .kickoff-page aside,
+    .kickoff-page li {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .kickoff-page a {
+      color: var(--brand-blue-dark) !important;
+    }
+
+    .story-report-page article,
+    .story-report-page aside,
+    .story-report-page li {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
   }
 }

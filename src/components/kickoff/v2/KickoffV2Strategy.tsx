@@ -10,9 +10,9 @@ export function KickoffV2Strategy() {
       id="strategy"
     >
       <KickoffV2Heading
-        eyebrow="Strategy for the next three months"
+        eyebrow="Executive roadmap"
         number="02"
-        title="One dependency-led roadmap, delivered in three phases."
+        title="3 Month Roadmap"
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
@@ -25,33 +25,21 @@ export function KickoffV2Strategy() {
             }`}
             key={phase.month}
           >
-            <div className="flex items-baseline justify-between gap-4">
-              <p className="text-xs font-black uppercase text-[#3e71b8]">
-                {phase.month}
-              </p>
-              <p className="audit-mono text-sm font-black text-[#051920]">
-                {phase.hours}h
-              </p>
-            </div>
+            <p className="text-xs font-black uppercase text-[#3e71b8]">
+              {phase.month}
+            </p>
             <h3 className="mt-4 text-[22px] font-black leading-tight text-[#051920]">
               {phase.theme}
             </h3>
             <p className="mt-3 text-[14px] leading-[1.55] text-[#607078]">
               <EditorialText compact text={phase.objective} />
             </p>
-            <div className="mt-auto pt-6">
-              <div className="h-1.5 overflow-hidden bg-[#e3e8ea]">
-                <div
-                  className={
-                    phase.accent === "gold"
-                      ? "h-full bg-[#f6b328]"
-                      : "h-full bg-[#3e71b8]"
-                  }
-                  style={{ width: phase.share }}
-                />
-              </div>
-              <p className="mt-2 text-[11px] font-bold uppercase text-[#6a777d]">
-                {phase.share} of the 90-day plan
+            <div className="mt-auto border-t border-[#d9e0e3] pt-5">
+              <p className="text-[11px] font-black uppercase text-[#6a777d]">
+                Phase outcome
+              </p>
+              <p className="mt-2 text-[13px] font-bold leading-[1.5] text-[#26373e]">
+                <EditorialText compact text={phase.deliverable} />
               </p>
             </div>
           </article>
@@ -68,40 +56,6 @@ export function KickoffV2Strategy() {
         </p>
       </aside>
 
-      <div className="relative mt-12 grid gap-7 lg:grid-cols-3">
-        <span
-          aria-hidden="true"
-          className="absolute left-[16.6%] right-[16.6%] top-3 hidden h-px bg-[#b7c2c6] lg:block"
-        />
-        {kickoffV2Phases.map((phase, index) => (
-          <article className="relative" key={phase.month}>
-            <span
-              aria-hidden="true"
-              className={`relative z-10 block h-6 w-6 rounded-full border-[6px] border-[#f0f2f3] ${
-                index === 1 ? "bg-[#f6b328]" : "bg-[#3e71b8]"
-              }`}
-            />
-            <p className="mt-4 text-xs font-black uppercase text-[#3e71b8]">
-              {phase.month} · {phase.hours} hours
-            </p>
-            <h3 className="mt-2 text-[19px] font-black text-[#051920]">
-              {phase.theme}
-            </h3>
-            <ul className="mt-3 space-y-2 text-[13px] leading-[1.5] text-[#5c6a70]">
-              {phase.work.map((item) => (
-                <li className="flex gap-2" key={item}>
-                  <span aria-hidden="true" className="text-[#f6b328]">
-                    ■
-                  </span>
-                  <span>
-                    <EditorialText compact text={item} />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </article>
-        ))}
-      </div>
     </section>
   );
 }

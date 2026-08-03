@@ -1,13 +1,21 @@
-import type { TechnicalItem } from "@/lib/reports/types";
+import type { TechnicalItem, TechnicalLabels } from "@/lib/reports/types";
+
+const defaultTechnicalLabels: TechnicalLabels = {
+  fix: "Fix applied or planned",
+  issue: "Issue",
+  why: "Why it matters",
+};
 
 type ReportAppendixProps = {
   dataNotes: string[];
   technicalItems: TechnicalItem[];
+  technicalLabels?: TechnicalLabels;
 };
 
 export function ReportAppendix({
   dataNotes,
   technicalItems,
+  technicalLabels = defaultTechnicalLabels,
 }: ReportAppendixProps) {
   return (
     <>
@@ -37,7 +45,7 @@ export function ReportAppendix({
               </span>
               <div>
                 <p className="mb-1 text-[11px] font-black uppercase tracking-[0.1em] text-[#c75a12]">
-                  Issue
+                  {technicalLabels.issue}
                 </p>
                 <p className="mb-0 text-sm font-semibold leading-relaxed text-slate-700">
                   {item.issue}
@@ -45,7 +53,7 @@ export function ReportAppendix({
               </div>
               <div>
                 <p className="mb-1 text-[11px] font-black uppercase tracking-[0.1em] text-[#9a6a00]">
-                  Why it matters
+                  {technicalLabels.why}
                 </p>
                 <p className="mb-0 text-sm leading-relaxed text-slate-600">
                   {item.why}
@@ -53,7 +61,7 @@ export function ReportAppendix({
               </div>
               <div>
                 <p className="mb-1 text-[11px] font-black uppercase tracking-[0.1em] text-[#16803d]">
-                  Fix applied or planned
+                  {technicalLabels.fix}
                 </p>
                 <p className="mb-0 text-sm leading-relaxed text-slate-600">
                   {item.fix}

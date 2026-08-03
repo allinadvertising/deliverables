@@ -16,11 +16,30 @@ export type PowerLine = {
 };
 
 export type JourneyWorkstream = {
+  businessPriority?: string;
   name: string;
   next: string;
   result: string;
   started: string;
   work: string;
+};
+
+export type ConversionPlan = {
+  nextReportExpectation: string;
+  owner: string;
+  sourcePriority: string;
+};
+
+export type ReportSectionCopy = {
+  eyebrow: string;
+  intro?: string;
+  title: string;
+};
+
+export type TechnicalLabels = {
+  fix: string;
+  issue: string;
+  why: string;
 };
 
 export type KpiRow = {
@@ -52,6 +71,8 @@ export type TechnicalItem = {
 };
 
 export type SeoStoryReportData = {
+  businessObjective?: string;
+  conversionPlan?: ConversionPlan;
   dataNotes: string[];
   executiveSummary: string;
   journeyWorkstreams: JourneyWorkstream[];
@@ -61,5 +82,7 @@ export type SeoStoryReportData = {
   obstacles: Obstacle[];
   powerLines: PowerLine[];
   technicalItems: TechnicalItem[];
+  technicalLabels?: TechnicalLabels;
+  visualSection?: ReportSectionCopy;
   visualDirections: VisualDirection[];
 };

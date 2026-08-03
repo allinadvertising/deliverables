@@ -202,6 +202,7 @@ body {
 
   .kickoff-v2-shell {
     background: #ffffff;
+    border-top: 8px solid var(--brand-gold);
     box-shadow: 0 18px 48px rgba(5, 25, 32, 0.13);
     margin: 24px auto 48px;
     max-width: 1080px;
@@ -210,13 +211,20 @@ body {
 
   .kickoff-v2-cover {
     background: #051920;
+    border-left: 12px solid var(--brand-blue);
     color: #ffffff;
     min-height: 420px;
     padding: 72px;
   }
 
   .kickoff-v2-section {
+    border-bottom: 1px solid #d9e0e3;
     padding: 60px 72px;
+  }
+
+  .kickoff-v2-heading h2 {
+    border-left: 6px solid var(--brand-blue);
+    padding-left: 20px;
   }
 
   .kickoff-v2-footer {

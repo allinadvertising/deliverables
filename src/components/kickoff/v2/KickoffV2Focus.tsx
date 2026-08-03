@@ -10,9 +10,9 @@ export function KickoffV2Focus() {
   return (
     <section className="kickoff-v2-section" id="focus">
       <KickoffV2Heading
-        eyebrow="What we will focus on, and why"
+        eyebrow="Recommended priorities"
         number="03"
-        title="Priorities tied to a visible business outcome."
+        title="Four priorities for organic growth"
       />
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -29,17 +29,28 @@ export function KickoffV2Focus() {
                 <h3 className="text-[20px] font-black leading-tight text-[#051920]">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-[13px] leading-[1.5] text-[#66747a]">
+                <p className="mt-2 text-[11px] font-black uppercase text-[#3e71b8]">
+                  Evidence
+                </p>
+                <p className="mt-1 text-[13px] leading-[1.5] text-[#66747a]">
                   <EditorialText compact text={item.evidence} />
                 </p>
               </div>
             </div>
             <div className="mt-5 border-t border-[#dce2e4] pt-4">
               <p className="text-[11px] font-black uppercase text-[#3e71b8]">
-                Why
+                Recommended action
               </p>
               <p className="mt-2 text-[14px] leading-[1.55] text-[#34434a]">
-                {item.why}
+                <EditorialText compact text={item.recommendedAction} />
+              </p>
+            </div>
+            <div className="mt-4 border-l-4 border-[#f6b328] bg-[#fff9eb] p-4">
+              <p className="text-[11px] font-black uppercase text-[#855900]">
+                Expected business impact
+              </p>
+              <p className="mt-2 text-[13px] leading-[1.5] text-[#34434a]">
+                <EditorialText compact text={item.expectedImpact} />
               </p>
             </div>
           </article>

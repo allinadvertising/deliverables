@@ -1,6 +1,26 @@
 import type { SeoStoryReportData } from "@/lib/reports/types";
 
 export const snowieJune2026Report: SeoStoryReportData = {
+  businessObjective:
+    "Recover lost organic visibility and drive measurable revenue growth, especially from B2B equipment sales, while restoring organic shopping reach through Google Merchant Center.",
+  conversionPlan: {
+    owner: "Account Manager with client analytics and ecommerce owners",
+    sourcePriority:
+      "WhatConverts first; then reliable GA4; then Shopify, WooCommerce, or the client CMS.",
+    nextReportExpectation:
+      "Confirm the connected source and report qualified leads or ecommerce revenue without estimating missing values.",
+  },
+  technicalLabels: {
+    fix: "What we will do",
+    issue: "What is broken",
+    why: "Why it matters",
+  },
+  visualSection: {
+    eyebrow: "Performance story",
+    intro:
+      "Each view connects a performance signal to the decision it should inform.",
+    title: "Views that guide the next decision",
+  },
   meta: {
     action:
       "Run one search-listing optimization sprint across the homepage, machine category, and Flavor Browser.",
@@ -24,8 +44,9 @@ export const snowieJune2026Report: SeoStoryReportData = {
     },
     {
       area: "Conversions",
-      statement: "Insufficient data for this reporting period.",
-      status: "unavailable",
+      statement:
+        "Revenue is not yet connected. The Account Manager will confirm the best available source so the next report can pair organic demand with qualified leads or ecommerce revenue.",
+      status: "watch",
     },
     {
       area: "Rankings",
@@ -36,12 +57,14 @@ export const snowieJune2026Report: SeoStoryReportData = {
     {
       area: "Technical health",
       statement:
-        "The legacy homepage URL is consolidated, but live product grids still expose application error text and the Vendor Locator title remains malformed.",
+        "The old homepage now points to the right place, but some product grids still show internal error text and the Vendor Locator search title is incomplete.",
       status: "watch",
     },
   ],
   journeyWorkstreams: [
     {
+      businessPriority:
+        "Grow qualified organic demand without losing the visibility gained in June.",
       name: "Monthly growth",
       started:
         "May produced 7,307 clicks from 285,989 search appearances at an average ranking of 7.1.",
@@ -53,6 +76,8 @@ export const snowieJune2026Report: SeoStoryReportData = {
         "Protect the June gains while measuring click efficiency on the pages creating the new visibility.",
     },
     {
+      businessPriority:
+        "Bring more equipment and flavor-syrup shoppers to commercial category pages.",
       name: "Commercial discovery",
       started:
         "Visible nonbrand searches generated 1,538 clicks in May, led by machine, syrup, and flavor terms.",
@@ -64,6 +89,8 @@ export const snowieJune2026Report: SeoStoryReportData = {
         "Strengthen internal links and search listings for the category pages already proving demand.",
     },
     {
+      businessPriority:
+        "Turn Snowie's growing search visibility into more qualified site visits.",
       name: "Click capture",
       started:
         "The homepage earned 2,443 clicks from 97,547 search appearances at a 2.50% click rate.",
@@ -208,23 +235,23 @@ export const snowieJune2026Report: SeoStoryReportData = {
   technicalItems: [
     {
       issue:
-        "The legacy /home-page/ URL produced 65 clicks in May but no June Search Console rows and now redirects to the root homepage.",
+        "Some internal links may still point to the retired /home-page/ address instead of the main homepage.",
       why:
         "Consolidating duplicate homepage signals gives search engines one preferred destination.",
       fix:
-        "Keep the redirect and canonical in place, remove remaining internal links to the legacy URL, and monitor the root homepage.",
+        "Keep the redirect in place, replace remaining internal links to the old address, and monitor the main homepage. Developers can retain the root canonical during validation.",
     },
     {
       issue:
-        "Product-card HTML repeatedly includes an undefined-constant error for NEW_ARRIVAL_DAYS_THRESHOLD.",
+        "Product grids can display internal application error text instead of finished product information.",
       why:
         "Customers and search engines can encounter internal application text instead of finished product information.",
       fix:
-        "Define or replace the missing constant, disable production error display, and validate product grids after release.",
+        "Define or replace NEW_ARRIVAL_DAYS_THRESHOLD, hide production error output, and validate representative product grids after release.",
     },
     {
       issue:
-        "The Vendor Locator search title is missing the brand name before a possessive.",
+        "The Vendor Locator search title is incomplete and does not clearly name Snowie.",
       why:
         "An incomplete title weakens the result's clarity for people looking for shaved ice nearby.",
       fix:
@@ -232,7 +259,7 @@ export const snowieJune2026Report: SeoStoryReportData = {
     },
     {
       issue:
-        "No crawl, indexing, Core Web Vitals, conversion, or completed-task evidence was supplied for May or June.",
+        "The monthly reporting package is missing site-health, completed-work, and business-outcome evidence.",
       why:
         "The report cannot connect technical activity to business outcomes or confirm broader site health.",
       fix:
@@ -246,6 +273,8 @@ export const snowieJune2026Report: SeoStoryReportData = {
     "Search Console data was final when exported on July 29, 2026.",
     "Query-level brand and nonbrand observations use visible search terms because Google withholds some terms for privacy.",
     "Live HTML inspection on July 29, 2026 supplied the redirect, product-card, and Vendor Locator observations.",
-    "No conversion, revenue, completed-task, crawl, indexing, or Core Web Vitals data was supplied.",
+    "No reliable conversion or revenue source was supplied, so this report does not claim revenue. Source priority for future reporting is WhatConverts, reliable GA4, then Shopify, WooCommerce, or the client CMS.",
+    "The Account Manager owns source confirmation with the client analytics and ecommerce owners; the next report should identify the connected source and include qualified leads or ecommerce revenue when reliable.",
+    "No completed-task, crawl, indexing, or Core Web Vitals data was supplied.",
   ],
 };

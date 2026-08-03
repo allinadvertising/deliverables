@@ -10,9 +10,9 @@ export function KickoffV2Approval() {
   return (
     <section className="kickoff-v2-section" id="approval">
       <KickoffV2Heading
-        eyebrow="Approval gates and operating cadence"
+        eyebrow="Implementation gates"
         number="05"
-        title="Every phase closes with a decision and evidence."
+        title="Decisions and owners before launch"
       />
 
       <div className="divide-y divide-[#d9e0e3] border-y border-[#d9e0e3]">

@@ -7,6 +7,13 @@ const journeySteps = [
   { key: "next", label: "What's next" },
 ] as const;
 
+const businessJourneySteps = [
+  { key: "started", label: "What we saw" },
+  { key: "work", label: "What we did" },
+  { key: "result", label: "Business result" },
+  { key: "next", label: "What needs attention next" },
+] as const;
+
 type ReportJourneyProps = {
   journeyWorkstreams: JourneyWorkstream[];
 };
@@ -44,7 +51,20 @@ export function ReportJourney({ journeyWorkstreams }: ReportJourneyProps) {
             </div>
 
             <dl className="grid gap-4 sm:grid-cols-2">
-              {journeySteps.map((step) => (
+              {workstream.businessPriority ? (
+                <div className="border-l-4 border-[#2f65a7] bg-[#f1f7ff] p-4 sm:col-span-2">
+                  <dt className="mb-1 text-[11px] font-black uppercase tracking-[0.1em] text-[#2f65a7]">
+                    Business priority
+                  </dt>
+                  <dd className="mb-0 text-sm font-bold leading-relaxed text-slate-800">
+                    {workstream.businessPriority}
+                  </dd>
+                </div>
+              ) : null}
+              {(workstream.businessPriority
+                ? businessJourneySteps
+                : journeySteps
+              ).map((step) => (
                 <div
                   className={
                     step.key === "next"

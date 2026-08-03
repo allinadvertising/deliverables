@@ -18,12 +18,14 @@ const statusStyles = {
 
 type ReportExecutiveProps = {
   action: string;
+  businessObjective?: string;
   executiveSummary: string;
   powerLines: PowerLine[];
 };
 
 export function ReportExecutive({
   action,
+  businessObjective,
   executiveSummary,
   powerLines,
 }: ReportExecutiveProps) {
@@ -40,6 +42,17 @@ export function ReportExecutive({
         <h2 className="audit-section-title" id="summary-title">
           Where we are today
         </h2>
+
+        {businessObjective ? (
+          <div className="mb-7 border-l-4 border-[#2f65a7] bg-[#f1f7ff] p-5">
+            <p className="mb-1 text-xs font-black uppercase tracking-[0.1em] text-[#2f65a7]">
+              Business objective
+            </p>
+            <p className="mb-0 text-base font-bold leading-relaxed text-slate-800">
+              {businessObjective}
+            </p>
+          </div>
+        ) : null}
 
         <p className="mb-0 text-xl font-extrabold leading-relaxed text-slate-900 sm:text-2xl">
           <EditorialText text={executiveSummary} />

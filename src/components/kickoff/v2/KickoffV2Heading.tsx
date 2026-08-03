@@ -10,7 +10,7 @@ export function KickoffV2Heading({
   title,
 }: KickoffV2HeadingProps) {
   return (
-    <header className="mb-8">
+    <header className="kickoff-v2-heading mb-8">
       <p className="text-xs font-black uppercase text-[#3e71b8]">
         <span className="audit-mono">{number}</span>
         <span aria-hidden="true"> · </span>

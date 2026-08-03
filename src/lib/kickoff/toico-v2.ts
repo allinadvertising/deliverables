@@ -7,10 +7,13 @@ import {
 
 export const kickoffV2Meta = [
   { label: "Quarter", value: "July to September 2026" },
-  { label: "Month 1 scope", value: "29 hours" },
-  { label: "90-day plan", value: "95 hours" },
+  { label: "Business objective", value: "Grow organic revenue 10-15% YoY" },
+  { label: "Roadmap", value: "Foundation, discovery, growth" },
   { label: "Platform", value: "BigCommerce" },
 ];
+
+export const kickoffV2BusinessObjective =
+  "Grow organic revenue toward a 10-15% YoY target by expanding visibility for the priority 3-inch Tiger Suction Hose line, recovering first-page category rankings, and capturing the value of phone orders that begin in organic search.";
 
 export const kickoffV2Metrics = [
   kickoffMetrics[0],
@@ -21,16 +24,18 @@ export const kickoffV2Metrics = [
   },
   kickoffMetrics[2],
   {
-    value: "29h",
-    label: "Approved Month 1 package",
-    note: "Shared template, malformed URL, and sitemap corrections come first.",
+    value: "3 phases",
+    label: "Decision-led roadmap",
+    note: "Foundation, discoverability, and commercial growth each close with evidence.",
   },
 ];
 
 export const kickoffV2Phases = roadmapMonths.map((month, index) => ({
-  ...month,
   accent: index === 1 ? "gold" : "blue",
-  share: `${Math.round((month.hours / 95) * 100)}%`,
+  deliverable: month.deliverable,
+  month: month.month,
+  objective: month.objective,
+  theme: month.theme,
 }));
 
 export const kickoffV2Focus = kickoffFindings.map((finding, index) => ({
@@ -41,9 +46,9 @@ export const kickoffV2Focus = kickoffFindings.map((finding, index) => ({
     "Differentiate priority clusters",
     "Build stronger search destinations",
   ][index],
-  why: finding.whyItMatters,
-  action: finding.response,
   evidence: finding.evidence,
+  expectedImpact: finding.whyItMatters,
+  recommendedAction: finding.response,
 }));
 
 export const kickoffV2Signals = [
@@ -67,23 +72,35 @@ export const kickoffV2Signals = [
 export const kickoffV2ExecutionArtifacts = [
   {
     phase: "Month 1",
+    owner: "Development + SEO",
     title: "Validated technical release",
-    detail: "Before-and-after crawl evidence for templates, URLs, and sitemap signals.",
+    evidence: "Before-and-after crawl confirms corrected templates, preferred URLs, and sitemap signals.",
+    recommendedAction: "Release shared template, malformed URL, and sitemap corrections first.",
+    expectedImpact: "Cleaner sitewide signals and a dependable Month 2 priority queue.",
   },
   {
     phase: "Month 2",
+    owner: "SEO + Merchandising",
     title: "Ranked orphan queue",
-    detail: "Products and categories scored by demand, value, inventory, and fit.",
+    evidence: "Products and categories are scored by demand, value, inventory, and strategic fit.",
+    recommendedAction: "Approve the highest-value product and category destinations for deployment.",
+    expectedImpact: "More qualified shoppers can reach commercially important inventory.",
   },
   {
     phase: "Month 2",
+    owner: "Development + SEO",
     title: "Internal-link deployment",
-    detail: "Approved category, product, brand, and editorial links with measured impact.",
+    evidence: "Deployed category, product, brand, and editorial links are verified on priority pages.",
+    recommendedAction: "Publish approved links and measure the reduction in priority orphan URLs.",
+    expectedImpact: "Stronger discovery paths for customers and search engines.",
   },
   {
     phase: "Month 3",
+    owner: "SEO + Content",
     title: "Growth-hub brief",
-    detail: "A prioritized content backlog tied to competitor gaps and buyer intent.",
+    evidence: "The backlog is ranked against competitor gaps, buyer intent, and commercial fit.",
+    recommendedAction: "Select and approve the next commercial content hub.",
+    expectedImpact: "Distinct search destinations can capture new product demand.",
   },
 ];
 
@@ -91,7 +108,7 @@ export const kickoffV2Gates = [
   {
     timing: "Kickoff",
     label: "Decision",
-    title: "Approve the 29-hour Month 1 scope",
+    title: "Approve the technical foundation phase",
     detail:
       "Lock the technical foundation package before page-level content production begins.",
   },
@@ -125,4 +142,12 @@ export const kickoffV2Gates = [
   },
 ];
 
-export const kickoffV2Decisions = kickoffDecisions;
+export const kickoffV2Decisions = kickoffDecisions.map((decision, index) => ({
+  ...decision,
+  label:
+    index === 0 ? "Approve the technical foundation phase" : decision.label,
+  detail:
+    index === 0
+      ? "Confirm shared template, malformed URL, and sitemap corrections as the first execution cycle."
+      : decision.detail,
+}));

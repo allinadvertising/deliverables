@@ -1,5 +1,8 @@
 import { EditorialText } from "@/components/shared/EditorialText";
-import { kickoffV2Metrics } from "@/lib/kickoff/toico-v2";
+import {
+  kickoffV2BusinessObjective,
+  kickoffV2Metrics,
+} from "@/lib/kickoff/toico-v2";
 
 import { KickoffV2Heading } from "./KickoffV2Heading";
 
@@ -9,11 +12,19 @@ export function KickoffV2Summary() {
       <KickoffV2Heading
         eyebrow="Summary"
         number="01"
-        title="Fix the shared causes. Then scale discovery."
+        title="What changes first"
       />
 
       <div className="grid items-start gap-9 lg:grid-cols-[1.08fr_0.92fr]">
         <div>
+          <div className="mb-6 border-l-4 border-[#f6b328] bg-[#fff9eb] p-5">
+            <p className="text-[11px] font-black uppercase text-[#855900]">
+              Business objective
+            </p>
+            <p className="mt-2 text-[15px] font-bold leading-[1.55] text-[#26373e]">
+              {kickoffV2BusinessObjective}
+            </p>
+          </div>
           <p className="text-[18px] leading-[1.65] text-[#526068]">
             TOICO&apos;s strongest near-term SEO gains will not come from
             rewriting pages one by one. The audit points to shared technical

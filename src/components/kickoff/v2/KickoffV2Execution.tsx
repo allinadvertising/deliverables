@@ -35,9 +35,9 @@ export function KickoffV2Execution() {
       id="execution"
     >
       <KickoffV2Heading
-        eyebrow="What execution will look like"
+        eyebrow="Implementation proof"
         number="04"
-        title="Concrete changes, followed by evidence."
+        title="How we will prove each release"
       />
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -88,12 +88,12 @@ export function KickoffV2Execution() {
       </div>
 
       <h3 className="mt-10 text-[20px] font-black text-[#051920]">
-        Deliverable evidence by phase
+        Evidence, action, impact, and owner
       </h3>
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kickoffV2ExecutionArtifacts.map((artifact) => (
           <article
-            className="flex min-h-[210px] flex-col rounded-lg border border-[#d4dcdf] bg-white"
+            className="flex min-h-[300px] flex-col rounded-lg border border-[#d4dcdf] bg-white"
             key={artifact.title}
           >
             <div className="grid h-20 place-items-center bg-[#051920]">
@@ -105,8 +105,28 @@ export function KickoffV2Execution() {
               <h4 className="text-[16px] font-black leading-tight text-[#051920]">
                 {artifact.title}
               </h4>
-              <p className="mt-3 text-[12px] leading-[1.5] text-[#647278]">
-                <EditorialText compact text={artifact.detail} />
+              <dl className="mt-4 space-y-4 text-[12px] leading-[1.5]">
+                <div>
+                  <dt className="font-black uppercase text-[#3e71b8]">Evidence</dt>
+                  <dd className="mt-1 text-[#647278]">
+                    <EditorialText compact text={artifact.evidence} />
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-black uppercase text-[#3e71b8]">Recommended action</dt>
+                  <dd className="mt-1 text-[#647278]">
+                    <EditorialText compact text={artifact.recommendedAction} />
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-black uppercase text-[#855900]">Expected business impact</dt>
+                  <dd className="mt-1 text-[#647278]">
+                    <EditorialText compact text={artifact.expectedImpact} />
+                  </dd>
+                </div>
+              </dl>
+              <p className="mt-auto border-t border-[#d9e0e3] pt-4 text-[11px] font-black uppercase text-[#34434a]">
+                Owner: {artifact.owner}
               </p>
             </div>
           </article>

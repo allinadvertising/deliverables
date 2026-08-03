@@ -1,4 +1,9 @@
-import type { KpiRow, VisualDirection } from "@/lib/reports/types";
+import type {
+  ConversionPlan,
+  KpiRow,
+  ReportSectionCopy,
+  VisualDirection,
+} from "@/lib/reports/types";
 
 const changeStyles = {
   positive: "bg-[#edf9f1] text-[#16803d]",
@@ -7,14 +12,18 @@ const changeStyles = {
 };
 
 type ReportDashboardProps = {
+  conversionPlan?: ConversionPlan;
   kpiDisclosure: string;
   kpiRows: KpiRow[];
+  visualSection?: ReportSectionCopy;
   visualDirections: VisualDirection[];
 };
 
 export function ReportDashboard({
+  conversionPlan,
   kpiDisclosure,
   kpiRows,
+  visualSection,
   visualDirections,
 }: ReportDashboardProps) {
   return (
@@ -45,13 +54,24 @@ export function ReportDashboard({
             <tbody>
               {kpiRows.map((row) => (
                 <tr key={row.metric}>
-                  <td className="font-extrabold text-slate-900">{row.metric}</td>
+                  <td
+                    className={`font-extrabold text-slate-900 ${
+                      row.status === "positive"
+                        ? "border-l-4 border-l-[#16803d]"
+                        : ""
+                    }`}
+                  >
+                    {row.metric}
+                  </td>
                   <td>{row.previous}</td>
                   <td className="font-black text-[#183b68]">{row.current}</td>
                   <td>
                     <span
-                      className={`inline-flex px-2.5 py-1 text-xs font-black ${changeStyles[row.status]}`}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-black ${changeStyles[row.status]}`}
                     >
+                      {row.status === "positive" ? (
+                        <span aria-hidden="true">&#8593;</span>
+                      ) : null}
                       {row.change}
                     </span>
                   </td>
@@ -65,6 +85,40 @@ export function ReportDashboard({
         <p className="mb-0 mt-4 text-xs leading-relaxed text-slate-500">
           {kpiDisclosure}
         </p>
+
+        {conversionPlan ? (
+          <aside className="mt-7 border-l-4 border-[#f6b328] bg-[#fef7e8] p-5">
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.1em] text-[#9a6a00]">
+              Conversion and revenue measurement plan
+            </p>
+            <dl className="grid gap-5 md:grid-cols-3">
+              <div>
+                <dt className="text-[11px] font-black uppercase tracking-[0.08em] text-slate-500">
+                  Owner
+                </dt>
+                <dd className="mt-1 text-sm font-bold leading-relaxed text-slate-800">
+                  {conversionPlan.owner}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] font-black uppercase tracking-[0.08em] text-slate-500">
+                  Source to connect
+                </dt>
+                <dd className="mt-1 text-sm font-bold leading-relaxed text-slate-800">
+                  {conversionPlan.sourcePriority}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] font-black uppercase tracking-[0.08em] text-slate-500">
+                  Next report
+                </dt>
+                <dd className="mt-1 text-sm font-bold leading-relaxed text-slate-800">
+                  {conversionPlan.nextReportExpectation}
+                </dd>
+              </div>
+            </dl>
+          </aside>
+        ) : null}
       </section>
 
       <section
@@ -73,14 +127,14 @@ export function ReportDashboard({
         aria-labelledby="visual-direction-title"
       >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          Visual direction
+          {visualSection?.eyebrow ?? "Visual direction"}
         </p>
         <h2 className="audit-section-title" id="visual-direction-title">
-          Recommended chart briefs
+          {visualSection?.title ?? "Recommended chart briefs"}
         </h2>
         <p className="audit-copy mb-7">
-          These are production directions for a designer or charting system.
-          Charts are intentionally not generated in this report.
+          {visualSection?.intro ??
+            "These are production directions for a designer or charting system. Charts are intentionally not generated in this report."}
         </p>
 
         <div className="grid gap-5 sm:grid-cols-2">

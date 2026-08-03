@@ -52,19 +52,23 @@ export function SeoStoryReport({ report }: SeoStoryReportProps) {
       <main>
         <ReportExecutive
           action={report.meta.action}
+          businessObjective={report.businessObjective}
           executiveSummary={report.executiveSummary}
           powerLines={report.powerLines}
         />
         <ReportJourney journeyWorkstreams={report.journeyWorkstreams} />
         <ReportDashboard
+          conversionPlan={report.conversionPlan}
           kpiDisclosure={report.kpiDisclosure}
           kpiRows={report.kpiRows}
+          visualSection={report.visualSection}
           visualDirections={report.visualDirections}
         />
         <ReportObstacles obstacles={report.obstacles} />
         <ReportAppendix
           dataNotes={report.dataNotes}
           technicalItems={report.technicalItems}
+          technicalLabels={report.technicalLabels}
         />
       </main>
 

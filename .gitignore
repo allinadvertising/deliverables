@@ -24,6 +24,8 @@
 # misc
 .DS_Store
 *.pem
+/docs/jordan-feedback-2026-07-30/raw-transcript-with-base64.md
+/docs/jordan-feedback-2026-07-30/executive-summary.md
 
 # debug
 npm-debug.log*

@@ -14,6 +14,11 @@ const implementationExamples = [
       "One descriptive commercial H1",
       "Interface labels use appropriate structural elements",
     ],
+    decision: "Approve the shared Stencil heading correction for Month 1.",
+    impact:
+      "Clear page topics support category-ranking recovery before priority product work begins.",
+    proof:
+      "A fresh crawl confirms corrected outlines on the homepage and representative category and product templates.",
   },
   {
     eyebrow: "Product URL signals",
@@ -25,6 +30,12 @@ const implementationExamples = [
       "One internally linked canonical product URL",
       "Non-preferred variants removed from crawl paths",
     ],
+    decision:
+      "Approve the preferred product-URL pattern and development owner for Month 1.",
+    impact:
+      "Clean product signals reduce duplicate discovery and protect visibility for the Tiger Suction Hose line and other revenue-priority inventory.",
+    proof:
+      "A post-release crawl finds one preferred URL per tested product and no exposed double-slash or com_cvv variants.",
   },
 ];
 
@@ -35,9 +46,9 @@ export function KickoffV2Execution() {
       id="execution"
     >
       <KickoffV2Heading
-        eyebrow="Implementation proof"
+        eyebrow="Proposed implementation"
         number="04"
-        title="How we will prove each release"
+        title="What changes, who decides, and how we prove it"
       />
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -46,9 +57,14 @@ export function KickoffV2Execution() {
             className="rounded-lg border border-[#d4dcdf] bg-white p-6"
             key={example.eyebrow}
           >
-            <p className="text-[11px] font-black uppercase text-[#3e71b8]">
-              {example.eyebrow}
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-[11px] font-black uppercase text-[#3e71b8]">
+                {example.eyebrow}
+              </p>
+              <span className="bg-[#fff1c7] px-2.5 py-1 text-[10px] font-black uppercase text-[#855900]">
+                Proposed priority
+              </span>
+            </div>
             <h3 className="mt-2 text-[21px] font-black leading-tight text-[#051920]">
               {example.title}
             </h3>
@@ -83,6 +99,32 @@ export function KickoffV2Execution() {
                 </ul>
               </div>
             </div>
+            <dl className="mt-6 grid gap-px bg-[#dce2e4] sm:grid-cols-3">
+              <div className="bg-white p-4">
+                <dt className="text-[10px] font-black uppercase text-[#3e71b8]">
+                  Decision at kickoff
+                </dt>
+                <dd className="mt-2 text-[12px] font-bold leading-[1.5] text-[#34434a]">
+                  {example.decision}
+                </dd>
+              </div>
+              <div className="bg-white p-4">
+                <dt className="text-[10px] font-black uppercase text-[#855900]">
+                  Business impact
+                </dt>
+                <dd className="mt-2 text-[12px] leading-[1.5] text-[#34434a]">
+                  {example.impact}
+                </dd>
+              </div>
+              <div className="bg-white p-4">
+                <dt className="text-[10px] font-black uppercase text-[#16803d]">
+                  Completion evidence
+                </dt>
+                <dd className="mt-2 text-[12px] leading-[1.5] text-[#34434a]">
+                  {example.proof}
+                </dd>
+              </div>
+            </dl>
           </article>
         ))}
       </div>

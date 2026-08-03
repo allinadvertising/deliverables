@@ -30,8 +30,15 @@ export const kickoffV2Metrics = [
   },
 ];
 
+const phaseBusinessOutcomes = [
+  "Create the clean technical foundation needed to recover first-page category rankings and measure priority-product visibility reliably.",
+  "Move the 3-inch Tiger Suction Hose line and other revenue-priority inventory into stronger customer and search-engine discovery paths.",
+  "Improve priority commercial pages so ranking recovery can contribute to the 10-15% organic revenue target.",
+];
+
 export const kickoffV2Phases = roadmapMonths.map((month, index) => ({
   accent: index === 1 ? "gold" : "blue",
+  businessOutcome: phaseBusinessOutcomes[index],
   deliverable: month.deliverable,
   month: month.month,
   objective: month.objective,
@@ -41,33 +48,27 @@ export const kickoffV2Phases = roadmapMonths.map((month, index) => ({
 export const kickoffV2Focus = kickoffFindings.map((finding, index) => ({
   number: String(index + 1).padStart(2, "0"),
   title: [
-    "Repair shared heading templates",
-    "Restore product discoverability",
-    "Differentiate priority clusters",
-    "Build stronger search destinations",
+    "Repair shared templates before growth work",
+    "Prioritize Tiger Suction Hose discoverability",
+    "Differentiate revenue-priority product clusters",
+    "Build commercial hubs around buyer demand",
+  ][index],
+  businessObjective: [
+    "Ranking recovery starts with dependable page and URL signals.",
+    "The priority product line needs clearer internal paths before visibility can contribute to revenue.",
+    "Distinct pages give high-value products a better chance to rank for specific buyer needs.",
+    "Commercial hubs support new demand and the 10-15% organic revenue growth target.",
   ][index],
   evidence: finding.evidence,
-  expectedImpact: finding.whyItMatters,
+  expectedImpact: [
+    "Cleaner templates give priority categories and products a stronger foundation for ranking recovery.",
+    "More qualified shoppers can reach the Tiger Suction Hose line and other commercially important inventory.",
+    "Stronger differentiation helps high-value product pages compete for specific buyer searches.",
+    "Connected commercial hubs can expand qualified demand and support the organic revenue growth target.",
+  ][index],
   recommendedAction: finding.response,
+  status: "Proposed priority",
 }));
-
-export const kickoffV2Signals = [
-  {
-    label: "Foundation",
-    value: "2,308 URLs",
-    detail: "One shared Stencil correction addresses the broadest heading defect.",
-  },
-  {
-    label: "Discovery",
-    value: "473 URLs",
-    detail: "A ranked orphan queue creates the clearest Month 2 deployment path.",
-  },
-  {
-    label: "Growth",
-    value: "26,632 relationships",
-    detail: "Near-duplicate clusters show where distinct commercial content matters.",
-  },
-];
 
 export const kickoffV2ExecutionArtifacts = [
   {

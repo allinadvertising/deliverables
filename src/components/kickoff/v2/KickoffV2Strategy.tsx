@@ -34,6 +34,14 @@ export function KickoffV2Strategy() {
             <p className="mt-3 text-[14px] leading-[1.55] text-[#607078]">
               <EditorialText compact text={phase.objective} />
             </p>
+            <div className="mt-5 border-l-4 border-[#f6b328] bg-[#fff9eb] p-4">
+              <p className="text-[10px] font-black uppercase text-[#855900]">
+                Business outcome
+              </p>
+              <p className="mt-2 text-[13px] font-bold leading-[1.5] text-[#34434a]">
+                <EditorialText compact text={phase.businessOutcome} />
+              </p>
+            </div>
             <div className="mt-auto border-t border-[#d9e0e3] pt-5">
               <p className="text-[11px] font-black uppercase text-[#6a777d]">
                 Phase outcome

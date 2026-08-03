@@ -61,6 +61,7 @@ export function SeoStoryReport({ report }: SeoStoryReportProps) {
           conversionPlan={report.conversionPlan}
           kpiDisclosure={report.kpiDisclosure}
           kpiRows={report.kpiRows}
+          performanceCharts={report.performanceCharts}
           visualSection={report.visualSection}
           visualDirections={report.visualDirections}
         />

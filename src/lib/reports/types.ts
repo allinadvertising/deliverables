@@ -52,9 +52,63 @@ export type KpiRow = {
 };
 
 export type VisualDirection = {
-  chart: string;
+  chart?: string;
   insight: string;
   title: string;
+};
+
+export type PerformanceComparison = {
+  change: string;
+  current: number;
+  currentDisplay: string;
+  label: string;
+  previous: number;
+  previousDisplay: string;
+  status: "positive" | "watch";
+};
+
+export type PerformanceChartSet = {
+  devices: {
+    insight: string;
+    series: PerformanceComparison[];
+    title: string;
+  };
+  growth: {
+    insight: string;
+    series: PerformanceComparison[];
+    title: string;
+  };
+  homepage: {
+    insight: string;
+    series: PerformanceComparison[];
+    title: string;
+  };
+  nonbrand: {
+    baseline: number;
+    baselineDisplay: string;
+    contributions: Array<{
+      display: string;
+      label: string;
+      value: number;
+    }>;
+    insight: string;
+    title: string;
+    total: number;
+    totalDisplay: string;
+  };
+  revenue?: {
+    customerMix: Array<{
+      grossDisplay: string;
+      label: string;
+      newCustomerDisplay: string;
+      newCustomerRevenue: number;
+      returningCustomerDisplay: string;
+      returningCustomerRevenue: number;
+    }>;
+    insight: string;
+    series: PerformanceComparison[];
+    title: string;
+  };
 };
 
 export type Obstacle = {
@@ -80,6 +134,7 @@ export type SeoStoryReportData = {
   kpiRows: KpiRow[];
   meta: ReportMeta;
   obstacles: Obstacle[];
+  performanceCharts?: PerformanceChartSet;
   powerLines: PowerLine[];
   technicalItems: TechnicalItem[];
   technicalLabels?: TechnicalLabels;

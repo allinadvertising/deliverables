@@ -1,8 +1,5 @@
 import { EditorialText } from "@/components/shared/EditorialText";
-import {
-  kickoffV2Focus,
-  kickoffV2Signals,
-} from "@/lib/kickoff/toico-v2";
+import { kickoffV2Focus } from "@/lib/kickoff/toico-v2";
 
 import { KickoffV2Heading } from "./KickoffV2Heading";
 
@@ -26,9 +23,15 @@ export function KickoffV2Focus() {
                 {item.number}
               </span>
               <div>
+                <p className="mb-2 text-[10px] font-black uppercase text-[#855900]">
+                  {item.status}
+                </p>
                 <h3 className="text-[20px] font-black leading-tight text-[#051920]">
                   {item.title}
                 </h3>
+                <p className="mt-3 border-l-4 border-[#3e71b8] bg-[#f1f7ff] p-3 text-[13px] font-bold leading-[1.5] text-[#26373e]">
+                  <EditorialText compact text={item.businessObjective} />
+                </p>
                 <p className="mt-2 text-[11px] font-black uppercase text-[#3e71b8]">
                   Evidence
                 </p>
@@ -57,24 +60,6 @@ export function KickoffV2Focus() {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-1 bg-[#051920] lg:grid-cols-3">
-        {kickoffV2Signals.map((signal) => (
-          <article
-            className="border-b border-white/10 px-7 py-8 lg:border-b-0 lg:border-r last:border-0"
-            key={signal.label}
-          >
-            <p className="text-[11px] font-black uppercase text-[#f6b328]">
-              {signal.label}
-            </p>
-            <p className="mt-3 text-[24px] font-black text-white">
-              {signal.value}
-            </p>
-            <p className="mt-3 text-[13px] leading-[1.55] text-white/65">
-              {signal.detail}
-            </p>
-          </article>
-        ))}
-      </div>
     </section>
   );
 }

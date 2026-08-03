@@ -3,23 +3,16 @@ import type { SeoStoryReportData } from "@/lib/reports/types";
 export const snowieJune2026Report: SeoStoryReportData = {
   businessObjective:
     "Recover lost organic visibility and drive measurable revenue growth, especially from B2B equipment sales, while restoring organic shopping reach through Google Merchant Center.",
-  conversionPlan: {
-    owner: "Account Manager with client analytics and ecommerce owners",
-    sourcePriority:
-      "WhatConverts first; then reliable GA4; then Shopify, WooCommerce, or the client CMS.",
-    nextReportExpectation:
-      "Confirm the connected source and report qualified leads or ecommerce revenue without estimating missing values.",
-  },
   technicalLabels: {
     fix: "What we will do",
     issue: "What is broken",
     why: "Why it matters",
   },
   visualSection: {
-    eyebrow: "Performance story",
+    eyebrow: "Performance trends",
     intro:
-      "Each view connects a performance signal to the decision it should inform.",
-    title: "Views that guide the next decision",
+      "June expanded Snowie's organic reach and generated more orders, but lower order value reduced revenue. These views connect search growth to the business outcome.",
+    title: "Organic growth and revenue performance",
   },
   meta: {
     action:
@@ -31,10 +24,10 @@ export const snowieJune2026Report: SeoStoryReportData = {
     previousPeriod: "May 1-31, 2026",
     property: "https://snowie.com/",
     reportType: "Monthly Organic Search Performance Report",
-    source: "Google Search Console",
+    source: "Google Search Console + organic order data",
   },
   executiveSummary:
-    "June delivered 8,178 organic clicks, up 11.9% from May, as search visibility expanded 24.1% and average ranking improved from 7.1 to 6.9. Growth came from nonbrand discovery: visible nonbrand clicks rose 37.6%, led by the Flavor Browser, shaved ice machines category, and flavor syrup category. The main drag was branded click capture: the query 'snowie' lost 284 clicks and the homepage lost 167 even as its impressions grew 22.6%. The next priority is a focused search-listing test for the homepage and highest-impression category pages.",
+    "June organic search generated 121 orders and $39,999.47 in gross revenue. Orders increased 6.1%, but gross revenue declined 3.8% because average order value fell from $364.84 to $330.57. Organic clicks grew 11.9%, search visibility expanded 24.1%, and visible nonbrand clicks rose 37.6%, led by the Flavor Browser and shaved ice machines category. New customers generated 79.6% of June organic revenue, up from 71.3% in May, showing that SEO is reaching fresh buyers. The next priority is to protect that acquisition growth while improving homepage click capture and understanding the product mix behind lower order value.",
   powerLines: [
     {
       area: "Traffic",
@@ -45,7 +38,7 @@ export const snowieJune2026Report: SeoStoryReportData = {
     {
       area: "Conversions",
       statement:
-        "Revenue is not yet connected. The Account Manager will confirm the best available source so the next report can pair organic demand with qualified leads or ecommerce revenue.",
+        "Organic orders increased 6.1% to 121, but gross revenue declined 3.8% to $39,999.47 as average order value fell 9.4%.",
       status: "watch",
     },
     {
@@ -159,37 +152,169 @@ export const snowieJune2026Report: SeoStoryReportData = {
     },
   ],
   kpiDisclosure:
-    "Search Console reports clicks and search appearances, not leads or revenue. Visible nonbrand metrics include only search terms Google exposes, and mobile clicks are a diagnostic subset of the site total.",
-  visualDirections: [
-    {
+    "Search performance comes from Google Search Console. Organic order data is 100% Google in both periods. Gross revenue includes the full order value; net revenue excludes tax and shipping. Visible nonbrand metrics include only search terms Google exposes.",
+  performanceCharts: {
+    revenue: {
+      customerMix: [
+        {
+          grossDisplay: "$41,591.86 gross",
+          label: "May",
+          newCustomerDisplay: "$29,673.96",
+          newCustomerRevenue: 29673.96,
+          returningCustomerDisplay: "$11,917.90",
+          returningCustomerRevenue: 11917.9,
+        },
+        {
+          grossDisplay: "$39,999.47 gross",
+          label: "June",
+          newCustomerDisplay: "$31,842.05",
+          newCustomerRevenue: 31842.05,
+          returningCustomerDisplay: "$8,157.42",
+          returningCustomerRevenue: 8157.42,
+        },
+      ],
+      insight:
+        "June produced seven more orders and 213 more items, but gross revenue fell $1,592.39 because average order value declined by $34.27.",
+      series: [
+        {
+          change: "-3.8%",
+          current: 39999.47,
+          currentDisplay: "$39,999.47",
+          label: "Gross revenue",
+          previous: 41591.86,
+          previousDisplay: "$41,591.86",
+          status: "watch",
+        },
+        {
+          change: "-4.9%",
+          current: 33321.76,
+          currentDisplay: "$33,321.76",
+          label: "Net revenue",
+          previous: 35051.95,
+          previousDisplay: "$35,051.95",
+          status: "watch",
+        },
+        {
+          change: "+6.1%",
+          current: 121,
+          currentDisplay: "121",
+          label: "Orders",
+          previous: 114,
+          previousDisplay: "114",
+          status: "positive",
+        },
+        {
+          change: "-9.4%",
+          current: 330.57,
+          currentDisplay: "$330.57",
+          label: "Average order value",
+          previous: 364.84,
+          previousDisplay: "$364.84",
+          status: "watch",
+        },
+      ],
+      title: "More orders, lower order value",
+    },
+    growth: {
       title: "Monthly growth",
-      chart:
-        "Clustered bars comparing clicks and search appearances for May and June, with percentage-change labels above each pair.",
       insight:
-        "Show that June produced meaningful traffic growth while visibility expanded even faster.",
+        "June produced 871 additional organic visits while Snowie's search visibility expanded by 68,899 appearances.",
+      series: [
+        {
+          change: "+11.9%",
+          current: 8178,
+          currentDisplay: "8,178",
+          label: "Organic clicks",
+          previous: 7307,
+          previousDisplay: "7,307",
+          status: "positive",
+        },
+        {
+          change: "+24.1%",
+          current: 354888,
+          currentDisplay: "354,888",
+          label: "Search appearances",
+          previous: 285989,
+          previousDisplay: "285,989",
+          status: "positive",
+        },
+      ],
     },
-    {
-      title: "Nonbrand expansion",
-      chart:
-        "Waterfall chart showing the 578-click visible nonbrand gain, led by Flavor Browser, shaved ice machines, flavor syrups, and Mini Pro.",
+    nonbrand: {
+      baseline: 1538,
+      baselineDisplay: "1,538",
+      contributions: [
+        { display: "+359", label: "Flavor Browser", value: 359 },
+        { display: "+326", label: "Shaved ice machines", value: 326 },
+        { display: "-107", label: "Other visible queries", value: -107 },
+      ],
       insight:
-        "Connect June's growth to product and category discovery rather than branded demand.",
+        "The two leading commercial destinations added 685 visits, more than offsetting a 107-click net decline across other visible nonbrand queries.",
+      title: "What drove nonbrand growth",
+      total: 2116,
+      totalDisplay: "2,116",
     },
-    {
-      title: "Homepage efficiency",
-      chart:
-        "Three paired bars for homepage clicks, search appearances, and click rate, with the May-to-June ranking change annotated.",
+    homepage: {
+      title: "Homepage visibility outpaced click capture",
       insight:
-        "Make the homepage's 22,013-impression gain and 167-click loss visible in the same frame.",
+        "The homepage appeared in 22,013 more searches but received 167 fewer visits, making its search listing the clearest immediate optimization target.",
+      series: [
+        {
+          change: "+22.6%",
+          current: 119560,
+          currentDisplay: "119,560",
+          label: "Search appearances",
+          previous: 97547,
+          previousDisplay: "97,547",
+          status: "positive",
+        },
+        {
+          change: "-6.8%",
+          current: 2276,
+          currentDisplay: "2,276",
+          label: "Organic clicks",
+          previous: 2443,
+          previousDisplay: "2,443",
+          status: "watch",
+        },
+        {
+          change: "-0.60 points",
+          current: 1.9,
+          currentDisplay: "1.90%",
+          label: "Click rate",
+          previous: 2.5,
+          previousDisplay: "2.50%",
+          status: "watch",
+        },
+      ],
     },
-    {
-      title: "Device performance",
-      chart:
-        "Grouped bars for desktop, mobile, and tablet clicks by month, with impression and click-rate changes shown as labels.",
+    devices: {
+      title: "Mobile supplied most of the growth",
       insight:
-        "Show that mobile supplied 94% of the incremental clicks while its visibility grew 38.5%.",
+        "Mobile generated 822 of the site's 871 additional visits. Other devices combined added 49 visits.",
+      series: [
+        {
+          change: "+14.5%",
+          current: 6500,
+          currentDisplay: "6,500",
+          label: "Mobile",
+          previous: 5678,
+          previousDisplay: "5,678",
+          status: "positive",
+        },
+        {
+          change: "+3.0%",
+          current: 1678,
+          currentDisplay: "1,678",
+          label: "Other devices combined",
+          previous: 1629,
+          previousDisplay: "1,629",
+          status: "positive",
+        },
+      ],
     },
-  ],
+  },
+  visualDirections: [],
   obstacles: [
     {
       obstacle:
@@ -259,11 +384,11 @@ export const snowieJune2026Report: SeoStoryReportData = {
     },
     {
       issue:
-        "The monthly reporting package is missing site-health, completed-work, and business-outcome evidence.",
+        "The monthly reporting package is missing site-health and completed-work evidence.",
       why:
-        "The report cannot connect technical activity to business outcomes or confirm broader site health.",
+        "The report can now connect organic performance to orders and revenue, but it cannot confirm whether technical activity improved broader site health.",
       fix:
-        "Add deployment dates, crawl exports, indexing coverage, performance data, and lead or revenue outcomes to each monthly report.",
+        "Add deployment dates, crawl exports, indexing coverage, and completed-work evidence to each monthly report.",
     },
   ],
   dataNotes: [
@@ -273,8 +398,8 @@ export const snowieJune2026Report: SeoStoryReportData = {
     "Search Console data was final when exported on July 29, 2026.",
     "Query-level brand and nonbrand observations use visible search terms because Google withholds some terms for privacy.",
     "Live HTML inspection on July 29, 2026 supplied the redirect, product-card, and Vendor Locator observations.",
-    "No reliable conversion or revenue source was supplied, so this report does not claim revenue. Source priority for future reporting is WhatConverts, reliable GA4, then Shopify, WooCommerce, or the client CMS.",
-    "The Account Manager owns source confirmation with the client analytics and ecommerce owners; the next report should identify the connected source and include qualified leads or ecommerce revenue when reliable.",
+    "Organic order data reports 114 May orders and 121 June orders; organic traffic is 100% Google in both periods.",
+    "Gross revenue includes total order value. Net revenue excludes tax and shipping. May includes 113 completed orders and one processing order; all 121 June orders were completed.",
     "No completed-task, crawl, indexing, or Core Web Vitals data was supplied.",
   ],
 };

@@ -15,7 +15,7 @@ export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
         Obstacles and remediation
       </p>
       <h2 className="audit-section-title" id="obstacles-title">
-        What is blocking the next level
+        What Needs Attention Next?
       </h2>
 
       <div className="space-y-5">

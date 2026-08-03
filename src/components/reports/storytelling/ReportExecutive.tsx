@@ -60,7 +60,7 @@ export function ReportExecutive({
 
         <div className="mt-8 border-l-4 border-[#f6b328] bg-[#fef7e8] p-5">
           <p className="mb-1 text-xs font-black uppercase tracking-[0.1em] text-[#9a6a00]">
-            One action that matters most
+            Next priority
           </p>
           <p className="mb-0 text-base font-bold leading-relaxed text-slate-800">
             {action}

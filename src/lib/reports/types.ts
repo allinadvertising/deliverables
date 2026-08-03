@@ -24,6 +24,14 @@ export type JourneyWorkstream = {
   work: string;
 };
 
+export type CompletedWorkItem = {
+  completedOn: string;
+  evidence: string;
+  owner: string;
+  taskUrl: string;
+  title: string;
+};
+
 export type ConversionPlan = {
   nextReportExpectation: string;
   owner: string;
@@ -97,7 +105,8 @@ export type PerformanceChartSet = {
     totalDisplay: string;
   };
   revenue?: {
-    customerMix: Array<{
+    channelContext?: string;
+    customerMix?: Array<{
       grossDisplay: string;
       label: string;
       newCustomerDisplay: string;
@@ -106,6 +115,19 @@ export type PerformanceChartSet = {
       returningCustomerRevenue: number;
     }>;
     insight: string;
+    rankings?: Array<{
+      insight: string;
+      periods: Array<{
+        items: Array<{
+          detail?: string;
+          display: string;
+          label: string;
+          value: number;
+        }>;
+        label: string;
+      }>;
+      title: string;
+    }>;
     series: PerformanceComparison[];
     title: string;
   };
@@ -119,6 +141,7 @@ export type Obstacle = {
 };
 
 export type TechnicalItem = {
+  developerNote?: string;
   fix: string;
   issue: string;
   why: string;
@@ -126,6 +149,7 @@ export type TechnicalItem = {
 
 export type SeoStoryReportData = {
   businessObjective?: string;
+  completedWork?: CompletedWorkItem[];
   conversionPlan?: ConversionPlan;
   dataNotes: string[];
   executiveSummary: string;

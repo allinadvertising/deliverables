@@ -1,39 +1,26 @@
 import {
   kickoffDecisions,
   kickoffFindings,
-  kickoffMetrics,
   roadmapMonths,
 } from "@/lib/kickoff/toico";
 
 export const kickoffV2Meta = [
   { label: "Quarter", value: "July to September 2026" },
-  { label: "Business objective", value: "Grow organic revenue 10-15% YoY" },
+  {
+    label: "Illustrative objective",
+    value: "Grow organic revenue 10-15% YoY (pending confirmation)",
+  },
   { label: "Roadmap", value: "Foundation, discovery, growth" },
   { label: "Platform", value: "BigCommerce" },
 ];
 
 export const kickoffV2BusinessObjective =
-  "Grow organic revenue toward a 10-15% YoY target by expanding visibility for the priority 3-inch Tiger Suction Hose line, recovering first-page category rankings, and capturing the value of phone orders that begin in organic search.";
-
-export const kickoffV2Metrics = [
-  kickoffMetrics[0],
-  {
-    value: "1,163",
-    label: "Indexable near-duplicate URLs",
-    note: "Priority clusters need differentiation, consolidation, or exclusion.",
-  },
-  kickoffMetrics[2],
-  {
-    value: "3 phases",
-    label: "Decision-led roadmap",
-    note: "Foundation, discoverability, and commercial growth each close with evidence.",
-  },
-];
+  "Illustrative objective, pending client confirmation: grow organic revenue toward a 10-15% YoY target by expanding visibility for the priority 3-inch Tiger Suction Hose line, recovering first-page category rankings, and capturing the value of phone orders that begin in organic search.";
 
 const phaseBusinessOutcomes = [
   "Create the clean technical foundation needed to recover first-page category rankings and measure priority-product visibility reliably.",
   "Move the 3-inch Tiger Suction Hose line and other revenue-priority inventory into stronger customer and search-engine discovery paths.",
-  "Improve priority commercial pages so ranking recovery can contribute to the 10-15% organic revenue target.",
+  "Improve priority commercial pages so ranking recovery can support the commercial growth objective once its target is confirmed.",
 ];
 
 export const kickoffV2Phases = roadmapMonths.map((month, index) => ({
@@ -57,7 +44,7 @@ export const kickoffV2Focus = kickoffFindings.map((finding, index) => ({
     "Ranking recovery starts with dependable page and URL signals.",
     "The priority product line needs clearer internal paths before visibility can contribute to revenue.",
     "Distinct pages give high-value products a better chance to rank for specific buyer needs.",
-    "Commercial hubs support new demand and the 10-15% organic revenue growth target.",
+    "Commercial hubs support new demand and the commercial growth objective once its target is confirmed.",
   ][index],
   evidence: finding.evidence,
   expectedImpact: [

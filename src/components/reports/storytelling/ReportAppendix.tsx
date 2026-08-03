@@ -25,7 +25,7 @@ export function ReportAppendix({
         aria-labelledby="appendix-title"
       >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          Technical appendix
+          Site health review
         </p>
         <h2 className="audit-section-title" id="appendix-title">
           Technical detail, in plain language
@@ -67,6 +67,16 @@ export function ReportAppendix({
                   {item.fix}
                 </p>
               </div>
+              {item.developerNote ? (
+                <div className="border-t border-slate-200 pt-4 lg:col-span-3 lg:col-start-2">
+                  <p className="mb-1 text-[11px] font-black uppercase text-slate-400">
+                    Implementation detail
+                  </p>
+                  <p className="mb-0 text-xs leading-relaxed text-slate-500">
+                    {item.developerNote}
+                  </p>
+                </div>
+              ) : null}
             </article>
           ))}
         </div>

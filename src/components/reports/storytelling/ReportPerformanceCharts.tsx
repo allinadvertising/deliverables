@@ -284,21 +284,94 @@ function DivergenceChart({
   );
 }
 
+function RevenueRanking({
+  ranking,
+}: {
+  ranking: NonNullable<
+    NonNullable<PerformanceChartSet["revenue"]>["rankings"]
+  >[number];
+}) {
+  const maximum = Math.max(
+    1,
+    ...ranking.periods.flatMap((period) =>
+      period.items.map((item) => item.value),
+    ),
+  );
+
+  return (
+    <div className="border-t border-slate-200 pt-7">
+      <div className="mb-6">
+        <h4 className="text-base font-black text-slate-900">{ranking.title}</h4>
+        <p className="mt-1 text-xs leading-relaxed text-slate-500">
+          {ranking.insight}
+        </p>
+      </div>
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
+        {ranking.periods.map((period, periodIndex) => (
+          <div key={period.label}>
+            <p className="mb-4 text-xs font-black uppercase text-[#183b68]">
+              {period.label}
+            </p>
+            <div className="space-y-4">
+              {period.items.map((item) => (
+                <div key={item.label}>
+                  <div className="mb-2 flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-bold leading-snug text-slate-700">
+                        {item.label}
+                      </p>
+                      {item.detail ? (
+                        <p className="mt-0.5 text-[11px] text-slate-500">
+                          {item.detail}
+                        </p>
+                      ) : null}
+                    </div>
+                    <p className="shrink-0 text-xs font-black text-slate-800">
+                      {item.display}
+                    </p>
+                  </div>
+                  <div className="h-2.5 bg-slate-100">
+                    <span
+                      className={`block h-2.5 ${periodIndex === 0 ? "bg-[#8a9aaa]" : "bg-[#16803d]"}`}
+                      style={{
+                        width: `${Math.max(3, (item.value / maximum) * 100)}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["revenue"]> }) {
   const customerMixLabel = chart.customerMix
+    ? chart.customerMix
     .map(
       (item) =>
         `${item.label}: new customers ${item.newCustomerDisplay}; returning customers ${item.returningCustomerDisplay}`,
     )
-    .join("; ");
+      .join("; ")
+    : "";
 
   return (
     <div>
       <DivergenceChart
-        ariaLabel="Organic revenue May compared with June: orders increased, while gross revenue, net revenue, and average order value decreased."
+        ariaLabel="Organic revenue May compared with June: gross revenue, orders, and average order value increased, while organic share of all orders decreased."
         series={chart.series}
       />
 
+      {chart.channelContext ? (
+        <p className="mt-6 border-l-4 border-[#2f65a7] bg-[#f1f7ff] p-4 text-sm font-bold leading-relaxed text-slate-700">
+          {chart.channelContext}
+        </p>
+      ) : null}
+
+      {chart.customerMix?.length ? (
       <div className="mt-8 border-t border-slate-200 pt-6" role="img" aria-label={customerMixLabel}>
         <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -352,6 +425,15 @@ function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["reven
           })}
         </div>
       </div>
+      ) : null}
+
+      {chart.rankings?.length ? (
+        <div className="mt-8 space-y-9">
+          {chart.rankings.map((ranking) => (
+            <RevenueRanking key={ranking.title} ranking={ranking} />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

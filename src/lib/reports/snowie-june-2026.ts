@@ -2,21 +2,21 @@ import type { SeoStoryReportData } from "@/lib/reports/types";
 
 export const snowieJune2026Report: SeoStoryReportData = {
   businessObjective:
-    "Recover lost organic visibility and drive measurable revenue growth, especially from B2B equipment sales, while restoring organic shopping reach through Google Merchant Center.",
+    "Recover lost organic visibility and drive measurable revenue growth, especially from B2B equipment sales.",
   technicalLabels: {
-    fix: "What we will do",
-    issue: "What is broken",
-    why: "Why it matters",
+    fix: "Next action",
+    issue: "Issue",
+    why: "Business risk",
   },
   visualSection: {
     eyebrow: "Performance trends",
     intro:
-      "June expanded Snowie's organic reach and generated more orders, but lower order value reduced revenue. These views connect search growth to the business outcome.",
+      "June expanded Snowie's organic reach, orders, revenue, and average order value. These views show where organic revenue entered the site and which products generated the most sales.",
     title: "Organic growth and revenue performance",
   },
   meta: {
     action:
-      "Run one search-listing optimization sprint across the homepage, machine category, and Flavor Browser.",
+      "Complete the in-progress ClickUp task \"Implement Dev Fixes from SEO Road Map\" (owner: Brandon Swain; due September 15, 2026).",
     client: "Snowie",
     coverHeadline:
       "Nonbrand discovery is scaling. Click efficiency is the next level.",
@@ -24,10 +24,11 @@ export const snowieJune2026Report: SeoStoryReportData = {
     previousPeriod: "May 1-31, 2026",
     property: "https://snowie.com/",
     reportType: "Monthly Organic Search Performance Report",
-    source: "Google Search Console + organic order data",
+    source:
+      "Google Search Console + WooCommerce Analytics + ClickUp delivery records",
   },
   executiveSummary:
-    "June organic search generated 121 orders and $39,999.47 in gross revenue. Orders increased 6.1%, but gross revenue declined 3.8% because average order value fell from $364.84 to $330.57. Organic clicks grew 11.9%, search visibility expanded 24.1%, and visible nonbrand clicks rose 37.6%, led by the Flavor Browser and shaved ice machines category. New customers generated 79.6% of June organic revenue, up from 71.3% in May, showing that SEO is reaching fresh buyers. The next priority is to protect that acquisition growth while improving homepage click capture and understanding the product mix behind lower order value.",
+    "June organic search generated 126 orders and $59,715.14 in gross revenue. Orders increased 9.6%, gross revenue grew 35.7%, and average order value rose from $382.60 to $473.93. Organic was Snowie's second-largest revenue channel in both months, although its share of all orders declined from 26.8% to 23.7% as total store orders grew faster. Organic clicks increased 11.9%, search visibility expanded 24.1%, and visible nonbrand clicks rose 37.6%. The homepage remained the largest organic entry point, while the Flavor Station, Mini Pro, and machine-category pages broadened the revenue mix in June.",
   powerLines: [
     {
       area: "Traffic",
@@ -38,8 +39,8 @@ export const snowieJune2026Report: SeoStoryReportData = {
     {
       area: "Conversions",
       statement:
-        "Organic orders increased 6.1% to 121, but gross revenue declined 3.8% to $39,999.47 as average order value fell 9.4%.",
-      status: "watch",
+        "Organic gross revenue increased 35.7% to $59,715.14 as orders grew 9.6% and average order value rose 23.9%.",
+      status: "positive",
     },
     {
       area: "Rankings",
@@ -77,7 +78,7 @@ export const snowieJune2026Report: SeoStoryReportData = {
       work:
         "We isolated the categories and generic searches responsible for June's incremental demand.",
       result:
-        "Visible nonbrand clicks rose 37.6%; Flavor Browser gained 359 clicks and shaved ice machines gained 326.",
+        "Visible nonbrand clicks rose 37.6%. In June, the Flavor Station, Mini Pro, and shaved ice machines entry pages generated $18,782.18 in organic gross revenue.",
       next:
         "Strengthen internal links and search listings for the category pages already proving demand.",
     },
@@ -90,9 +91,43 @@ export const snowieJune2026Report: SeoStoryReportData = {
       work:
         "We compared branded demand with the homepage's larger June visibility footprint.",
       result:
-        "Homepage impressions grew 22.6%, but clicks fell 6.8% as click rate declined to 1.90%.",
+        "Homepage impressions grew 22.6% and clicks fell 6.8%, while attributed homepage revenue increased 3.1% to $30,436.83.",
       next:
         "Test a clearer homepage title and description while preserving the stronger nonbrand message.",
+    },
+  ],
+  completedWork: [
+    {
+      completedOn: "June 1, 2026",
+      evidence:
+        "The onsite package was approved and 18 of 20 listed product-page updates were implemented. The remaining two URLs were documented as nonexistent rather than reported as completed.",
+      owner: "Ricardo Zelaya",
+      taskUrl: "https://app.clickup.com/t/868jdjyvd",
+      title: "Implemented 18 product-page onsite updates",
+    },
+    {
+      completedOn: "June 1, 2026",
+      evidence:
+        "Schema markup was written for the six scheduled pages and the implementation note confirms that the markup was installed manually.",
+      owner: "Roberto Verlezza",
+      taskUrl: "https://app.clickup.com/t/868jewgxy",
+      title: "Completed the six-page schema package",
+    },
+    {
+      completedOn: "June 23, 2026",
+      evidence:
+        "Missing sitemap sections were enabled and checked after regeneration. The sitemap index contained all 10 expected sitemaps, including 122 flavor URLs and 77 location URLs.",
+      owner: "Rafael Osorio",
+      taskUrl: "https://app.clickup.com/t/868j7cjrt",
+      title: "Restored sitemap coverage",
+    },
+    {
+      completedOn: "June 23, 2026",
+      evidence:
+        "Cart, checkout, and account pages plus five redirected product URLs were removed from the sitemap. Redirects were retained, the cache was cleared, and only final indexable URLs remained.",
+      owner: "Rafael Osorio",
+      taskUrl: "https://app.clickup.com/t/868j7cjrv",
+      title: "Removed unsuitable URLs from the sitemap",
     },
   ],
   kpiRows: [
@@ -152,68 +187,108 @@ export const snowieJune2026Report: SeoStoryReportData = {
     },
   ],
   kpiDisclosure:
-    "Search performance comes from Google Search Console. Organic order data is 100% Google in both periods. Gross revenue includes the full order value; net revenue excludes tax and shipping. Visible nonbrand metrics include only search terms Google exposes.",
+    "Search performance comes from Google Search Console. WooCommerce attributed all organic orders to Google organic search in both periods. Gross revenue includes tax and shipping; order share compares organic orders with all attributed store orders. Visible nonbrand metrics include only search terms Google exposes.",
   performanceCharts: {
     revenue: {
-      customerMix: [
-        {
-          grossDisplay: "$41,591.86 gross",
-          label: "May",
-          newCustomerDisplay: "$29,673.96",
-          newCustomerRevenue: 29673.96,
-          returningCustomerDisplay: "$11,917.90",
-          returningCustomerRevenue: 11917.9,
-        },
-        {
-          grossDisplay: "$39,999.47 gross",
-          label: "June",
-          newCustomerDisplay: "$31,842.05",
-          newCustomerRevenue: 31842.05,
-          returningCustomerDisplay: "$8,157.42",
-          returningCustomerRevenue: 8157.42,
-        },
-      ],
+      channelContext:
+        "Organic was the second-largest revenue channel in May and June, and WooCommerce attributed 100% of organic orders to Google organic search.",
       insight:
-        "June produced seven more orders and 213 more items, but gross revenue fell $1,592.39 because average order value declined by $34.27.",
+        "June produced 11 more organic orders and $15,716.04 more gross revenue as average order value increased by $91.33.",
       series: [
         {
-          change: "-3.8%",
-          current: 39999.47,
-          currentDisplay: "$39,999.47",
+          change: "+35.7%",
+          current: 59715.14,
+          currentDisplay: "$59,715.14",
           label: "Gross revenue",
-          previous: 41591.86,
-          previousDisplay: "$41,591.86",
-          status: "watch",
-        },
-        {
-          change: "-4.9%",
-          current: 33321.76,
-          currentDisplay: "$33,321.76",
-          label: "Net revenue",
-          previous: 35051.95,
-          previousDisplay: "$35,051.95",
-          status: "watch",
-        },
-        {
-          change: "+6.1%",
-          current: 121,
-          currentDisplay: "121",
-          label: "Orders",
-          previous: 114,
-          previousDisplay: "114",
+          previous: 43999.1,
+          previousDisplay: "$43,999.10",
           status: "positive",
         },
         {
-          change: "-9.4%",
-          current: 330.57,
-          currentDisplay: "$330.57",
+          change: "+9.6%",
+          current: 126,
+          currentDisplay: "126",
+          label: "Orders",
+          previous: 115,
+          previousDisplay: "115",
+          status: "positive",
+        },
+        {
+          change: "+23.9%",
+          current: 473.93,
+          currentDisplay: "$473.93",
           label: "Average order value",
-          previous: 364.84,
-          previousDisplay: "$364.84",
+          previous: 382.6,
+          previousDisplay: "$382.60",
+          status: "positive",
+        },
+        {
+          change: "-3.1 points",
+          current: 23.7,
+          currentDisplay: "23.7%",
+          label: "Share of all orders",
+          previous: 26.8,
+          previousDisplay: "26.8%",
           status: "watch",
         },
       ],
-      title: "More orders, lower order value",
+      rankings: [
+        {
+          insight:
+            "The homepage remained the largest entry point, but its share of the top-page revenue mix became less concentrated in June.",
+          periods: [
+            {
+              label: "May 2026",
+              items: [
+                { detail: "58 orders", display: "$29,523.62", label: "Homepage /", value: 29523.62 },
+                { display: "$2,722.97", label: "Flavor syrup dispensing category", value: 2722.97 },
+                { display: "$2,568.02", label: "About", value: 2568.02 },
+                { display: "$2,175.77", label: "Sour Extreme Powder", value: 2175.77 },
+                { detail: "10 orders", display: "$1,346.47", label: "Parts", value: 1346.47 },
+              ],
+            },
+            {
+              label: "June 2026",
+              items: [
+                { detail: "69 orders", display: "$30,436.83", label: "Homepage /", value: 30436.83 },
+                { display: "$11,003.87", label: "Flavor Station - 6 Unit", value: 11003.87 },
+                { display: "$4,796.44", label: "Snowie Mini Pro Ice Shaver", value: 4796.44 },
+                { display: "$2,981.87", label: "Shaved ice machines category", value: 2981.87 },
+                { display: "$2,384.70", label: "Snowie Cube Pro Ice Shaver", value: 2384.7 },
+              ],
+            },
+          ],
+          title: "Top organic landing pages by revenue",
+        },
+        {
+          insight:
+            "Equipment led organic product revenue in both periods, with the six-unit Flavor Station becoming a major June contributor.",
+          periods: [
+            {
+              label: "May 2026",
+              items: [
+                { display: "$11,960.00", label: "Snowie Cube Pro - 110AC", value: 11960 },
+                { display: "$7,840.00", label: "Snowie Mini Pro - 110AC", value: 7840 },
+                { display: "$2,460.00", label: "Drop Down Flavor Station", value: 2460 },
+                { display: "$1,977.80", label: "Snowie Cube Pro Blade", value: 1977.8 },
+                { display: "$1,960.00", label: "Snowie Mini Pro - 12v DC", value: 1960 },
+              ],
+            },
+            {
+              label: "June 2026",
+              items: [
+                { display: "$13,720.00", label: "Snowie Mini Pro - 110AC", value: 13720 },
+                { display: "$9,925.00", label: "Flavor Station - 6 Unit", value: 9925 },
+                { display: "$8,970.00", label: "Snowie Cube Pro - 110AC", value: 8970 },
+                { display: "$3,650.00", label: "Snowie Block Pro - 110AC", value: 3650 },
+                { display: "$1,618.20", label: "Snowie Cube Pro Blade", value: 1618.2 },
+              ],
+            },
+          ],
+          title: "Top products from organic orders",
+        },
+      ],
+      title: "Organic revenue accelerated in June",
     },
     growth: {
       title: "Monthly growth",
@@ -348,47 +423,55 @@ export const snowieJune2026Report: SeoStoryReportData = {
     },
     {
       obstacle:
-        "Live product modules expose repeated application error text, and the Vendor Locator title is missing the brand name before a possessive.",
+        "Some product lists show internal error text, and the Vendor Locator search result does not clearly identify Snowie.",
       impact:
-        "Search engines and customers can receive unfinished page copy that weakens trust and result quality.",
+        "Customers may see unfinished content, while unclear search listings can reduce trust and clicks.",
       remediation:
-        "Correct the product-card constant, suppress production error output, repair the title template, and recrawl the affected templates.",
+        "Fix the product-list display, update the Vendor Locator page title, and confirm both changes on the live site.",
       eta:
         "One development sprint after ownership is confirmed.",
     },
   ],
   technicalItems: [
     {
+      developerNote:
+        "Keep the root-page canonical during validation and replace internal references to /home-page/ with direct links to /.",
       issue:
-        "Some internal links may still point to the retired /home-page/ address instead of the main homepage.",
+        "Some website links may still send visitors through an outdated homepage address.",
       why:
-        "Consolidating duplicate homepage signals gives search engines one preferred destination.",
+        "Unnecessary redirects can slow the visitor journey and make the preferred homepage less clear to search engines.",
       fix:
-        "Keep the redirect in place, replace remaining internal links to the old address, and monitor the main homepage. Developers can retain the root canonical during validation.",
+        "Update remaining links so they point directly to the main homepage, then confirm the old address still forwards correctly.",
     },
     {
+      developerNote:
+        "Define or replace NEW_ARRIVAL_DAYS_THRESHOLD, suppress production error output, and test representative product grids after release.",
       issue:
-        "Product grids can display internal application error text instead of finished product information.",
+        "Some product lists can display an internal error instead of finished product information.",
       why:
-        "Customers and search engines can encounter internal application text instead of finished product information.",
+        "Visible errors can interrupt shopping, weaken trust, and leave search engines with incomplete product content.",
       fix:
-        "Define or replace NEW_ARRIVAL_DAYS_THRESHOLD, hide production error output, and validate representative product grids after release.",
+        "Correct the missing site setting, hide internal errors from visitors, and test key product lists after release.",
     },
     {
+      developerNote:
+        "Repair the title template and verify the rendered title, meta description, and H1 on the live Vendor Locator page.",
       issue:
-        "The Vendor Locator search title is incomplete and does not clearly name Snowie.",
+        "The Vendor Locator search listing does not clearly identify Snowie.",
       why:
-        "An incomplete title weakens the result's clarity for people looking for shaved ice nearby.",
+        "People looking for nearby shaved ice may be less likely to trust or select an unclear result.",
       fix:
-        "Repair the title template and confirm the rendered title, description, and main heading.",
+        "Update the page title and confirm that the search listing and page heading clearly name Snowie.",
     },
     {
+      developerNote:
+        "Attach a post-release crawl, Google Search Console indexing comparison, and Core Web Vitals check to the relevant ClickUp tasks.",
       issue:
-        "The monthly reporting package is missing site-health and completed-work evidence.",
+        "Completed work is documented, but its effect on site health has not been measured yet.",
       why:
-        "The report can now connect organic performance to orders and revenue, but it cannot confirm whether technical activity improved broader site health.",
+        "Without a follow-up check, the team cannot confirm that each release improved search access or visitor experience.",
       fix:
-        "Add deployment dates, crawl exports, indexing coverage, and completed-work evidence to each monthly report.",
+        "Run a site-health check after each release and include the before-and-after result in the next monthly report.",
     },
   ],
   dataNotes: [
@@ -398,8 +481,9 @@ export const snowieJune2026Report: SeoStoryReportData = {
     "Search Console data was final when exported on July 29, 2026.",
     "Query-level brand and nonbrand observations use visible search terms because Google withholds some terms for privacy.",
     "Live HTML inspection on July 29, 2026 supplied the redirect, product-card, and Vendor Locator observations.",
-    "Organic order data reports 114 May orders and 121 June orders; organic traffic is 100% Google in both periods.",
-    "Gross revenue includes total order value. Net revenue excludes tax and shipping. May includes 113 completed orders and one processing order; all 121 June orders were completed.",
-    "No completed-task, crawl, indexing, or Core Web Vitals data was supplied.",
+    "WooCommerce Analytics reports 115 organic orders in May and 126 in June; all organic attribution came from Google organic search in both periods.",
+    "Gross organic revenue was $43,999.10 in May and $59,715.14 in June. These order totals include tax and shipping; WooCommerce net sales will be lower because it excludes tax, shipping, and refunds.",
+    "Organic represented 115 of 429 total attributed orders in May and 126 of 531 in June. It was the second-largest revenue channel in both months.",
+    "Completed-work evidence comes from closed ClickUp tasks and implementation comments. Post-release crawl, indexing, and Core Web Vitals evidence was not attached.",
   ],
 };

@@ -35,6 +35,24 @@ export function KickoffV2Focus() {
                 <p className="mt-2 text-[11px] font-black uppercase text-[#3e71b8]">
                   Evidence
                 </p>
+                <dl className="mt-2 grid gap-px bg-[#dce2e4] sm:grid-cols-2">
+                  <div className="bg-[#f7f9fa] p-3">
+                    <dt className="text-[10px] font-black uppercase text-[#758187]">
+                      Volume
+                    </dt>
+                    <dd className="mt-1 text-[13px] font-black text-[#051920]">
+                      {item.volume}
+                    </dd>
+                  </div>
+                  <div className="bg-[#f7f9fa] p-3">
+                    <dt className="text-[10px] font-black uppercase text-[#758187]">
+                      Scoped URLs impacted
+                    </dt>
+                    <dd className="mt-1 text-[13px] font-black text-[#051920]">
+                      {item.scopeImpact}
+                    </dd>
+                  </div>
+                </dl>
                 <p className="mt-1 text-[13px] leading-[1.5] text-[#66747a]">
                   <EditorialText compact text={item.evidence} />
                 </p>
@@ -59,6 +77,11 @@ export function KickoffV2Focus() {
           </article>
         ))}
       </div>
+
+      <p className="mt-5 text-[11px] leading-[1.5] text-[#758187]">
+        Percentages use the 2,308-URL technical scope represented in the crawl
+        evidence.
+      </p>
 
     </section>
   );

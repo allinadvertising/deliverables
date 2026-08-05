@@ -47,6 +47,18 @@ export const kickoffV2Focus = kickoffFindings.map((finding, index) => ({
     "Commercial hubs support new demand and the commercial growth objective once its target is confirmed.",
   ][index],
   evidence: finding.evidence,
+  volume: [
+    "2,308 H1 / 2,256 H2 URLs",
+    "473 URLs",
+    "1,163 URLs",
+    "Market-level analysis",
+  ][index],
+  scopeImpact: [
+    "100% H1 / 97.7% H2",
+    "20.5% of scoped URLs",
+    "50.4% of scoped URLs",
+    "Not URL-scoped",
+  ][index],
   expectedImpact: [
     "Cleaner templates give priority categories and products a stronger foundation for ranking recovery.",
     "More qualified shoppers can reach the Tiger Suction Hose line and other commercially important inventory.",
@@ -60,7 +72,7 @@ export const kickoffV2Focus = kickoffFindings.map((finding, index) => ({
 export const kickoffV2ExecutionArtifacts = [
   {
     phase: "Month 1",
-    owner: "Development + SEO",
+    specialists: "Development and SEO",
     title: "Validated technical release",
     evidence: "Before-and-after crawl confirms corrected templates, preferred URLs, and sitemap signals.",
     recommendedAction: "Release shared template, malformed URL, and sitemap corrections first.",
@@ -68,7 +80,7 @@ export const kickoffV2ExecutionArtifacts = [
   },
   {
     phase: "Month 2",
-    owner: "SEO + Merchandising",
+    specialists: "SEO and Merchandising",
     title: "Ranked orphan queue",
     evidence: "Products and categories are scored by demand, value, inventory, and strategic fit.",
     recommendedAction: "Approve the highest-value product and category destinations for deployment.",
@@ -76,7 +88,7 @@ export const kickoffV2ExecutionArtifacts = [
   },
   {
     phase: "Month 2",
-    owner: "Development + SEO",
+    specialists: "Development and SEO",
     title: "Internal-link deployment",
     evidence: "Deployed category, product, brand, and editorial links are verified on priority pages.",
     recommendedAction: "Publish approved links and measure the reduction in priority orphan URLs.",
@@ -84,7 +96,7 @@ export const kickoffV2ExecutionArtifacts = [
   },
   {
     phase: "Month 3",
-    owner: "SEO + Content",
+    specialists: "SEO and Content",
     title: "Growth-hub brief",
     evidence: "The backlog is ranked against competitor gaps, buyer intent, and commercial fit.",
     recommendedAction: "Select and approve the next commercial content hub.",
@@ -102,8 +114,8 @@ export const kickoffV2Gates = [
   },
   {
     timing: "Before launch",
-    label: "Ownership",
-    title: "Confirm development and QA owners",
+    label: "Specialists",
+    title: "Confirm development and QA specialists",
     detail:
       "Assign Stencil deployment, redirect rules, production QA, and SEO validation.",
   },
@@ -133,7 +145,11 @@ export const kickoffV2Gates = [
 export const kickoffV2Decisions = kickoffDecisions.map((decision, index) => ({
   ...decision,
   label:
-    index === 0 ? "Approve the technical foundation phase" : decision.label,
+    index === 0
+      ? "Approve the technical foundation phase"
+      : index === 1
+        ? "Confirm development specialists"
+        : decision.label,
   detail:
     index === 0
       ? "Confirm shared template, malformed URL, and sitemap corrections as the first execution cycle."

@@ -12,7 +12,7 @@ export function KickoffV2Approval() {
       <KickoffV2Heading
         eyebrow="Implementation gates"
         number="05"
-        title="Decisions and owners before launch"
+        title="Decisions and specialists before launch"
       />
 
       <div className="divide-y divide-[#d9e0e3] border-y border-[#d9e0e3]">

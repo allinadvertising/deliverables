@@ -31,7 +31,7 @@ const implementationExamples = [
       "Non-preferred variants removed from crawl paths",
     ],
     decision:
-      "Approve the preferred product-URL pattern and development owner for Month 1.",
+      "Approve the preferred product-URL pattern and development specialist for Month 1.",
     impact:
       "Clean product signals reduce duplicate discovery and protect visibility for the Tiger Suction Hose line and other revenue-priority inventory.",
     proof:
@@ -130,7 +130,7 @@ export function KickoffV2Execution() {
       </div>
 
       <h3 className="mt-10 text-[20px] font-black text-[#051920]">
-        Evidence, action, impact, and owner
+        Evidence, action, impact, and specialists
       </h3>
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kickoffV2ExecutionArtifacts.map((artifact) => (
@@ -168,7 +168,7 @@ export function KickoffV2Execution() {
                 </div>
               </dl>
               <p className="mt-auto border-t border-[#d9e0e3] pt-4 text-[11px] font-black uppercase text-[#34434a]">
-                Owner: {artifact.owner}
+                Specialists involved: {artifact.specialists}
               </p>
             </div>
           </article>

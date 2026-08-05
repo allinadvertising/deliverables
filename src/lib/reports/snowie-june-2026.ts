@@ -9,7 +9,7 @@ export const snowieJune2026Report: SeoStoryReportData = {
     why: "Business risk",
   },
   visualSection: {
-    eyebrow: "Performance trends",
+    eyebrow: "Revenue",
     intro:
       "June expanded Snowie's organic reach, orders, revenue, and average order value. These views show where organic revenue entered the site and which products generated the most sales.",
     title: "Organic growth and revenue performance",
@@ -128,6 +128,41 @@ export const snowieJune2026Report: SeoStoryReportData = {
       owner: "Rafael Osorio",
       taskUrl: "https://app.clickup.com/t/868j7cjrv",
       title: "Removed unsuitable URLs from the sitemap",
+    },
+  ],
+  industryUpdates: [
+    {
+      date: "June 2, 2026",
+      title: "May 2026 core update completed",
+      summary:
+        "Google completed its May core update on June 2 after a rollout lasting nearly 12 days.",
+      impact:
+        "Because the rollout overlapped the end of May and opening days of June, part of the month-over-month ranking movement may reflect broader search-system changes. Continue monitoring July before treating every movement as site-specific.",
+      sourceLabel: "Google Search Status Dashboard",
+      sourceUrl:
+        "https://status.search.google.com/incidents/wdAXJk6LRRihEjpzEeWE",
+    },
+    {
+      date: "June 24-26, 2026",
+      title: "Global spam update rolled out",
+      summary:
+        "Google released a spam update across all languages and completed the rollout on June 26.",
+      impact:
+        "The update affected only the final week of this reporting period. Review July rankings and visibility for sustained changes, particularly across product and category pages, before attributing late-June movement to onsite work.",
+      sourceLabel: "Google Search Status Dashboard",
+      sourceUrl:
+        "https://status.search.google.com/incidents/YUX1peHev5a4fkxLDiUQ",
+    },
+    {
+      date: "May 15, 2026",
+      title: "Google clarified optimization for AI search features",
+      summary:
+        "Google stated that established SEO practices remain foundational for visibility in generative search and emphasized unique content plus strong shopping, image, and video assets.",
+      impact:
+        "Snowie should continue strengthening distinctive product and category content while improving product imagery and structured information. No separate AI-only optimization layer is required.",
+      sourceLabel: "Google Search Central",
+      sourceUrl:
+        "https://developers.google.com/search/blog/2026/05/a-new-resource-for-optimizing",
     },
   ],
   kpiRows: [

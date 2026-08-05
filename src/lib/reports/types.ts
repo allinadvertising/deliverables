@@ -32,6 +32,15 @@ export type CompletedWorkItem = {
   title: string;
 };
 
+export type IndustryUpdate = {
+  date: string;
+  impact: string;
+  sourceLabel: string;
+  sourceUrl: string;
+  summary: string;
+  title: string;
+};
+
 export type ConversionPlan = {
   nextReportExpectation: string;
   owner: string;
@@ -153,6 +162,7 @@ export type SeoStoryReportData = {
   conversionPlan?: ConversionPlan;
   dataNotes: string[];
   executiveSummary: string;
+  industryUpdates?: IndustryUpdate[];
   journeyWorkstreams: JourneyWorkstream[];
   kpiDisclosure: string;
   kpiRows: KpiRow[];

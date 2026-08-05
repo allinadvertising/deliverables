@@ -6,29 +6,39 @@ import { ReportCover } from "@/components/reports/storytelling/ReportCover";
 import { ReportCompletedWork } from "@/components/reports/storytelling/ReportCompletedWork";
 import { ReportDashboard } from "@/components/reports/storytelling/ReportDashboard";
 import { ReportExecutive } from "@/components/reports/storytelling/ReportExecutive";
+import { ReportIndustryUpdates } from "@/components/reports/storytelling/ReportIndustryUpdates";
 import { ReportJourney } from "@/components/reports/storytelling/ReportJourney";
 import { ReportObstacles } from "@/components/reports/storytelling/ReportObstacles";
+import { ReportVisuals } from "@/components/reports/storytelling/ReportVisuals";
 import type { SeoStoryReportData } from "@/lib/reports/types";
-
-const sections = [
-  { href: "#summary", label: "Summary" },
-  { href: "#power-lines", label: "Power lines" },
-  { href: "#journey", label: "Journey" },
-  { href: "#completed-work", label: "Completed work", optional: true },
-  { href: "#dashboard", label: "KPIs" },
-  { href: "#visual-direction", label: "Visuals" },
-  { href: "#obstacles", label: "Obstacles" },
-  { href: "#appendix", label: "Appendix" },
-];
 
 type SeoStoryReportProps = {
   report: SeoStoryReportData;
 };
 
 export function SeoStoryReport({ report }: SeoStoryReportProps) {
-  const visibleSections = sections.filter(
-    (section) => !section.optional || report.completedWork?.length,
+  const hasRevenue = Boolean(report.performanceCharts?.revenue);
+  const hasVisuals = Boolean(
+    report.performanceCharts || report.visualDirections.length,
   );
+  const visibleSections = [
+    { href: "#summary", label: "Summary" },
+    { href: "#power-lines", label: "Highlights" },
+    ...(hasRevenue ? [{ href: "#revenue", label: "Revenue" }] : []),
+    { href: "#journey", label: "Journey" },
+    ...(report.completedWork?.length
+      ? [{ href: "#completed-work", label: "Completed work" }]
+      : []),
+    { href: "#dashboard", label: "KPIs" },
+    ...(!hasRevenue && hasVisuals
+      ? [{ href: "#visual-direction", label: "Visuals" }]
+      : []),
+    { href: "#obstacles", label: "Obstacles" },
+    ...(report.industryUpdates?.length
+      ? [{ href: "#industry-updates", label: "Industry updates" }]
+      : []),
+    { href: "#appendix", label: "Appendix" },
+  ];
 
   return (
     <>
@@ -62,6 +72,13 @@ export function SeoStoryReport({ report }: SeoStoryReportProps) {
           executiveSummary={report.executiveSummary}
           powerLines={report.powerLines}
         />
+        {hasRevenue ? (
+          <ReportVisuals
+            performanceCharts={report.performanceCharts}
+            visualSection={report.visualSection}
+            visualDirections={report.visualDirections}
+          />
+        ) : null}
         <ReportJourney journeyWorkstreams={report.journeyWorkstreams} />
         {report.completedWork?.length ? (
           <ReportCompletedWork items={report.completedWork} />
@@ -70,11 +87,18 @@ export function SeoStoryReport({ report }: SeoStoryReportProps) {
           conversionPlan={report.conversionPlan}
           kpiDisclosure={report.kpiDisclosure}
           kpiRows={report.kpiRows}
-          performanceCharts={report.performanceCharts}
-          visualSection={report.visualSection}
-          visualDirections={report.visualDirections}
         />
+        {!hasRevenue && hasVisuals ? (
+          <ReportVisuals
+            performanceCharts={report.performanceCharts}
+            visualSection={report.visualSection}
+            visualDirections={report.visualDirections}
+          />
+        ) : null}
         <ReportObstacles obstacles={report.obstacles} />
+        {report.industryUpdates?.length ? (
+          <ReportIndustryUpdates updates={report.industryUpdates} />
+        ) : null}
         <ReportAppendix
           dataNotes={report.dataNotes}
           technicalItems={report.technicalItems}

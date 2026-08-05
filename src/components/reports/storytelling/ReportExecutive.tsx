@@ -74,10 +74,10 @@ export function ReportExecutive({
         aria-labelledby="power-lines-title"
       >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          Power lines
+          Highlights
         </p>
         <h2 className="audit-section-title" id="power-lines-title">
-          The meaning behind the metrics
+          What mattered this period
         </h2>
 
         <div className="divide-y divide-slate-200">

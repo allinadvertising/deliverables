@@ -21,11 +21,11 @@ export function BrandLogo({
     <Image
       alt="All In Advertising"
       className={`${inverted ? "brightness-0 invert opacity-96" : ""} ${className}`}
-      height={height}
+      height={61}
       priority={inverted}
       src="/all-in-advertising-logo.svg"
       style={{ height, width: "auto", maxWidth: width }}
-      width={width}
+      width={300}
     />
   );
 }

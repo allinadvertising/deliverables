@@ -153,6 +153,9 @@ deliverables/
 | `/enhance` | Required | Upload markdown → AI enhancement |
 | `/audit?token=xxx` | None (public) | Client-facing audit viewer via share token |
 | `/dashboard/audits/:id` | Required | Staff audit viewer by audit ID |
+| `/piping-now-seo-analysis` | None | Piping Now audit suite hub (static, `noindex`) |
+| `/piping-now-seo-analysis/<audit>` | None | Eight child audit pages — see Hand-Built Report Pages |
+| `/piping-now-seo/*` | None | Short alias redirects (307) into the suite, defined in `next.config.ts` |
 | `/html-audits/:clientSlug/:dateSlug/:auditSlug` | None (public) | Direct HTML deliverable viewer — serves the branded HTML verbatim as `text/html`, not via React |
 | `POST /api/audit-enhancer` | Required | Start markdown AI enhancement job |
 | `GET /api/audit-enhancer/status?runId=xxx` | None | Poll enhancement job status (job-kind-agnostic — used by markdown, HTML, and revise jobs) |
@@ -165,6 +168,37 @@ deliverables/
 | `POST /api/share-token` | Required | Generate share token |
 | `DELETE /api/share-token` | Required | Revoke share token |
 | `PUT /api/share-token` | Required | Regenerate share token (invalidates old) |
+
+### Hand-Built Report Pages
+
+A third category of deliverable, separate from both LLM pipelines and the direct HTML pipeline: **hand-authored React pages**. Content lives in typed data modules under `src/lib/`, rendered by prop-driven components under `src/components/`. No database, no Storage, no AI. All are static, public, and carry `robots: "noindex, nofollow"` in their page metadata.
+
+| Family | Routes | Data | Components |
+|---|---|---|---|
+| Monthly SEO story reports | `/reports/{client}/{period}` | `src/lib/reports/*.ts` typed by `reports/types.ts` | `components/reports/storytelling/*` via `SeoStoryReport` |
+| Revenue reports | `/reports/sportsdisplays/may-jul-2026` | `reports/revenue-types.ts` | `components/reports/revenue/*` |
+| Kickoff decks | `/kickoff/toico`, `/kickoff/toico/v2` | `src/lib/kickoff/*.ts` | `components/kickoff/*`, `components/kickoff/v2/*` |
+| **Piping Now audit suite** | `/piping-now-seo-analysis` + 8 children | `src/lib/reports/pipingnow/*.ts` typed by `pipingnow/types.ts` | `components/reports/suite/*` |
+
+**Piping Now audit suite** (added 2026-08-07) is the first *multi-page* deliverable. Nine pages share one cover, one cross-page nav, and one footer via `SuiteShell`:
+
+```
+/piping-now-seo-analysis                       hub: diagnosis, roadmap, links to all children
+  /action-plan                                 prioritized actions, owners, approval gates
+  /gsc-performance                             28-day and 3-month winners/losers, charts
+  /gsc-indexation                              coverage buckets, crawl waste, dev notes
+  /merchant-center                             feed coverage, disapprovals, store warning
+  /ahrefs                                      top pages, competitors, backlink spam
+  /blog-cannibalization                        overlap tables, merge/delete/keep plan
+  /ai-search-visibility                        Generative AI impressions, merge conflicts
+  /data-appendix                               source file index, outstanding exports
+```
+
+Notes for anyone extending it:
+- **Nav is centralized.** `src/lib/reports/pipingnow/nav.ts` owns `suiteBasePath` and the nine nav entries. Adding a page means adding it there, not editing nine files.
+- **`components/reports/suite/` is client-agnostic** apart from importing types from `lib/reports/pipingnow/types.ts`. Reusing it for another client means generalizing that one import, not rewriting components.
+- **Chart primitives live in `suite/charts/`** (`SuiteRankedBars`, `SuiteComparisonBars`, `SuiteGroupedColumns`, `SuiteShareBars`). They deliberately duplicate the *visual language* of `storytelling/ReportPerformanceCharts.tsx` but not its code: that file hard-codes "May"/"June" period labels and Snowie-specific aria descriptions, so it could not be reused as-is. The suite versions take period labels and aria text as props. If Snowie's charts are ever genericized, these two sets should be merged.
+- **Four storytelling components are reused directly** by the suite: `ReportExecutive`, `ReportDashboard`, `ReportObstacles`, `ReportAppendix`. Each gained *optional* heading/label props (defaulting to their original strings) so the existing Snowie, V-Belt, and SportsDisplays reports render byte-identically. Do not make those props required.
 
 **Middleware** (`proxy.ts`) only gates `/`, `/enhance`, `/login`. Everything else passes through, including `/audit`, `/html-audits`, and all `/api/*` routes — `/api/html-audits` and the `/html-audits/...` viewer enforce auth/ownership in the route handlers themselves where needed (upload/delete are auth-gated; the public viewer is intentionally not).
 

@@ -10,15 +10,35 @@ const changeStyles = {
 };
 
 type ReportDashboardProps = {
+  columnLabels?: {
+    change: string;
+    current: string;
+    meaning: string;
+    metric: string;
+    previous: string;
+  };
   conversionPlan?: ConversionPlan;
+  eyebrow?: string;
   kpiDisclosure: string;
   kpiRows: KpiRow[];
+  title?: string;
+};
+
+const defaultColumnLabels = {
+  change: "Change",
+  current: "This period",
+  meaning: "Business meaning",
+  metric: "Metric",
+  previous: "Previous period",
 };
 
 export function ReportDashboard({
+  columnLabels = defaultColumnLabels,
   conversionPlan,
+  eyebrow = "KPI dashboard",
   kpiDisclosure,
   kpiRows,
+  title = "The six metrics that matter",
 }: ReportDashboardProps) {
   return (
     <section
@@ -27,21 +47,21 @@ export function ReportDashboard({
       aria-labelledby="dashboard-title"
     >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          KPI dashboard
+          {eyebrow}
         </p>
         <h2 className="audit-section-title" id="dashboard-title">
-          The six metrics that matter
+          {title}
         </h2>
 
         <div className="overflow-x-auto">
           <table className="audit-table mt-0 min-w-[840px]">
             <thead>
               <tr>
-                <th scope="col">Metric</th>
-                <th scope="col">Previous period</th>
-                <th scope="col">This period</th>
-                <th scope="col">Change</th>
-                <th scope="col">Business meaning</th>
+                <th scope="col">{columnLabels.metric}</th>
+                <th scope="col">{columnLabels.previous}</th>
+                <th scope="col">{columnLabels.current}</th>
+                <th scope="col">{columnLabels.change}</th>
+                <th scope="col">{columnLabels.meaning}</th>
               </tr>
             </thead>
             <tbody>

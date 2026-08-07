@@ -1,10 +1,24 @@
 import type { Obstacle } from "@/lib/reports/types";
 
 type ReportObstaclesProps = {
+  etaLabel?: string;
+  eyebrow?: string;
+  impactLabel?: string;
+  obstacleLabel?: string;
   obstacles: Obstacle[];
+  remediationLabel?: string;
+  title?: string;
 };
 
-export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
+export function ReportObstacles({
+  etaLabel = "ETA to recovery",
+  eyebrow = "Obstacles and remediation",
+  impactLabel = "Impact",
+  obstacleLabel = "Obstacle",
+  obstacles,
+  remediationLabel = "Remediation",
+  title = "What Needs Attention Next?",
+}: ReportObstaclesProps) {
   return (
     <section
       className="audit-page story-report-page"
@@ -12,10 +26,10 @@ export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
       aria-labelledby="obstacles-title"
     >
       <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-        Obstacles and remediation
+        {eyebrow}
       </p>
       <h2 className="audit-section-title" id="obstacles-title">
-        What Needs Attention Next?
+        {title}
       </h2>
 
       <div className="space-y-5">
@@ -33,7 +47,7 @@ export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
               </span>
               <div>
                 <p className="mb-1 text-[11px] font-black uppercase tracking-[0.1em] text-[#f6b328]">
-                  Obstacle
+                  {obstacleLabel}
                 </p>
                 <h3 className="mb-0 text-lg font-extrabold leading-relaxed text-white">
                   {item.obstacle}
@@ -44,7 +58,7 @@ export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
             <dl className="grid gap-px bg-slate-200 sm:grid-cols-3">
               <div className="bg-white p-5">
                 <dt className="mb-2 text-[11px] font-black uppercase tracking-[0.1em] text-[#c75a12]">
-                  Impact
+                  {impactLabel}
                 </dt>
                 <dd className="mb-0 text-sm leading-relaxed text-slate-600">
                   {item.impact}
@@ -52,7 +66,7 @@ export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
               </div>
               <div className="bg-white p-5">
                 <dt className="mb-2 text-[11px] font-black uppercase tracking-[0.1em] text-[#16803d]">
-                  Remediation
+                  {remediationLabel}
                 </dt>
                 <dd className="mb-0 text-sm leading-relaxed text-slate-600">
                   {item.remediation}
@@ -60,7 +74,7 @@ export function ReportObstacles({ obstacles }: ReportObstaclesProps) {
               </div>
               <div className="bg-white p-5">
                 <dt className="mb-2 text-[11px] font-black uppercase tracking-[0.1em] text-[#2f65a7]">
-                  ETA to recovery
+                  {etaLabel}
                 </dt>
                 <dd className="mb-0 text-sm font-semibold leading-relaxed text-slate-700">
                   {item.eta}

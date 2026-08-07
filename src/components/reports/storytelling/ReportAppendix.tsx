@@ -8,14 +8,22 @@ const defaultTechnicalLabels: TechnicalLabels = {
 
 type ReportAppendixProps = {
   dataNotes: string[];
+  dataNotesEyebrow?: string;
+  dataNotesTitle?: string;
+  technicalEyebrow?: string;
   technicalItems: TechnicalItem[];
   technicalLabels?: TechnicalLabels;
+  technicalTitle?: string;
 };
 
 export function ReportAppendix({
   dataNotes,
+  dataNotesEyebrow = "Data notes",
+  dataNotesTitle = "Scope and limitations",
+  technicalEyebrow = "Site health review",
   technicalItems,
   technicalLabels = defaultTechnicalLabels,
+  technicalTitle = "Technical detail, in plain language",
 }: ReportAppendixProps) {
   return (
     <>
@@ -25,10 +33,10 @@ export function ReportAppendix({
         aria-labelledby="appendix-title"
       >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          Site health review
+          {technicalEyebrow}
         </p>
         <h2 className="audit-section-title" id="appendix-title">
-          Technical detail, in plain language
+          {technicalTitle}
         </h2>
 
         <div className="divide-y divide-slate-200">
@@ -88,10 +96,10 @@ export function ReportAppendix({
         aria-labelledby="data-notes-title"
       >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          Data notes
+          {dataNotesEyebrow}
         </p>
         <h2 className="audit-section-title" id="data-notes-title">
-          Scope and limitations
+          {dataNotesTitle}
         </h2>
 
         <ul className="space-y-3">

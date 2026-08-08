@@ -18,16 +18,28 @@ const statusStyles = {
 
 type ReportExecutiveProps = {
   action: string;
+  actionLabel?: string;
   businessObjective?: string;
   executiveSummary: string;
+  highlightsEyebrow?: string;
+  highlightsTitle?: string;
+  objectiveLabel?: string;
   powerLines: PowerLine[];
+  summaryEyebrow?: string;
+  summaryTitle?: string;
 };
 
 export function ReportExecutive({
   action,
+  actionLabel = "Next priority",
   businessObjective,
   executiveSummary,
+  highlightsEyebrow = "Highlights",
+  highlightsTitle = "What mattered this period",
+  objectiveLabel = "Business objective",
   powerLines,
+  summaryEyebrow = "Executive summary",
+  summaryTitle = "Where we are today",
 }: ReportExecutiveProps) {
   return (
     <>
@@ -37,16 +49,16 @@ export function ReportExecutive({
         aria-labelledby="summary-title"
       >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          Executive summary
+          {summaryEyebrow}
         </p>
         <h2 className="audit-section-title" id="summary-title">
-          Where we are today
+          {summaryTitle}
         </h2>
 
         {businessObjective ? (
           <div className="mb-7 border-l-4 border-[#2f65a7] bg-[#f1f7ff] p-5">
             <p className="mb-1 text-xs font-black uppercase tracking-[0.1em] text-[#2f65a7]">
-              Business objective
+              {objectiveLabel}
             </p>
             <p className="mb-0 text-base font-bold leading-relaxed text-slate-800">
               {businessObjective}
@@ -60,7 +72,7 @@ export function ReportExecutive({
 
         <div className="mt-8 border-l-4 border-[#f6b328] bg-[#fef7e8] p-5">
           <p className="mb-1 text-xs font-black uppercase tracking-[0.1em] text-[#9a6a00]">
-            Next priority
+            {actionLabel}
           </p>
           <p className="mb-0 text-base font-bold leading-relaxed text-slate-800">
             {action}
@@ -74,10 +86,10 @@ export function ReportExecutive({
         aria-labelledby="power-lines-title"
       >
         <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-          Highlights
+          {highlightsEyebrow}
         </p>
         <h2 className="audit-section-title" id="power-lines-title">
-          What mattered this period
+          {highlightsTitle}
         </h2>
 
         <div className="divide-y divide-slate-200">

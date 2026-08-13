@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { KickoffV2Deliverable } from "@/components/kickoff/v2/KickoffV2Deliverable";
+import { toicoKickoffV2 } from "@/lib/kickoff/toico-v2";
 
 export const metadata: Metadata = {
   title: "TOICO : SEO Strategy Kickoff V2",
@@ -10,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function ToicoKickoffV2Page() {
-  return <KickoffV2Deliverable />;
+  return <KickoffV2Deliverable data={toicoKickoffV2} />;
 }

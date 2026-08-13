@@ -1,19 +1,23 @@
 import { EditorialText } from "@/components/shared/EditorialText";
-import { kickoffV2Focus } from "@/lib/kickoff/toico-v2";
+import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 
 import { KickoffV2Heading } from "./KickoffV2Heading";
 
-export function KickoffV2Focus() {
+type KickoffV2FocusProps = {
+  focus: KickoffV2Data["focus"];
+};
+
+export function KickoffV2Focus({ focus }: KickoffV2FocusProps) {
   return (
     <section className="kickoff-v2-section" id="focus">
       <KickoffV2Heading
         eyebrow="Recommended priorities"
         number="03"
-        title="Four priorities for organic growth"
+        title={focus.title}
       />
 
       <div className="grid gap-5 md:grid-cols-2">
-        {kickoffV2Focus.map((item) => (
+        {focus.items.map((item) => (
           <article
             className="rounded-lg border border-[#d7dfe2] bg-white p-6"
             key={item.number}
@@ -38,7 +42,7 @@ export function KickoffV2Focus() {
                 <dl className="mt-2 grid gap-px bg-[#dce2e4] sm:grid-cols-2">
                   <div className="bg-[#f7f9fa] p-3">
                     <dt className="text-[10px] font-black uppercase text-[#758187]">
-                      Volume
+                      {focus.volumeLabel}
                     </dt>
                     <dd className="mt-1 text-[13px] font-black text-[#051920]">
                       {item.volume}
@@ -46,7 +50,7 @@ export function KickoffV2Focus() {
                   </div>
                   <div className="bg-[#f7f9fa] p-3">
                     <dt className="text-[10px] font-black uppercase text-[#758187]">
-                      Scoped URLs impacted
+                      {focus.scopeLabel}
                     </dt>
                     <dd className="mt-1 text-[13px] font-black text-[#051920]">
                       {item.scopeImpact}
@@ -79,8 +83,7 @@ export function KickoffV2Focus() {
       </div>
 
       <p className="mt-5 text-[11px] leading-[1.5] text-[#758187]">
-        Percentages use the 2,308-URL technical scope represented in the crawl
-        evidence.
+        {focus.footnote}
       </p>
 
     </section>

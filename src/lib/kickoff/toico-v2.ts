@@ -3,6 +3,7 @@ import {
   kickoffFindings,
   roadmapMonths,
 } from "@/lib/kickoff/toico";
+import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 
 export const kickoffV2Meta = [
   { label: "Quarter", value: "July to September 2026" },
@@ -24,7 +25,7 @@ const phaseBusinessOutcomes = [
 ];
 
 export const kickoffV2Phases = roadmapMonths.map((month, index) => ({
-  accent: index === 1 ? "gold" : "blue",
+  accent: index === 1 ? ("gold" as const) : ("blue" as const),
   businessOutcome: phaseBusinessOutcomes[index],
   deliverable: month.deliverable,
   month: month.month,
@@ -104,6 +105,42 @@ export const kickoffV2ExecutionArtifacts = [
   },
 ];
 
+export const kickoffV2ExecutionExamples = [
+  {
+    eyebrow: "Template hierarchy",
+    title: "Make the page topic the primary heading",
+    currentLabel: "Current template",
+    current: ["Newsletter — H1", "Footer Start — H2"],
+    targetLabel: "Target template",
+    target: [
+      "One descriptive commercial H1",
+      "Interface labels use appropriate structural elements",
+    ],
+    decision: "Approve the shared Stencil heading correction for Month 1.",
+    impact:
+      "Clear page topics support category-ranking recovery before priority product work begins.",
+    proof:
+      "A fresh crawl confirms corrected outlines on the homepage and representative category and product templates.",
+  },
+  {
+    eyebrow: "Product URL signals",
+    title: "Emit one clean preferred product URL",
+    currentLabel: "Current patterns",
+    current: ["Double-slash SKU variants", "Crawlable com_cvv variants"],
+    targetLabel: "Target state",
+    target: [
+      "One internally linked canonical product URL",
+      "Non-preferred variants removed from crawl paths",
+    ],
+    decision:
+      "Approve the preferred product-URL pattern and development specialist for Month 1.",
+    impact:
+      "Clean product signals reduce duplicate discovery and protect visibility for the Tiger Suction Hose line and other revenue-priority inventory.",
+    proof:
+      "A post-release crawl finds one preferred URL per tested product and no exposed double-slash or com_cvv variants.",
+  },
+];
+
 export const kickoffV2Gates = [
   {
     timing: "Kickoff",
@@ -155,3 +192,47 @@ export const kickoffV2Decisions = kickoffDecisions.map((decision, index) => ({
       ? "Confirm shared template, malformed URL, and sitemap corrections as the first execution cycle."
       : decision.detail,
 }));
+
+export const toicoKickoffV2: KickoffV2Data = {
+  printAriaLabel: "Print TOICO kickoff V2 as PDF",
+  footerNote: "TOICO SEO Strategy Kickoff · Q3 2026",
+  cover: {
+    clientName: "TOICO",
+    subtitle: "Your organic search strategy for the next three months.",
+  },
+  meta: kickoffV2Meta,
+  summary: {
+    title: "What changes first",
+    objectiveLabel: "Illustrative business objective",
+    objective: kickoffV2BusinessObjective,
+    lead: "TOICO's strongest near-term SEO gains will not come from rewriting pages one by one. The audit points to shared technical defects that weaken thousands of URLs at once, followed by a clear discoverability queue and a focused content opportunity.",
+    emphasis:
+      "The sequence is deliberate: correct the foundation, restore access to valuable inventory, then invest in differentiated commercial content.",
+  },
+  strategy: {
+    title: "3 Month Roadmap",
+    gridClassName: "lg:grid-cols-3",
+    phases: kickoffV2Phases,
+    operatingPrinciple:
+      "Fix shared technical defects before committing effort to page-level rewrites.",
+  },
+  focus: {
+    title: "Four priorities for organic growth",
+    volumeLabel: "Volume",
+    scopeLabel: "Scoped URLs impacted",
+    items: kickoffV2Focus,
+    footnote:
+      "Percentages use the 2,308-URL technical scope represented in the crawl evidence.",
+  },
+  execution: {
+    title: "What changes, who decides, and how we prove it",
+    examples: kickoffV2ExecutionExamples,
+    artifactsTitle: "Evidence, action, impact, and specialists",
+    artifacts: kickoffV2ExecutionArtifacts,
+  },
+  approval: {
+    title: "Decisions and specialists before launch",
+    gates: kickoffV2Gates,
+    decisions: kickoffV2Decisions,
+  },
+};

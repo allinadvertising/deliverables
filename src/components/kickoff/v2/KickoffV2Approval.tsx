@@ -1,22 +1,23 @@
 import { EditorialText } from "@/components/shared/EditorialText";
-import {
-  kickoffV2Decisions,
-  kickoffV2Gates,
-} from "@/lib/kickoff/toico-v2";
+import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 
 import { KickoffV2Heading } from "./KickoffV2Heading";
 
-export function KickoffV2Approval() {
+type KickoffV2ApprovalProps = {
+  approval: KickoffV2Data["approval"];
+};
+
+export function KickoffV2Approval({ approval }: KickoffV2ApprovalProps) {
   return (
     <section className="kickoff-v2-section" id="approval">
       <KickoffV2Heading
         eyebrow="Implementation gates"
         number="05"
-        title="Decisions and specialists before launch"
+        title={approval.title}
       />
 
       <div className="divide-y divide-[#d9e0e3] border-y border-[#d9e0e3]">
-        {kickoffV2Gates.map((gate) => (
+        {approval.gates.map((gate) => (
           <article
             className="grid gap-4 py-6 md:grid-cols-[150px_1fr]"
             key={gate.timing}
@@ -46,7 +47,7 @@ export function KickoffV2Approval() {
           What we need to begin
         </p>
         <div className="mt-6 grid gap-7 lg:grid-cols-3">
-          {kickoffV2Decisions.map((decision, index) => (
+          {approval.decisions.map((decision, index) => (
             <article key={decision.label}>
               <span className="audit-mono text-xs font-black text-[#f6b328]">
                 0{index + 1}

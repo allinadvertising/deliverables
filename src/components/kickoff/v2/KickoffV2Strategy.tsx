@@ -1,9 +1,13 @@
 import { EditorialText } from "@/components/shared/EditorialText";
-import { kickoffV2Phases } from "@/lib/kickoff/toico-v2";
+import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 
 import { KickoffV2Heading } from "./KickoffV2Heading";
 
-export function KickoffV2Strategy() {
+type KickoffV2StrategyProps = {
+  strategy: KickoffV2Data["strategy"];
+};
+
+export function KickoffV2Strategy({ strategy }: KickoffV2StrategyProps) {
   return (
     <section
       className="kickoff-v2-section bg-[#f0f2f3]"
@@ -12,11 +16,11 @@ export function KickoffV2Strategy() {
       <KickoffV2Heading
         eyebrow="Executive roadmap"
         number="02"
-        title="3 Month Roadmap"
+        title={strategy.title}
       />
 
-      <div className="grid gap-5 lg:grid-cols-3">
-        {kickoffV2Phases.map((phase) => (
+      <div className={`grid gap-5 ${strategy.gridClassName}`}>
+        {strategy.phases.map((phase) => (
           <article
             className={`flex min-h-[310px] flex-col rounded-lg border border-[#d4dcdf] bg-white p-6 ${
               phase.accent === "gold"
@@ -59,8 +63,7 @@ export function KickoffV2Strategy() {
           Operating principle
         </p>
         <p className="mt-2 text-[16px] font-bold leading-relaxed text-[#051920]">
-          Fix shared technical defects before committing effort to page-level
-          rewrites.
+          {strategy.operatingPrinciple}
         </p>
       </aside>
 

@@ -176,10 +176,14 @@ export async function enhanceHtmlDeliverable(
       supportingFile: context.supportingWorkbookLink || null,
     },
     blocks: transformedOutput.blocks,
+    ...(transformedOutput.insightBox !== undefined
+      ? { insightBox: transformedOutput.insightBox }
+      : {}),
   };
 
   await options.logger?.info("html_json_parsed", {
     blocks: auditContent.blocks.length,
+    hasInsightBox: Boolean(auditContent.insightBox),
     schemaVersion: auditContent.schemaVersion,
   });
 
@@ -332,6 +336,9 @@ export async function reviseHtmlDeliverable(
   const updatedContent: AuditContentV3 = {
     ...content,
     blocks: transformedOutput.blocks,
+    ...(transformedOutput.insightBox !== undefined
+      ? { insightBox: transformedOutput.insightBox }
+      : {}),
   };
 
   await updateAuditContent(options.auditId, updatedContent);
@@ -339,6 +346,7 @@ export async function reviseHtmlDeliverable(
   await options.logger?.info("html_revision_stored", {
     auditId: options.auditId,
     blocks: updatedContent.blocks.length,
+    hasInsightBox: Boolean(updatedContent.insightBox),
   });
 
   return {

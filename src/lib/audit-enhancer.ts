@@ -191,6 +191,9 @@ export async function enhanceAuditMarkdown(
       supportingFile: context.supportingWorkbookLink || null,
     },
     issues: transformedOutput.issues,
+    ...(transformedOutput.insightBox !== undefined
+      ? { insightBox: transformedOutput.insightBox }
+      : {}),
     glossary: transformedOutput.glossary,
     faq: transformedOutput.faq,
   };
@@ -198,6 +201,7 @@ export async function enhanceAuditMarkdown(
   await options.logger?.info("json_parsed", {
     faq: auditContent.faq.length,
     glossary: auditContent.glossary.length,
+    hasInsightBox: Boolean(auditContent.insightBox),
     issues: auditContent.issues.length,
     schemaVersion: auditContent.schemaVersion,
   });

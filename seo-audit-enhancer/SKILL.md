@@ -17,9 +17,10 @@ You are a specialized data transformation agent. Convert raw technical Markdown 
 
 ## Required model output
 
-Return one JSON object with these top-level arrays:
+Return one JSON object with these top-level fields:
 
 - `issues`
+- `insightBox` (optional string or null; use only when the source has one clear main issue or executive insight worth highlighting)
 - `glossary`
 - `faq`
 
@@ -44,6 +45,7 @@ Use this shape:
       "expected_outcome": "..."
     }
   ],
+  "insightBox": null,
   "glossary": [
     { "term": "...", "definition": "..." }
   ],
@@ -87,6 +89,7 @@ Before responding, verify that:
 
 - `issues` is non-empty.
 - Every issue has all four required strings and no additional fields.
+- `insightBox`, when present, is either null or one non-empty string grounded in the source.
 - `glossary` and `faq` are arrays with the required object shapes.
 - Each field provides distinct value without internal repetition.
 - The response is valid JSON only, with no preamble, commentary, or Markdown fences.

@@ -10,6 +10,7 @@ import { MetricCardV3 } from "./MetricCardV3";
 import { AuditGlossaryV3 } from "./AuditGlossaryV3";
 import { AuditFaqV3 } from "./AuditFaqV3";
 import { AuditSectionHeaderV3 } from "./AuditSectionHeaderV3";
+import { InsightBox } from "./InsightBox";
 
 type AuditReportV3Props = {
   content: AuditContentV3;
@@ -46,6 +47,8 @@ export function AuditReportV3({ content }: AuditReportV3Props) {
 
   return (
     <main className="mx-auto my-10 max-w-[1160px] px-4 sm:px-0">
+      {content.insightBox ? <InsightBox insight={content.insightBox} /> : null}
+
       {sections.map((section, index) => {
         return (
           <div className="audit-page" key={index}>

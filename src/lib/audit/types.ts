@@ -117,6 +117,7 @@ export type AuditIssueV2 = {
 /** Payload returned by the v2 transformation model before server metadata is added. */
 export type AuditTransformationV2Payload = {
   issues: AuditIssueV2[];
+  insightBox?: string | null;
   glossary: GlossaryTerm[];
   faq: FaqItem[];
 };
@@ -162,6 +163,7 @@ export type ContentBlockType = ContentBlock["type"];
 /** Payload returned by the v3 transformation model before server metadata is added. */
 export type AuditTransformationV3Payload = {
   blocks: ContentBlock[];
+  insightBox?: string | null;
 };
 
 /** Versioned shape used only for HTML-sourced audits. */
@@ -178,7 +180,8 @@ export function isAuditTransformationV2Payload(
   if (!isRecord(value)) return false;
 
   return (
-    hasOnlyKeys(value, ["issues", "glossary", "faq"]) &&
+    hasOnlyKeys(value, ["issues", "insightBox", "glossary", "faq"]) &&
+    hasOptionalInsightBox(value.insightBox) &&
     hasValidV2Sections(value)
   );
 }
@@ -190,11 +193,13 @@ export function isAuditContentV2(value: unknown): value is AuditContentV2 {
       "schemaVersion",
       "meta",
       "issues",
+      "insightBox",
       "glossary",
       "faq",
     ]) &&
     value.schemaVersion === 2 &&
     isAuditMeta(value.meta) &&
+    hasOptionalInsightBox(value.insightBox) &&
     hasValidV2Sections(value)
   );
 }
@@ -204,15 +209,20 @@ export function isAuditTransformationV3Payload(
 ): value is AuditTransformationV3Payload {
   if (!isRecord(value)) return false;
 
-  return hasOnlyKeys(value, ["blocks"]) && isValidBlockArray(value.blocks);
+  return (
+    hasOnlyKeys(value, ["blocks", "insightBox"]) &&
+    hasOptionalInsightBox(value.insightBox) &&
+    isValidBlockArray(value.blocks)
+  );
 }
 
 export function isAuditContentV3(value: unknown): value is AuditContentV3 {
   return (
     isRecord(value) &&
-    hasOnlyKeys(value, ["schemaVersion", "meta", "blocks"]) &&
+    hasOnlyKeys(value, ["schemaVersion", "meta", "blocks", "insightBox"]) &&
     value.schemaVersion === 3 &&
     isAuditMeta(value.meta) &&
+    hasOptionalInsightBox(value.insightBox) &&
     isValidBlockArray(value.blocks)
   );
 }
@@ -271,6 +281,10 @@ function hasValidV2Sections(
     value.faq.length > 0 &&
     value.faq.every(isFaqItem)
   );
+}
+
+function hasOptionalInsightBox(value: unknown): value is string | null | undefined {
+  return value === undefined || value === null || isNonEmptyString(value);
 }
 
 function isAuditMeta(value: unknown): value is AuditMeta {

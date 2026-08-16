@@ -2,6 +2,7 @@ import type { AuditContentV2 } from "@/lib/audit/types";
 import { AuditIssueCardV2 } from "./AuditIssueCardV2";
 import { FaqSection } from "./FaqSection";
 import { GlossaryGrid } from "./GlossaryGrid";
+import { InsightBox } from "./InsightBox";
 
 type AuditReportV2Props = {
   content: AuditContentV2;
@@ -10,6 +11,8 @@ type AuditReportV2Props = {
 export function AuditReportV2({ content }: AuditReportV2Props) {
   return (
     <main className="mx-auto my-10 max-w-[1160px] px-4 sm:px-0">
+      {content.insightBox ? <InsightBox insight={content.insightBox} /> : null}
+
       <section aria-labelledby="audit-issues-title">
         <div className="mb-8 border-l-[6px] border-l-[#f6b328] bg-white px-6 py-5 shadow-[0_12px_30px_rgba(24,59,104,0.08)] sm:px-8">
           <p className="mb-2 text-xs font-black uppercase tracking-[0.14em] text-[#2f65a7]">

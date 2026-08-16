@@ -50,6 +50,7 @@
         }
       }
     },
+    "insightBox": { "type": ["string", "null"], "minLength": 1 },
     "glossary": {
       "type": "array",
       "minItems": 1,

@@ -34,7 +34,8 @@
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "#/$defs/block" }
-    }
+    },
+    "insightBox": { "type": ["string", "null"], "minLength": 1 }
   },
   "$defs": {
     "block": {

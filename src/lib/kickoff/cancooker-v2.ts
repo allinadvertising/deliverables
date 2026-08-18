@@ -267,7 +267,7 @@ export const cancookerKickoffV2: KickoffV2Data = {
         label: "Planning",
         title: "Approve the fish fry build for next quarter",
         detail:
-          "Use the Month 3 mapping to decide whether the 54,530-search fish fry and batter cluster becomes the next full content build.",
+          "At the end of Month 3, decide whether the fish fry and batter keyword opportunity, worth about 54,530 monthly searches, should become the next full content project for the following quarter.",
       },
     ],
     decisions: [

@@ -242,13 +242,6 @@ export const cancookerKickoffV2: KickoffV2Data = {
           "Start with the ten product-page optimizations, cart drawer heading fix, recipe H1 fix, corrupted title repair, and tailgating hub.",
       },
       {
-        timing: "Before ticketing",
-        label: "Scope",
-        title: "Confirm the sold SEO scope",
-        detail:
-          "The Scope of Work was not found and SEO custom fields were empty, so Account Management should confirm monthly quantities before tickets are raised.",
-      },
-      {
         timing: "Month 1 close",
         label: "Evidence",
         title: "Verify the shared Shopify heading release",

@@ -177,7 +177,7 @@ A third category of deliverable, separate from both LLM pipelines and the direct
 |---|---|---|---|
 | Monthly SEO story reports | `/reports/{client}/{period}` | `src/lib/reports/*.ts` typed by `reports/types.ts` | `components/reports/storytelling/*` via `SeoStoryReport` |
 | Revenue reports | `/reports/sportsdisplays/may-jul-2026` | `reports/revenue-types.ts` | `components/reports/revenue/*` |
-| Kickoff decks | `/kickoff/toico`, `/kickoff/toico/v2`, `/kickoff/penelope/v2`, `/kickoff/intradyn/v2`, `/kickoff/sportsdisplays` | `src/lib/kickoff/*.ts`; V2 decks typed by `kickoff/v2-types.ts` | `components/kickoff/*`, `components/kickoff/v2/*` |
+| Kickoff decks | `/kickoff/toico`, `/kickoff/toico/v2`, `/kickoff/penelope/v2`, `/kickoff/intradyn/v2`, `/kickoff/race-parts-solutions/v2`, `/kickoff/sportsdisplays` | `src/lib/kickoff/*.ts`; V2 decks typed by `kickoff/v2-types.ts` | `components/kickoff/*`, `components/kickoff/v2/*` |
 | **Piping Now audit suite** | `/piping-now-seo-analysis` + 8 children | `src/lib/reports/pipingnow/*.ts` typed by `pipingnow/types.ts` | `components/reports/suite/*` |
 
 **Piping Now audit suite** (added 2026-08-07) is the first *multi-page* deliverable. Nine pages share one cover, one cross-page nav, and one footer via `SuiteShell`:

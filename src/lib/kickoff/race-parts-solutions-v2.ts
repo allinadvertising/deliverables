@@ -13,7 +13,7 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
       label: "Business objective",
       value: "Grow non-brand revenue and recover qualified retail demand",
     },
-    { label: "Roadmap", value: "Repair, consolidate, build demand" },
+    { label: "Roadmap", value: "Ticketed technical, feed, category, and QA waves" },
     {
       label: "Platform",
       value: "Custom ecommerce site, sitemap generator, redirect layer",
@@ -25,45 +25,45 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
     objective:
       "Use SEO to reverse the revenue trend by bringing more non-brand buyers to Race Parts Solutions, prioritizing house-made RPS inventory, and measuring organic impact through orders, revenue, and qualified product discovery.",
     lead:
-      "Race Parts Solutions has a large product catalog, strong manufacturing value, and real demand clusters, but the current crawl signals make Google work too hard. The sitemap points to 1,641 non-www URLs that return 404, while 14,259 indexable URLs are missing from sitemap coverage.",
+      "Race Parts Solutions has a large product catalog, strong manufacturing value, and real demand clusters, but the updated roadmap shows the first quarter needs tighter execution sequencing. The sitemap points to 1,641 non-www URLs that return 404, while 14,259 indexable URLs are missing from sitemap coverage.",
     emphasis:
-      "The next three months should fix the technical foundation first, consolidate duplicate browse and index.php signals, then build clean category destinations around the product families most likely to support revenue.",
+      "The new sequence is more specific: ship the Month 1 technical and Merchant Center waves first, build the first three P1 category pages in Month 2, resolve KWR priority decisions before the rest of the roadmap is ticketed, then use Month 3 for lean template, schema, validation, and P2 category work.",
   },
   strategy: {
     title: "3 Month Roadmap",
     gridClassName: "lg:grid-cols-3",
     operatingPrinciple:
-      "Lead with revenue and orders, then show the SEO work that made priority products easier to find.",
+      "Use the ClickUp ticket plan as the execution spine, but keep client-facing updates focused on revenue, orders, and priority product discovery.",
     phases: [
       {
         accent: "blue",
         month: "Month 1",
-        theme: "Repair the crawl foundation",
+        theme: "Ship the technical and feed foundation",
         objective:
-          "Fix the sitemap host, add a catch-all non-www to www redirect, remove utility and parameter URLs from sitemap files, and confirm Merchant Center and Search Console access.",
-        deliverable: "Technical foundation and access baseline",
+          "Run the technical foundation wave, confirm GSC substitute validation, and start the Merchant Center scope and feed first pass.",
+        deliverable: "Technical foundation, crawl QA, and feed access baseline",
         businessOutcome:
-          "Google receives a clean preferred domain signal, the team can validate releases, and organic shopping work can start from the right access point.",
+          "Google receives a clean preferred domain signal, the team has evidence even while GSC access is unresolved, and shopping visibility work starts from the correct account and feed path.",
       },
       {
         accent: "gold",
         month: "Month 2",
-        theme: "Consolidate demand paths",
+        theme: "Build the first category tranche",
         objective:
-          "Resolve index.php duplicates, canonicalize faceted browse URLs, strip internal product tracking parameters, and approve the first clean category URLs.",
-        deliverable: "Duplicate consolidation and category architecture release",
+          "Stabilize URL rules, brief and build the first three P1 category pages, apply KWR vocabulary rules, and resolve client priority conflicts before ticketing the remaining growth work.",
+        deliverable: "First P1 category tranche and KWR decision release",
         businessOutcome:
-          "More ranking value points to the pages customers should actually land on, instead of being split across internal search and duplicate URL patterns.",
+          "The first clean category pages go live with the right search language, while open client decisions are handled before they create rework.",
       },
       {
         accent: "blue",
         month: "Month 3",
-        theme: "Scale product visibility",
+        theme: "Validate and extend the system",
         objective:
-          "Repair browse headings and meta descriptions, fix homepage template leaks, improve product titles and descriptions, add Product structured data, and document durable URL rules.",
-        deliverable: "Template, product, and governance rollout",
+          "Use a lean third-month wave for heading and Product JSON-LD work, crawl-based validation, P2 category build or optimization, and durable platform URL rules.",
+        deliverable: "Template, schema, validation, P2, and governance wave",
         businessOutcome:
-          "Priority products and categories become clearer to shoppers and search engines, while future site work follows the same SEO rules.",
+          "The team proves what improved, expands only after the first category tranche is stable, and leaves practical rules so the same platform issues do not return.",
       },
     ],
   },
@@ -110,59 +110,59 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
         businessObjective:
           "Prioritize product families where search demand and RPS manufacturing margin work together.",
         evidence:
-          "The keyword strategy prioritizes V-Bands at 10,280 US searches per month and 96% house-made, O2 and weld-on bungs at 4,900 searches, T-Bolt Clamps at 2,030 searches and 100% house-made, plus Turbo Flanges and Intercooler Piping.",
-        volume: "Five P1 category destinations",
-        scopeImpact: "Category architecture, internal links, product grouping",
+          "The updated ticket plan keeps five P1 category targets, but schedules the first Month 2 tranche around /v-band-clamps, /o2-sensor-bungs, and /t-bolt-clamps before the remaining P1 pages scale. Mandrel bend terms sit inside the Intercooler Piping cluster with 400 searches per month combined.",
+        volume: "First 3 P1 pages in Month 2",
+        scopeImpact: "Category briefs, copy, URL structures, launch QA",
         expectedImpact:
           "Retail buyers can land on focused commercial pages instead of generic browse results, with the first build weighted toward higher-margin RPS-made inventory.",
         recommendedAction:
-          "Approve clean pages for /v-band-clamps, /o2-sensor-bungs, /t-bolt-clamps, /turbo-flanges, and /intercooler-piping, then rewrite /turbo-piping and /air-fuel-delivery in place.",
-        status: "P1, revenue architecture",
+          "Brief, draft, build, and QA /v-band-clamps, /o2-sensor-bungs, and /t-bolt-clamps first. Keep /turbo-flanges and /intercooler-piping in the P1 set after the first tranche is stable, with mandrel bends handled as an on-page child topic of /intercooler-piping instead of a separate URL.",
+        status: "P1, first category tranche",
       },
       {
         number: "04",
-        title: "Confirm Merchant Center scope and feed access",
+        title: "Run the Merchant Center first pass",
         businessObjective:
           "Make product visibility competitive where Google places Shopping results above organic listings.",
         evidence:
-          "Every checked priority cluster showed Shopping results, and the roadmap notes that Merchant Center access and feed status still need confirmation.",
-        volume: "3 verified Shopping-block clusters",
+          "The updated roadmap creates a Month 1 Merchant Center parent with subtasks to locate or scope the account, audit price, availability, and product eligibility, then apply a first feed remediation tranche.",
+        volume: "3 Month 1 feed subtasks",
         scopeImpact: "Merchant Center, product feed, product titles, price and availability",
         expectedImpact:
           "Product titles, feed labels, availability, and pricing can support organic shopping eligibility and product discovery without promising a specific revenue lift.",
         recommendedAction:
-          "Confirm Merchant Center ownership, audit the active feed, align product titles with winning keyword variants, and check price and availability fields before optimization.",
-        status: "P0, access gate",
+          "Confirm or locate the Merchant Center path, audit representative products from V-Bands, Turbo Flanges, and O2 Bungs, then apply the highest-impact title, category, price, and availability fixes within the first tranche.",
+        status: "P0, Month 1 feed wave",
       },
       {
         number: "05",
-        title: "Repair headings, metadata, and structured data",
+        title: "Run a lean template, schema, and validation wave",
         businessObjective:
           "Make each important page explain its product, category, and offer clearly.",
         evidence:
-          "The audit found 11,203 URLs without an H1, 11,200 missing meta descriptions, 6,372 titles over 60 characters, 3,016 duplicate meta descriptions, and no structured data across 14,259 URLs.",
-        volume: "14,259 URLs without structured data",
-        scopeImpact: "Browse templates, product templates, homepage, schema",
+          "The Month 3 ticket plan narrows this into a template cleanup, schema, and validation wave with a 2-hour dev tranche for heading/template and Product JSON-LD work, plus crawl-based validation while GSC access remains unresolved.",
+        volume: "2h dev tranche plus QA",
+        scopeImpact: "Heading order, product schema, crawl validation, P2 categories",
         expectedImpact:
           "Search snippets and page topics become cleaner at scale, especially for product and category pages that should support revenue.",
         recommendedAction:
-          "Fix the newsletter H2 placement, add browse H1 and meta rules, repair the homepage title leak, put product names first in titles, and add Product, Offer, BreadcrumbList, and Organization schema where applicable.",
-        status: "P1, template scale",
+          "Use the lean dev tranche for the highest-impact template and Product JSON-LD work, validate with crawl-based checks, then build or optimize P2 pages only after P1 category pages are approved.",
+        status: "P2, Month 3 wave",
       },
       {
         number: "06",
-        title: "Align reporting around orders and product discovery",
+        title: "Resolve KWR and client priority decisions",
         businessObjective:
           "Show progress in the language the client cares about: traffic that turns into sales.",
         evidence:
-          "The intake and handoff materials frame the goal as reversing the revenue line, getting non-brand buyers to the site, and reporting organic revenue, orders, non-brand sessions, Merchant Center performance, and category-page performance.",
-        volume: "Non-brand organic around 63 visits per month",
-        scopeImpact: "Reporting, access, top-product list, category approvals",
+          "The updated roadmap adds a Month 2 decision task for Dual Seal, Mandrel bends, Silicone Hoses, Billet Merges, and Billet 90s because client priority collections do not fully align with KWR and margin guidance.",
+        volume: "5 named client priority decisions",
+        scopeImpact: "KWR language, category order, metadata, feed guidance",
         expectedImpact:
-          "Biweekly updates stay focused on business movement first, with keyword counts used only as supporting evidence.",
+          "The team avoids building the wrong pages, over-prioritizing lower-margin volume, or using internal language customers do not search.",
         recommendedAction:
-          "Secure canonical Search Console access, confirm analytics and ecommerce revenue visibility, get John's top 10 to 20 product list, and map the first reporting view around revenue, orders, non-brand traffic, and priority-category performance.",
-        status: "P0, measurement",
+          "Prepare the AM and SEO decision note, apply variant rules for terms like o2 sensor bung, 02 sensor bung, v band clamp, and t bolt clamp, and finalize the remaining page and feed guidance after those calls are made. Treat mandrel bends as support language for Intercooler Piping unless the client approves a different strategy.",
+        status: "P1, before remaining tickets",
       },
     ],
   },
@@ -192,50 +192,50 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
       },
       {
         eyebrow: "Category architecture",
-        title: "Replace internal search URLs with clean buyer destinations",
+        title: "Build clean buyer destinations in tranches",
         currentLabel: "Current pattern",
         current: [
           "/browse?category=9354 and page variants compete with each other",
-          "Product links carry category and brand tracking parameters",
+          "The first Month 2 build covers only the first three P1 category pages",
         ],
         targetLabel: "Target pattern",
         target: [
-          "/v-band-clamps and related category pages become clean entry points",
+          "/v-band-clamps, /o2-sensor-bungs, and /t-bolt-clamps become clean entry points first",
           "Internal links point to canonical product URLs without tracking parameters",
         ],
         decision:
-          "Approve the first P1 category URL set and confirm it fits the no-rebuild scope.",
+          "Approve the first three P1 pages and confirm the remaining P1 pages wait for tranche results.",
         impact:
-          "Buyers searching for high-value parts land on understandable category pages instead of duplicated internal-search results.",
+          "Buyers searching for high-value parts land on understandable category pages, and the team can QA one tranche before scaling.",
         proof:
-          "Crawl validation shows canonical category URLs, stripped product parameters, and internal links pointing at the approved destinations.",
+          "Launch QA checks title, H1, meta, canonical, indexability, internal links, and product relevance on the first three pages.",
       },
     ],
     artifacts: [
       {
         phase: "Month 1",
         specialists: "AIA SEO, account team, web or platform owner",
-        title: "Sitemap and redirect release brief",
+        title: "Technical foundation ticket wave",
         evidence:
-          "The roadmap confirms a sitemap host mismatch and missing catch-all redirects for deep non-www URLs.",
+          "The updated roadmap groups sitemap host repair, non-www redirects, sitemap exclusions, duplicate URL fixes, browse canonicals, and crawl substitute QA into the first technical sequence.",
         recommendedAction:
-          "Document the exact redirect and sitemap generator changes, coordinate release ownership, and verify with a fresh crawl.",
+          "Run the technical tickets in dependency order, with the sitemap host marked for escalation and redirects and sitemap exclusions ready after ownership is confirmed.",
         expectedImpact:
           "Google receives live canonical URLs and the team has a clean baseline for the next phase.",
       },
       {
         phase: "Month 1",
         specialists: "AIA SEO and account team",
-        title: "Access and measurement baseline",
+        title: "Merchant Center scope and feed first pass",
         evidence:
-          "Search Console access is not available for the canonical HTTPS or domain property, and Merchant Center status is still open.",
+          "The roadmap now has a dedicated Month 1 Merchant Center parent and three direct subtasks for account path, eligibility audit, and first remediation.",
         recommendedAction:
-          "Request Search Console, analytics, ecommerce, Merchant Center, and feed access, then define the first order and revenue reporting view.",
+          "Locate or scope the Merchant Center account, audit priority product title, price, availability, category, and disapproval status, then apply the first feed remediation tranche.",
         expectedImpact:
           "Performance conversations can focus on organic revenue, orders, non-brand traffic, and priority product discovery.",
       },
       {
-        phase: "Month 2",
+        phase: "Month 1",
         specialists: "AIA SEO, content, web or platform owner",
         title: "Duplicate URL consolidation plan",
         evidence:
@@ -243,29 +243,40 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
         recommendedAction:
           "Map redirects, canonicals, internal-link rules, sitemap exclusions, and release QA for each duplicate URL family.",
         expectedImpact:
-          "Ranking signals consolidate around clean URLs before new category work scales.",
+          "Ranking signals consolidate around clean URLs before new category work scales in Month 2.",
       },
       {
         phase: "Month 2",
         specialists: "AIA SEO, content, account team",
-        title: "Priority category buildout",
+        title: "First P1 category buildout",
         evidence:
-          "The keyword strategy ranks V-Bands, O2 Sensor Bungs, T-Bolt Clamps, Turbo Flanges, and Intercooler Piping as the first clean category opportunities.",
+          "The updated ticket plan schedules SEO briefs, content copy, URL structures, and QA for the first three P1 pages before scaling the remaining P1 set.",
         recommendedAction:
-          "Approve page names, product groupings, internal links, and first copy rules for the P1 category pages.",
+          "Brief, draft, create, and QA /v-band-clamps, /o2-sensor-bungs, and /t-bolt-clamps using KWR terms and product group evidence.",
         expectedImpact:
           "High-intent shoppers get clearer landing pages for the product families most tied to revenue recovery.",
       },
       {
+        phase: "Month 2",
+        specialists: "AIA SEO and AM",
+        title: "KWR metadata and priority decision note",
+        evidence:
+          "The roadmap calls out unresolved decisions for Dual Seal, Mandrel bends, Silicone Hoses, Billet Merges, and Billet 90s before the remaining roadmap is ticketed.",
+        recommendedAction:
+          "Apply KWR variant rules to title, H1, and feed guidance, then prepare an AM-facing decision note for the named product conflicts. Clarify that Mandrel bends are covered under /intercooler-piping as child terms, not as a standalone category URL.",
+        expectedImpact:
+          "The team uses customer search language and client priorities without creating avoidable rework.",
+      },
+      {
         phase: "Month 3",
         specialists: "AIA SEO, content, web or platform owner",
-        title: "Template and product metadata rollout",
+        title: "Template cleanup, schema, and validation wave",
         evidence:
-          "The crawl shows missing H1s and meta descriptions, duplicate product descriptions, long product titles, homepage title leakage, and no product structured data.",
+          "The crawl shows missing H1s and meta descriptions, duplicate product descriptions, long product titles, homepage title leakage, no product structured data, and unresolved GSC access.",
         recommendedAction:
-          "Deploy browse, homepage, and product-template rules, then validate representative pages with a fresh crawl.",
+          "Use the 2-hour dev tranche for heading/template and Product JSON-LD work, validate with crawl-based checks, build or optimize approved P2 category pages, and document durable platform rules.",
         expectedImpact:
-          "Product and category pages become more distinct, more useful in search results, and easier to maintain.",
+          "Product and category pages become more distinct, the team can prove issue reduction, and future platform updates follow the same SEO standard.",
       },
     ],
   },
@@ -275,9 +286,9 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
       {
         timing: "Kickoff",
         label: "Access",
-        title: "Grant canonical Search Console access",
+        title: "Grant canonical Search Console access or approve substitute QA",
         detail:
-          "The current evidence says the HTTPS www or domain property is not available. Until access is granted, validation should rely on crawl and Ahrefs substitutes.",
+          "The current evidence says the HTTPS www or domain property is not available. Until access is granted, Month 1 and Month 3 validation should rely on crawl and Ahrefs substitutes.",
       },
       {
         timing: "Kickoff",
@@ -287,42 +298,42 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
           "Shopping results appear for priority product clusters, so feed access and product eligibility need to be confirmed before optimization is planned.",
       },
       {
-        timing: "Before build",
+        timing: "Before Month 2",
         label: "Scope",
-        title: "Confirm the first clean category URLs",
+        title: "Confirm the first three P1 category URLs",
         detail:
-          "Approve the P1 category set and confirm the 8 to 10 clean category destinations fit within the no website rebuild scope.",
+          "Approve /v-band-clamps, /o2-sensor-bungs, and /t-bolt-clamps as the first build tranche, with /turbo-flanges and /intercooler-piping following after QA.",
       },
       {
-        timing: "Before content",
+        timing: "Before remaining tickets",
         label: "Products",
-        title: "Share the top product list and house-made prefixes",
+        title: "Resolve named product priority conflicts",
         detail:
-          "John's top 10 to 20 products and the confirmed house-made SKU prefixes will help prioritize pages by revenue value, not search volume alone.",
+          "Prepare decisions for Dual Seal naming, Mandrel bends placement under Intercooler Piping, Silicone Hoses demotion rationale, Billet Merges demand, and Billet 90s mapping or volume pull.",
       },
       {
         timing: "Month 2",
         label: "Naming",
-        title: "Decide how to position Dual Seal Connectors",
+        title: "Apply KWR vocabulary rules",
         detail:
-          "The product line is 100% house-made but has no measurable demand under that name, so it needs a naming decision before SEO page creation.",
+          "Use winning variants such as o2 sensor bung, 02 sensor bung, v band clamp, and t bolt clamp in titles, H1s, feed titles, synonyms, and page briefs.",
       },
     ],
     decisions: [
       {
-        label: "Approve technical foundation first",
+        label: "Approve the ticketed Month 1 sequence",
         detail:
-          "Sitemap, redirect, duplicate URL, and access work should happen before the team invests heavily in new page copy.",
+          "Run technical foundation and Merchant Center first-pass work before investing heavily in new page copy.",
       },
       {
-        label: "Prioritize house-made RPS inventory",
+        label: "Build category pages in tranches",
         detail:
-          "The keyword strategy shows that search volume alone can push low-margin resold products too high. Category order should favor search demand, manufacturing margin, and product availability together.",
+          "Start with the first three P1 pages in Month 2, QA them, then decide how quickly to scale Turbo Flanges, Intercooler Piping with Mandrel bends as child terms, and P2 targets.",
       },
       {
-        label: "Report business outcomes before keyword counts",
+        label: "Resolve product priorities before more tickets",
         detail:
-          "Biweekly updates should lead with organic revenue, orders, non-brand sessions, Merchant Center or organic shopping visibility, and category-page performance.",
+          "Dual Seal, Mandrel bends, Silicone Hoses, Billet Merges, and Billet 90s need AM and SEO alignment before the remaining content and metadata work is locked.",
       },
     ],
   },

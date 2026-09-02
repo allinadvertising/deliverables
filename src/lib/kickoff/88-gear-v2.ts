@@ -13,8 +13,9 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
       label: "Business objective",
       value: "Grow organic sales while keeping paid media steady",
     },
-    { label: "Roadmap", value: "Access, feed, crawl, snow, conversion" },
-    { label: "Platform", value: "Shopify, Merchant Center, GA4 and GTM pending" },
+    { label: "Roadmap", value: "10h sprint, feed, crawl, snow" },
+    { label: "Platform", value: "Shopify, GSC, GA4, GTM and Merchant Center" },
+    { label: "Capacity", value: "$2,000 tier: 11.11h capacity, 10h planned" },
   ],
   summary: {
     title: "What changes first",
@@ -24,23 +25,23 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
     lead:
       "88 Gear is already visible. Search Console shows 25,643 clicks from 5,723,815 impressions over 12 months, but collections earn 45.8% of impressions at only 0.27% CTR while products convert impressions at 0.59% CTR. The gap is not demand, it is how commercial demand lands.",
     emphasis:
-      "The first month should deliver visible wins before the 2026-09-20 invoice: confirm access, repair feed eligibility, contain crawl waste, clean the highest-impact empty collections, and move snow work first because it was already promised before winter traffic.",
+      "The first month should stay credit-capped: plan roughly 10 hours against 11.11 hours of monthly capacity, capture the now-available baseline, repair feed eligibility, contain crawl waste, and move snow work first because it was already promised before winter traffic.",
   },
   strategy: {
     title: "3 Month Roadmap",
     gridClassName: "lg:grid-cols-3",
     operatingPrinciple:
-      "Fix the systems that directly affect revenue reporting, product eligibility, and collection quality before building broader growth content.",
+      "Use lean first-pass tranches that protect the September invoice promise while leaving margin for QA, approvals, client requests, and implementation uncertainty.",
     phases: [
       {
         accent: "blue",
         month: "Month 1",
-        theme: "Access, feed, and snow-first containment",
+        theme: "Credit-capped containment",
         objective:
-          "Confirm Shopify, GSC, GA4, GTM, Merchant Center, Google Ads, Meta, and Omnisend access, fix Merchant Center feed attributes, rewrite robots controls, start product URL consolidation, clean priority empty collections, and map the first snow collections.",
-        deliverable: "Month-one deliverables before the September 20 invoice",
+          "Capture the Shopify, GSC, GA4, GTM, Merchant Center, Google Ads, paid-coordination, and Omnisend baseline, run first-pass Merchant Center fixes, start robots and URL containment, prioritize empty collections, and map snow-first briefs inside a roughly 10-hour Month 1 plan.",
+        deliverable: "Credit-capped Month 1 sprint before the September 20 invoice",
         businessOutcome:
-          "The client sees tangible movement in the first billing cycle: product eligibility improves, crawl waste starts shrinking, empty navigation pages stop wasting demand, and the snow promise is protected.",
+          "The client sees tangible movement in the first billing cycle without hearing the full backlog as a one-month promise: product eligibility improves, crawl waste starts shrinking, and the snow promise is protected.",
       },
       {
         accent: "gold",
@@ -69,22 +70,22 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
     volumeLabel: "Evidence",
     scopeLabel: "Scope impact",
     footnote:
-      "Evidence comes from the 88 Gear consolidated SEO roadmap, KWR, SEO action items, Deep SEO Analysis, and Knowledge Center context dated August and September 2026. The plan treats the supplied 88 Gear Drive folder as the source of truth.",
+      "Evidence comes from the 88 Gear consolidated SEO roadmap, KWR, SEO action items, Deep SEO Analysis, and Knowledge Center context dated August and September 2026. The updated roadmap applies the $2,000 tier rule: 11.11 working hours per month, with 10 hours planned to preserve margin.",
     items: [
       {
         number: "01",
-        title: "Confirm access and revenue reporting first",
+        title: "Capture the revenue baseline first",
         businessObjective:
           "Make sure every fix can be deployed and measured against sales, not just rankings.",
         evidence:
-          "The Deep SEO records Shopify, GA4, GTM, Merchant Center, GSC, Google Ads, Meta, and Omnisend access as open or pending, and the client technical profile was empty when the audit was written.",
-        volume: "First SEO-credit gate",
-        scopeImpact: "Shopify, GSC, GA4, GTM, Merchant Center, Google Ads, Meta, Omnisend",
+          "The Deep SEO recorded Shopify, GA4, GTM, Merchant Center, GSC, Google Ads, Meta, and Omnisend access as open or pending at audit time. The consolidated roadmap now records Karla's 2026-09-02 confirmation that Shopify, GSC, GA4, GTM, Merchant Center, and related access are available.",
+        volume: "Baseline before changes",
+        scopeImpact: "Shopify, GSC, GA4, GTM, Merchant Center, paid coordination, Omnisend",
         expectedImpact:
           "The team can tie work back to organic revenue, orders, AOV, Organic Shopping, and collection performance once implementation starts.",
         recommendedAction:
-          "Confirm and document access before implementation, then set the first reporting baseline before the 2026-09-02 strategy review and the 2026-09-20 invoice window.",
-        status: "P0, do first",
+          "Document which accounts are editable, capture the starting baseline in GSC, GA4, GTM, Merchant Center, and Shopify, then use that baseline to measure Merchant Center fixes, crawl-control changes, and URL consolidation.",
+        status: "P0, ready now",
       },
       {
         number: "02",
@@ -113,8 +114,8 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
         expectedImpact:
           "Product authority consolidates behind clean Shopify URLs and crawl attention shifts away from feeds, filters, legacy app paths, and dead product handles.",
         recommendedAction:
-          "Rewrite robots controls, consolidate collection-relative and vendor product URLs to /products/handle, 301 legacy /a/s/products/ paths, and canonicalize variant URLs without breaking variant selection.",
-        status: "P0, technical containment",
+          "Start with the first robots and URL containment tranche: rewrite crawl controls, map collection-relative and vendor product URLs to /products/handle, queue legacy /a/s/products/ redirects, and keep variant canonical work coordinated with feed and paid URL behavior.",
+        status: "P0, first tranche",
       },
       {
         number: "04",
@@ -128,7 +129,7 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
         expectedImpact:
           "Searchers stop landing on empty shelves, and 88 Gear has useful snow destinations ready before seasonal demand peaks.",
         recommendedAction:
-          "Decide whether to fill, merge, noindex, or remove empty navigation collections. Start snow work with accessories, boards and bindings, and outerwear, including the snow-googles handle typo and Snow Pants naming.",
+          "Decide whether to fill, merge, noindex, or remove empty navigation collections. Start the snow plan with accessories, boards and bindings, and outerwear, including the snow-googles handle typo and Snow Pants naming. Keep implementation inside the approved Month 1 credit plan.",
         status: "P1, month-one content focus",
       },
       {
@@ -183,7 +184,7 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
         decision:
           "Approve the empty-collection decisions and the snow-first collection order.",
         impact:
-          "Month-one content work starts with pages that already get demand and can affect revenue faster.",
+          "Month-one content work starts with pages that already get demand, while the full empty-collection backlog stays phased.",
         proof:
           "Live Shopify checks confirm product availability, navigation status, title, meta, H1, and indexation decision for each priority collection.",
       },
@@ -212,13 +213,13 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
       {
         phase: "Month 1",
         specialists: "AIA SEO, AM, owner, platform and analytics owners",
-        title: "Access and reporting baseline",
+        title: "Baseline and scope guardrail",
         evidence:
-          "The roadmap marks access as the first gate because Shopify, GA4, GTM, GSC, Merchant Center, Google Ads, Meta, and Omnisend access affect deployment and reporting.",
+          "The Deep SEO identified access as a blocker at audit time, and the updated consolidated roadmap now treats access as confirmed per Karla on 2026-09-02. The same roadmap sets a 10-hour monthly plan against 11.11 hours of capacity.",
         recommendedAction:
-          "Confirm access, document what All In can edit, and establish reporting around organic revenue, orders, AOV, Organic Shopping, and collection performance.",
+          "Document what All In can edit, capture reporting baselines, and frame Month 1 as a focused sprint rather than the full 39-hour roadmap.",
         expectedImpact:
-          "The team can move quickly without reporting only rankings or creating implementation blockers.",
+          "The team can move quickly from a clean measurement snapshot while preserving margin for QA, approvals, client requests, and implementation uncertainty.",
       },
       {
         phase: "Month 1",
@@ -227,7 +228,7 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
         evidence:
           "Feed issues include thousands of missing age group and gender attributes, missing prices, 183 not-approved products, and a 34.7% click drop.",
         recommendedAction:
-          "Repair the highest-confidence feed attributes and coordinate campaign-sensitive fields with the outside paid-media provider.",
+          "Repair the highest-confidence feed attributes first and coordinate campaign-sensitive fields with the outside paid-media provider.",
         expectedImpact:
           "The first visible win is tied to products and Shopping eligibility, not just a planning document.",
       },
@@ -238,7 +239,7 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
         evidence:
           "The audit shows robots-blocked commercial risk, canonical alternates, redirect buckets, long-standing 404s, /a/s/ paths, vendor paths, and variant URL signal splits.",
         recommendedAction:
-          "Rewrite robots controls, consolidate product URL variants, map legacy app paths, and validate with GSC and crawl checks.",
+          "Rewrite robots controls, start the first product URL consolidation tranche, map legacy app paths, and validate with GSC and crawl checks.",
         expectedImpact:
           "Google spends more time on real products and collections and less on machine-generated or dead URL space.",
       },
@@ -249,7 +250,7 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
         evidence:
           "KWR identifies 50 empty collections with 50,848 annual impressions and places snow accessories, boards and bindings, and outerwear first because snow was promised.",
         recommendedAction:
-          "Make collection decisions, map first snow URLs and keyword angles, prepare briefs, and QA SEO fields and internal links.",
+          "Make collection decisions, map first snow URLs and keyword angles, prepare only the first briefs, and QA SEO fields and internal links after implementation.",
         expectedImpact:
           "The first content credits go to pages that can protect client confidence before winter demand.",
       },
@@ -282,10 +283,17 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
     gates: [
       {
         timing: "Kickoff",
-        label: "Access",
-        title: "Confirm edit and reporting access",
+        label: "Baseline",
+        title: "Confirm editable accounts and baseline evidence",
         detail:
-          "Shopify, GSC, GA4, GTM, Merchant Center, Google Ads, Meta, and Omnisend access should be confirmed before implementation or revenue reporting starts.",
+          "Access is now treated as available per Karla's 2026-09-02 confirmation. The kickoff decision is to save baseline evidence and keep Month 1 scoped to roughly 10 planned hours.",
+      },
+      {
+        timing: "Kickoff",
+        label: "Scope",
+        title: "Approve the 10-hour Month 1 plan",
+        detail:
+          "The updated roadmap uses the $2,000 tier rule, which gives 11.11 working hours per month. The ClickUp Ticket Plan schedules 10 hours to preserve margin.",
       },
       {
         timing: "Week 1",
@@ -320,7 +328,7 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
       {
         label: "Lead with month-one deliverables",
         detail:
-          "The first client-facing progress story should show access, Merchant Center, crawl containment, empty collection cleanup, and snow progress before the September 20 invoice.",
+          "The first client-facing progress story should show baseline capture, Merchant Center, crawl containment, first empty-collection and snow progress, and the reason the rest stays phased.",
       },
       {
         label: "Protect revenue reporting",

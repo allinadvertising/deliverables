@@ -1,10 +1,10 @@
 import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 
 export const racePartsSolutionsKickoffV2: KickoffV2Data = {
-  printAriaLabel: "Print Race Parts Solutions kickoff V2 as PDF",
-  footerNote: "Race Parts Solutions SEO Strategy Kickoff | August 2026",
+  printAriaLabel: "Print Race Part Solutions kickoff V2 as PDF",
+  footerNote: "Race Part Solutions SEO Strategy Kickoff | September 2026",
   cover: {
-    clientName: "Race Parts Solutions",
+    clientName: "Race Part Solutions",
     subtitle: "Your organic search strategy for the next three months.",
   },
   meta: [
@@ -23,9 +23,9 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
     title: "What changes first",
     objectiveLabel: "Business objective",
     objective:
-      "Use SEO to reverse the revenue trend by bringing more non-brand buyers to Race Parts Solutions, prioritizing house-made RPS inventory, and measuring organic impact through orders, revenue, and qualified product discovery.",
+      "Use SEO to reverse the revenue trend by bringing more non-brand buyers to Race Part Solutions, prioritizing house-made RPS inventory, and measuring organic impact through orders, revenue, and qualified product discovery.",
     lead:
-      "Race Parts Solutions has a large product catalog, strong manufacturing value, and real demand clusters, but the updated roadmap shows the first quarter needs tighter execution sequencing. The sitemap points to 1,641 non-www URLs that return 404, while 14,259 indexable URLs are missing from sitemap coverage.",
+      "Race Part Solutions has a large product catalog, strong manufacturing value, and real demand clusters, but the updated roadmap shows the first quarter needs tighter execution sequencing. The sitemap points to 1,641 non-www URLs that return 404, while 14,259 indexable URLs are missing from sitemap coverage.",
     emphasis:
       "The new sequence is more specific: ship the Month 1 technical and Merchant Center waves first, build the first three P1 category pages in Month 2, resolve KWR priority decisions before the rest of the roadmap is ticketed, then use Month 3 for lean template, schema, validation, and P2 category work.",
   },
@@ -72,7 +72,7 @@ export const racePartsSolutionsKickoffV2: KickoffV2Data = {
     volumeLabel: "Evidence",
     scopeLabel: "Scope impact",
     footnote:
-      "Evidence comes from the Race Parts Solutions consolidated SEO roadmap, technical and content SEO audit, keyword strategy, and intake materials dated August 2026. Search Console access for the canonical HTTPS or domain property was not available, so early validation should use crawl and Ahrefs evidence until access is granted.",
+      "Evidence comes from the Race Part Solutions consolidated SEO roadmap, technical and content SEO audit, keyword strategy, and intake materials dated August 2026. Search Console access for the canonical HTTPS or domain property was not available, so early validation should use crawl and Ahrefs evidence until access is granted.",
     items: [
       {
         number: "01",

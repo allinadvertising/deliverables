@@ -4,9 +4,9 @@ import { KickoffV2Deliverable } from "@/components/kickoff/v2/KickoffV2Deliverab
 import { racePartsSolutionsKickoffV2 } from "@/lib/kickoff/race-parts-solutions-v2";
 
 export const metadata: Metadata = {
-  title: "Race Parts Solutions : SEO Strategy Kickoff V2",
+  title: "Race Part Solutions : SEO Strategy Kickoff V2",
   description:
-    "Race Parts Solutions SEO kickoff strategy presented as a focused three-month execution deck.",
+    "Race Part Solutions SEO kickoff strategy presented as a focused three-month execution deck.",
   robots: "noindex, nofollow",
 };
 

@@ -38,7 +38,7 @@ export const eightyEightGearKickoffV2: KickoffV2Data = {
         month: "Month 1",
         theme: "Credit-capped containment",
         objective:
-          "Capture the Shopify, GSC, GA4, GTM, Merchant Center, Google Ads, paid-coordination, and Omnisend baseline, run first-pass Merchant Center fixes, start robots and URL containment, prioritize empty collections, and map snow-first briefs inside a roughly 10-hour Month 1 plan.",
+          "Capture the starting baseline across Shopify, GSC, GA4, GTM, Merchant Center, Google Ads, and Omnisend, then coordinate any feed or URL changes that could affect paid media. From there, run first-pass Merchant Center fixes, start robots and URL containment, prioritize empty collections, and map snow-first briefs inside a roughly 10-hour Month 1 plan.",
         deliverable: "Credit-capped Month 1 sprint before the September 20 invoice",
         businessOutcome:
           "The client sees tangible movement in the first billing cycle without hearing the full backlog as a one-month promise: product eligibility improves, crawl waste starts shrinking, and the snow promise is protected.",

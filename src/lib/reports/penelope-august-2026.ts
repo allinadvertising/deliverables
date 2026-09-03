@@ -260,6 +260,53 @@ export const penelopeAugust2026Report: SeoStoryReportData = {
   },
 
   performanceCharts: {
+    revenue: {
+      title: "Organic search revenue baseline: $8,163.84",
+      insight:
+        "August is the first tracked month, so this is a baseline — July predates the engagement, and organic here runs on just 7-16 orders a month, so it's volatile. Google drove 95.7% of organic revenue, and 96% of it entered through the homepage.",
+      channelContext:
+        "Source of truth: Shopify Total sales by referrer (source = search). Organic search was 60.7% of all-channel store sales ($13,450.40), across 16 orders at a $510 average. This covers Shopify ecommerce and online-booked services — not walk-in or phone bookings — and the GA4 tie-out is pending. For context, pre-engagement July organic revenue was $861.36 across 7 orders (all Google); August's step-up came from a few large skincare and gift-certificate orders, not SEO work, which ships in September. That's why August is the baseline, not a month-over-month result.",
+      rankings: [
+        {
+          insight:
+            "Google drove almost all organic revenue; the other engines were a single order each.",
+          periods: [
+            {
+              label: "August 2026",
+              items: [
+                { display: "$7,810", label: "Google", value: 7810 },
+                { display: "$159.84", label: "DuckDuckGo", value: 159.84 },
+                { display: "$150", label: "Bing", value: 150 },
+                { display: "$44", label: "Yahoo!", value: 44 },
+              ],
+            },
+          ],
+          title: "Organic revenue by search engine (August)",
+        },
+        {
+          insight:
+            "Priority skincare brands (MBR) and gift certificates led — the high-value demand the roadmap is built to grow.",
+          periods: [
+            {
+              label: "August 2026",
+              items: [
+                { display: "$1,785", label: "MBR The Best Face Extra Rich", value: 1785 },
+                { display: "$1,720", label: "MBR The Best Face", value: 1720 },
+                {
+                  detail: "7 gift-card line items",
+                  display: "$1,375",
+                  label: "Custom Gift Certificate",
+                  value: 1375,
+                },
+                { display: "$598", label: "Couples Massage", value: 598 },
+                { display: "$455", label: "RELAX", value: 455 },
+              ],
+            },
+          ],
+          title: "Top products from organic search revenue (August)",
+        },
+      ],
+    },
     growth: {
       title: "Traffic rose, but visibility did not",
       insight:
@@ -443,6 +490,7 @@ export const penelopeAugust2026Report: SeoStoryReportData = {
     "Non-brand figures use Search Console's built-in brand filter: about 1,180 clicks in August vs 1,270 in July. Brand queries make up the remainder (~967 vs ~732) and grew month over month.",
     "The homepage appears as separate http://www and https://www rows in the GSC Pages breakdown (849 and 430 clicks in August) — the protocol split the containment work will consolidate.",
     "Revenue source: Shopify Total sales by referrer, referrer source = search, August 2026. Organic Total sales were $8,163.84 (net $8,004) across 16 unique organic orders, AOV $510.24 — 60.7% of all-channel store sales ($13,450.40). Shown as a first-month baseline; it covers Shopify ecommerce and online-booked services, not walk-in/phone bookings.",
+    "Pre-engagement context (same report, July 2026): organic revenue was $861.36 (net $845) across 7 orders, all Google. August is treated as the tracked baseline rather than a month-over-month result — July predates the engagement, and on 7-16 orders a month a few large skincare or gift-certificate orders swing the total heavily.",
     "Organic revenue by engine: Google $7,810 (95.7%), DuckDuckGo $159.84, Bing $150, Yahoo $44. By landing page, the homepage captured $7,813.84 (95.7%). Top organic products were MBR The Best Face Extra Rich ($1,785), MBR The Best Face ($1,720), and Custom Gift Certificates ($1,375).",
     "GA4 tie-out is pending: the Supermetrics GA4 connector trial expired July 15, 2026 and the live GA4 property (474007130) isn't accessible from the reporting browser, so Shopify is the sole revenue source this month.",
     "Merchant Center (0 valid / 56 invalid listings) and backlink-risk figures come from the August audits recorded in ClickUp; completed-work evidence comes from ClickUp task closures in the Penelope Task List.",

@@ -4,9 +4,9 @@ import { SeoStoryReport } from "@/components/reports/storytelling/SeoStoryReport
 import { everwhiteAugust2026Report } from "@/lib/reports/everwhite-august-2026";
 
 export const metadata: Metadata = {
-  title: "EverWhite : Organic Search Performance Report",
+  title: "EverWhite : August 2026 Organic Search Performance Report",
   description:
-    "EverWhite organic search performance story for August 2026.",
+    "EverWhite monthly organic search performance for August 2026 compared with July 2026.",
   robots: "noindex, nofollow",
 };
 

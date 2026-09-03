@@ -8,6 +8,11 @@ const statusColors = {
   watch: "bg-[#c75a12]",
 };
 
+type PeriodLabels = {
+  currentLabel: string;
+  previousLabel: string;
+};
+
 function ChartBand({
   children,
   insight,
@@ -39,21 +44,23 @@ function ChartBand({
 
 function GroupedColumnChart({
   ariaLabel,
+  currentLabel,
+  previousLabel,
   series,
 }: {
   ariaLabel: string;
   series: PerformanceComparison[];
-}) {
+} & PeriodLabels) {
   return (
     <div aria-label={ariaLabel} role="img">
       <div className="mb-5 flex flex-wrap gap-5 text-xs font-bold text-slate-600">
         <span className="inline-flex items-center gap-2">
           <span className="h-3 w-3 bg-[#8a9aaa]" aria-hidden="true" />
-          May
+          {previousLabel}
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="h-3 w-3 bg-[#16803d]" aria-hidden="true" />
-          June
+          {currentLabel}
         </span>
         <span className="text-slate-400">Each metric uses its own scale.</span>
       </div>
@@ -62,6 +69,7 @@ function GroupedColumnChart({
           const maximum = Math.max(1, item.previous, item.current);
           const previousHeight = `${Math.max(10, (item.previous / maximum) * 100)}%`;
           const currentHeight = `${Math.max(10, (item.current / maximum) * 100)}%`;
+          const changeUp = item.status === "positive";
 
           return (
             <div className="min-w-0 sm:px-6 sm:first:pl-0 sm:last:pr-0" key={item.label}>
@@ -73,16 +81,18 @@ function GroupedColumnChart({
                   <span className="block w-full bg-[#8a9aaa]" style={{ height: previousHeight }} />
                 </div>
                 <div className="flex h-full w-20 flex-col justify-end text-center">
-                  <span className="mb-2 text-xs font-black text-[#16803d]">
+                  <span className={`mb-2 text-xs font-black ${changeUp ? "text-[#16803d]" : "text-[#c75a12]"}`}>
                     {item.currentDisplay}
                   </span>
-                  <span className="block w-full bg-[#16803d]" style={{ height: currentHeight }} />
+                  <span className={`block w-full ${statusColors[item.status]}`} style={{ height: currentHeight }} />
                 </div>
               </div>
               <div className="mt-3 flex items-start justify-between gap-3">
                 <p className="text-sm font-black text-slate-800">{item.label}</p>
-                <span className="shrink-0 bg-[#edf9f1] px-2 py-1 text-xs font-black text-[#16803d]">
-                  ↑ {item.change}
+                <span
+                  className={`shrink-0 px-2 py-1 text-xs font-black ${changeUp ? "bg-[#edf9f1] text-[#16803d]" : "bg-[#fff5eb] text-[#c75a12]"}`}
+                >
+                  {changeUp ? "↑" : "↓"} {item.change}
                 </span>
               </div>
             </div>
@@ -93,7 +103,13 @@ function GroupedColumnChart({
   );
 }
 
-function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
+function WaterfallChart({
+  chart,
+  currentLabel,
+  previousLabel,
+}: {
+  chart: PerformanceChartSet["nonbrand"];
+} & PeriodLabels) {
   const contributionBars = chart.contributions.map((item, index) => {
     const priorChange = chart.contributions
       .slice(0, index)
@@ -110,7 +126,7 @@ function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
     {
       display: chart.baselineDisplay,
       end: chart.baseline,
-      label: "May baseline",
+      label: previousLabel,
       start: 0,
       type: "baseline" as const,
       value: chart.baseline,
@@ -119,7 +135,7 @@ function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
     {
       display: chart.totalDisplay,
       end: chart.total,
-      label: "June total",
+      label: currentLabel,
       start: 0,
       type: "total" as const,
       value: chart.total,
@@ -132,11 +148,15 @@ function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
   const ariaLabel = bars
     .map((item) => `${item.label}: ${item.display}`)
     .join("; ");
+  const columnCount = bars.length;
 
   return (
     <div role="img" aria-label={ariaLabel}>
       <div className="hidden min-w-[700px] sm:block">
-        <div className="grid grid-cols-5 gap-3">
+        <div
+          className="grid gap-3"
+          style={{ gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` }}
+        >
           {bars.map((item) => {
             const bottom = `${(Math.min(item.start, item.end) / maximum) * 100}%`;
             const height = `${Math.max(3, (Math.abs(item.end - item.start) / maximum) * 100)}%`;
@@ -205,18 +225,20 @@ function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
 
 function DivergenceChart({
   ariaLabel,
+  currentLabel,
+  previousLabel,
   series,
 }: {
   ariaLabel: string;
   series: PerformanceComparison[];
-}) {
+} & PeriodLabels) {
   return (
     <div role="img" aria-label={ariaLabel}>
       <div className="hidden min-w-[690px] border-y border-slate-200 lg:block">
         <div className="grid grid-cols-[160px_1fr_1fr_110px] gap-5 border-b border-slate-200 py-3 text-[11px] font-black uppercase text-slate-400">
           <span>Metric</span>
-          <span>May</span>
-          <span>June</span>
+          <span>{previousLabel}</span>
+          <span>{currentLabel}</span>
           <span>Change</span>
         </div>
         {series.map((item) => {
@@ -261,15 +283,15 @@ function DivergenceChart({
                 </span>
               </div>
               <div className="space-y-3">
-                <div className="grid grid-cols-[42px_1fr_70px] items-center gap-3">
-                  <span className="text-xs font-bold text-slate-500">May</span>
+                <div className="grid grid-cols-[68px_1fr_70px] items-center gap-3">
+                  <span className="text-xs font-bold text-slate-500">{previousLabel}</span>
                   <div className="h-3 bg-slate-100">
                     <span className="block h-3 bg-[#8a9aaa]" style={{ width: previousWidth }} />
                   </div>
                   <span className="text-right text-xs font-bold text-slate-700">{item.previousDisplay}</span>
                 </div>
-                <div className="grid grid-cols-[42px_1fr_70px] items-center gap-3">
-                  <span className="text-xs font-bold text-slate-500">June</span>
+                <div className="grid grid-cols-[68px_1fr_70px] items-center gap-3">
+                  <span className="text-xs font-bold text-slate-500">{currentLabel}</span>
                   <div className="h-3 bg-slate-100">
                     <span className={`block h-3 ${statusColors[item.status]}`} style={{ width: currentWidth }} />
                   </div>
@@ -332,7 +354,7 @@ function RevenueRanking({
                   </div>
                   <div className="h-2.5 bg-slate-100">
                     <span
-                      className={`block h-2.5 ${periodIndex === 0 ? "bg-[#8a9aaa]" : "bg-[#16803d]"}`}
+                      className={`block h-2.5 ${ranking.periods.length > 1 && periodIndex === 0 ? "bg-[#8a9aaa]" : "bg-[#16803d]"}`}
                       style={{
                         width: `${Math.max(3, (item.value / maximum) * 100)}%`,
                       }}
@@ -348,7 +370,13 @@ function RevenueRanking({
   );
 }
 
-function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["revenue"]> }) {
+function RevenueChart({
+  chart,
+  currentLabel,
+  previousLabel,
+}: {
+  chart: NonNullable<PerformanceChartSet["revenue"]>;
+} & PeriodLabels) {
   const customerMixLabel = chart.customerMix
     ? chart.customerMix
     .map(
@@ -361,7 +389,9 @@ function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["reven
   return (
     <div>
       <DivergenceChart
-        ariaLabel="Organic revenue May compared with June: gross revenue, orders, and average order value increased, while organic share of all orders decreased."
+        ariaLabel={`Organic revenue and sales, ${previousLabel} compared with ${currentLabel}.`}
+        currentLabel={currentLabel}
+        previousLabel={previousLabel}
         series={chart.series}
       />
 
@@ -438,36 +468,56 @@ function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["reven
   );
 }
 
-export function ReportPerformanceCharts({ charts }: { charts: PerformanceChartSet }) {
+export function ReportPerformanceCharts({
+  charts,
+  currentLabel,
+  previousLabel,
+}: {
+  charts: PerformanceChartSet;
+} & PeriodLabels) {
   return (
     <div>
       {charts.revenue ? (
         <ChartBand number="01" title={charts.revenue.title} insight={charts.revenue.insight}>
-          <RevenueChart chart={charts.revenue} />
+          <RevenueChart
+            chart={charts.revenue}
+            currentLabel={currentLabel}
+            previousLabel={previousLabel}
+          />
         </ChartBand>
       ) : null}
 
       <ChartBand number={charts.revenue ? "02" : "01"} title={charts.growth.title} insight={charts.growth.insight}>
         <GroupedColumnChart
-          ariaLabel="May compared with June: organic clicks increased from 7,307 to 8,178; search appearances increased from 285,989 to 354,888."
+          ariaLabel={`Organic clicks and search appearances, ${previousLabel} compared with ${currentLabel}.`}
+          currentLabel={currentLabel}
+          previousLabel={previousLabel}
           series={charts.growth.series}
         />
       </ChartBand>
 
       <ChartBand number={charts.revenue ? "03" : "02"} title={charts.nonbrand.title} insight={charts.nonbrand.insight}>
-        <WaterfallChart chart={charts.nonbrand} />
+        <WaterfallChart
+          chart={charts.nonbrand}
+          currentLabel={currentLabel}
+          previousLabel={previousLabel}
+        />
       </ChartBand>
 
       <ChartBand number={charts.revenue ? "04" : "03"} title={charts.homepage.title} insight={charts.homepage.insight}>
         <DivergenceChart
-          ariaLabel="Homepage May compared with June: search appearances increased, while organic clicks and click rate decreased."
+          ariaLabel={`Flagship page performance, ${previousLabel} compared with ${currentLabel}.`}
+          currentLabel={currentLabel}
+          previousLabel={previousLabel}
           series={charts.homepage.series}
         />
       </ChartBand>
 
       <ChartBand number={charts.revenue ? "05" : "04"} title={charts.devices.title} insight={charts.devices.insight}>
         <GroupedColumnChart
-          ariaLabel="Device clicks May compared with June: mobile increased from 5,678 to 6,500; all other devices combined increased from 1,629 to 1,678."
+          ariaLabel={`Clicks by device, ${previousLabel} compared with ${currentLabel}.`}
+          currentLabel={currentLabel}
+          previousLabel={previousLabel}
           series={charts.devices.series}
         />
       </ChartBand>

@@ -16,7 +16,17 @@ type SeoStoryReportProps = {
   report: SeoStoryReportData;
 };
 
+// "August 1-31, 2026" -> "August 2026"; "August 2026" -> unchanged.
+function toPeriodLabel(period: string): string {
+  return period
+    .replace(/\s+\d{1,2}\s*[-–]\s*\d{1,2}\s*,?/, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export function SeoStoryReport({ report }: SeoStoryReportProps) {
+  const previousLabel = toPeriodLabel(report.meta.previousPeriod);
+  const currentLabel = toPeriodLabel(report.meta.currentPeriod);
   const hasRevenue = Boolean(report.performanceCharts?.revenue);
   const hasVisuals = Boolean(
     report.performanceCharts || report.visualDirections.length,
@@ -74,7 +84,9 @@ export function SeoStoryReport({ report }: SeoStoryReportProps) {
         />
         {hasRevenue ? (
           <ReportVisuals
+            currentLabel={currentLabel}
             performanceCharts={report.performanceCharts}
+            previousLabel={previousLabel}
             visualSection={report.visualSection}
             visualDirections={report.visualDirections}
           />
@@ -90,7 +102,9 @@ export function SeoStoryReport({ report }: SeoStoryReportProps) {
         />
         {!hasRevenue && hasVisuals ? (
           <ReportVisuals
+            currentLabel={currentLabel}
             performanceCharts={report.performanceCharts}
+            previousLabel={previousLabel}
             visualSection={report.visualSection}
             visualDirections={report.visualDirections}
           />

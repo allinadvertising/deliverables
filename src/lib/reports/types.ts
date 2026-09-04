@@ -137,7 +137,10 @@ export type PerformanceChartSet = {
       }>;
       title: string;
     }>;
-    series: PerformanceComparison[];
+    // Two-period comparison bars. Omit for a first-month / baseline revenue
+    // section that has no trustworthy prior month — the rankings and context
+    // still render on their own.
+    series?: PerformanceComparison[];
     title: string;
   };
 };

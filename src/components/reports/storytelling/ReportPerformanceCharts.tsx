@@ -388,12 +388,14 @@ function RevenueChart({
 
   return (
     <div>
-      <DivergenceChart
-        ariaLabel={`Organic revenue and sales, ${previousLabel} compared with ${currentLabel}.`}
-        currentLabel={currentLabel}
-        previousLabel={previousLabel}
-        series={chart.series}
-      />
+      {chart.series?.length ? (
+        <DivergenceChart
+          ariaLabel={`Organic revenue and sales, ${previousLabel} compared with ${currentLabel}.`}
+          currentLabel={currentLabel}
+          previousLabel={previousLabel}
+          series={chart.series}
+        />
+      ) : null}
 
       {chart.channelContext ? (
         <p className="mt-6 border-l-4 border-[#2f65a7] bg-[#f1f7ff] p-4 text-sm font-bold leading-relaxed text-slate-700">

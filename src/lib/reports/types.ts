@@ -28,7 +28,7 @@ export type CompletedWorkItem = {
   completedOn: string;
   evidence: string;
   owner: string;
-  taskUrl: string;
+  taskUrl?: string;
   title: string;
 };
 

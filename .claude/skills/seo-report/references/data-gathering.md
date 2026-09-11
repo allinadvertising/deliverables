@@ -42,6 +42,8 @@ Pull, current vs previous:
 
 `get_page_text` on GSC can return stale/aggregate tables — trust the on-screen comparison values (screenshots) over it.
 
+**Very large properties (1,000+ pages):** the Pages breakdown can leave the claude-in-chrome renderer unresponsive (`read_page`/`screenshot` time out with "Script injection timed out" / "Page still loading"). Fix: open the Pages breakdown in a **fresh tab** (`tabs_create_mcp`, then navigate) and retry the screenshot; the wedged tab can be abandoned/closed. Totals, devices, and non-brand load fine; only the page-level table is heavy. Top ~10 pages is plenty — identify the commercial-collection movers vs. the decaying blog/news posts (a big brand's net click dip is often just one or two viral posts decaying while the money pages grow). (Worked example: Ritani, Aug 2026.)
+
 ## WooCommerce revenue
 
 Log in at the client's `store.adminUrl`. Both reports take `period=custom&compare=previous_period&after=YYYY-MM-DD&before=YYYY-MM-DD`:
@@ -56,9 +58,13 @@ Use the Shopify Analytics export the specialist provides (or export it): the **T
 
 Two things to keep honest: Shopify's referrer attribution is reliable **on its own even when GA4 is broken or unavailable** — treat Shopify as the revenue source of truth and GA4 as a secondary tie-out (note if the GA4 tie-out is pending). And it captures **ecommerce and online-booked services only** — for med spas, salons, and other booking businesses, in-store/phone revenue sits outside this figure, so label it. (Note: the report's "Total sales by referrer" export shows the *referrer engine*, whereas an older "by referrer URL" field would hold external referrers, not onsite pages — use GSC for onsite page traffic.)
 
+**First, confirm the agency even has Shopify admin for this store — don't assume.** In the reporting Chrome go to `admin.shopify.com`, open the account/store switcher (top-right), and search the client name. If the store is present, use it (Total sales by referrer, as above). If it returns **no result**, the agency has no Shopify admin for this client (common with large brands that have in-house teams and headless storefronts) — do not guess a `store/<handle>` URL, and do not report organic revenue. Record `attribution: "unavailable-seo-only"` in `clients.json` and use the **SEO-only access** revenue treatment in `report-schema.md` (GSC traffic only, revenue as a measurement deliverable). Note for headless storefronts (custom Next.js/etc. in front of a Shopify backend): even with admin access, referrer attribution can be unreliable, so treat it with the same caution. (Worked example: Ritani, Aug 2026 — no Ritani store in the fulfillment@ switcher.)
+
 ## ClickUp completed work
 
 The ClickUp MCP tools (`mcp__*__clickup_*`) are usually connected. Load `clickup_filter_tasks` (and `clickup_search`, `clickup_get_task`) via ToolSearch if deferred.
+
+**Reporting month vs. bundle name — check this first.** The "SEO Monthly Report" task lives inside a monthly parent bundle, but the bundle can be named for the **production month**, not the reporting month: e.g. a report on **August** performance whose report task sits in the **"September 2026 SEO Tasks"** bundle (produced in early September). The report always covers the last complete month. Draw **delivered work** from that reporting month's **closed tasks** (the `date_closed` filter below), and the **forward plan** ("next month", "next 3 months") from the current bundle's open subtasks. Confirm the month with the user if the bundle name and the reporting month disagree. (Worked example: Ritani, Aug 2026.)
 
 Get the report month's delivered work from the client's `clickup.listId`:
 ```

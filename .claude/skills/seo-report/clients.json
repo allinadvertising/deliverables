@@ -1,0 +1,198 @@
+{
+  "_comment": "Client registry for the seo-report skill. One entry per client, keyed by slug (used in file paths and routes). Add a client here the first time you run a report for them so future runs don't re-ask. Fields marked (confirm) were not verified at seed time — confirm on first use and update.",
+  "clients": {
+    "everwhite": {
+      "name": "EverWhite",
+      "domain": "everwhiteboards.com",
+      "platform": "woocommerce",
+      "reportType": "Monthly Organic Search Performance Report",
+      "gsc": {
+        "property": "https://everwhiteboards.com/",
+        "propertyType": "url-prefix",
+        "googleAccount": "fulfillment@allinadvertising.com",
+        "accountPathIndex": 1,
+        "note": "Access is NOT under the default Chrome account. It is the second signed-in Google account (URLs open at /u/1/...). ricardo@allinadvertising.com does NOT have access."
+      },
+      "store": {
+        "type": "woocommerce",
+        "adminUrl": "https://everwhiteboards.com/wp-admin",
+        "analytics": "WooCommerce Analytics: Revenue report + Orders report (page=wc-admin&path=/analytics/revenue and /analytics/orders), period=custom + compare=previous_period",
+        "attribution": "total-store",
+        "attributionNote": "Revenue is TOTAL store sales, all channels — NOT organic-attributed. GA4 e-commerce tracking captures ~3% of orders; WooCommerce order attribution exists but blends paid and organic Google (client also runs Google Ads). Do NOT report organic-attributed revenue; label as all-channel store revenue and flag the attribution gap."
+      },
+      "clickup": {
+        "listId": "901105563905",
+        "listName": "Ever White Task List",
+        "folder": "EverWhite Boards (90113140070)",
+        "space": "Jordan's Clients (90110618522)"
+      },
+      "ahrefs": { "domainRating": 34 }
+    },
+    "vbeltguys": {
+      "name": "V-Belt Guys",
+      "domain": "vbeltguys.com",
+      "platform": "shopify",
+      "reportType": "Monthly Organic Search Performance Report",
+      "gsc": {
+        "property": "sc-domain:vbeltguys.com",
+        "propertyType": "domain",
+        "googleAccount": "(confirm)",
+        "accountPathIndex": null
+      },
+      "store": {
+        "type": "shopify",
+        "analytics": "Shopify Analytics export: organic-search-revenue CSV filtered to order_referrer_source = search; metric = Total sales (USD); segment by search engine and by product.",
+        "attribution": "organic-by-engine",
+        "attributionNote": "Shopify attributes organic revenue by referring search engine (Google/Bing/DuckDuckGo/Yahoo). This IS organic-attributed — report revenue by engine and top products by organic revenue (see the V-Belt exemplar). Shopify's Landing page URL field holds external referrers, not onsite pages — use GSC for onsite pages."
+      },
+      "clickup": {
+        "listId": "901113809551",
+        "listName": "V-Belt Guys Task List",
+        "folder": "V-Belt Guys (90117984034)",
+        "space": "Brandon's Clients (90110611324)"
+      }
+    },
+    "penelope": {
+      "name": "Penelope and The Beauty Bar",
+      "domain": "penelopeandthebeautybar.com",
+      "platform": "shopify",
+      "reportType": "Monthly Organic Search Performance Report",
+      "gsc": {
+        "property": "sc-domain:penelopeandthebeautybar.com",
+        "propertyType": "domain",
+        "googleAccount": "fulfillment@allinadvertising.com",
+        "accountPathIndex": 1,
+        "note": "Domain property (aggregates http+https). Under the fulfillment@ account (/u/1/). The homepage still appears as separate http:// and https:// rows in the Pages breakdown — the P0 consolidation target."
+      },
+      "store": {
+        "type": "shopify",
+        "attribution": "unconfirmed",
+        "attributionNote": "As of Month 1 (August 2026) GA4 / Shopify ecommerce / booking conversion tracking is UNCONFIRMED — do NOT report organic revenue until it's verified. Revenue spans ecommerce + in-store bookings. Merchant Center shows 0 valid / 56 invalid product listings, so Shopping visibility is also impaired. Report revenue as a measurement baseline in progress."
+      },
+      "clickup": {
+        "listId": "901114281903",
+        "listName": "Penelope Task List",
+        "folder": "Penelope and The Beauty Bar (90118231028)",
+        "space": "Jordan's Clients (90110618522)"
+      },
+      "notes": "Seattle med spa + beauty ecommerce. Engagement Aug-Oct 2026, roadmap = containment / conversion / growth. Shopify dev via WebTitans (Ben Lehrer). Kickoff context in src/lib/kickoff/penelope-v2.ts."
+    },
+    "ev-charge-solutions": {
+      "name": "EV Charge Solutions",
+      "domain": "evchargesolutions.com",
+      "platform": "odoo",
+      "reportType": "Monthly Organic Search Performance Report",
+      "gsc": {
+        "property": "https://www.evchargesolutions.com/",
+        "propertyType": "url-prefix",
+        "googleAccount": "fulfillment@allinadvertising.com",
+        "accountPathIndex": 1,
+        "note": "URL-prefix property (https://www). An http://www URL-prefix property also exists; there is no sc-domain property, so the https://www property misses any non-www/http traffic. Found via the GSC picker under the fulfillment@ account (/u/1/)."
+      },
+      "store": {
+        "type": "odoo",
+        "attribution": "ga4-only",
+        "attributionNote": "Odoo carries NO channel attribution — all website orders group under Medium='None', so organic revenue cannot be isolated inside Odoo. Use GA4 (property 289659428, 'Organic Search' session default channel group) as the organic-revenue source of truth. GA4 total site revenue reconciles closely to Odoo's eCommerce sales report (Odoo also has a 'confirmed website orders' figure that can include a to-invoice order). The Supermetrics GA4 connector trial expired 2026-07-15, so pull revenue directly from the GA4 UI under fulfillment@. The user (SEO specialist) provides this as an xlsx export.",
+        "ga4Property": "289659428"
+      },
+      "clickup": {
+        "listId": "901113912288",
+        "listName": "EV Charge Solutions Task List",
+        "folder": "EV Charge Solutions (90118033802)",
+        "space": "Greg's Space (90114087399)"
+      },
+      "notes": "B2B EV-charging equipment ecommerce (Odoo /shop catalog), migrated from Volusion to Odoo. August 2026 was a migration-recovery month (Volusion→Odoo redirects, indexation policy, sitemap resubmission, crawl-path cleanup, backlink reclamation, live verification). Desktop-dominant. Notable: Bing drives a large share of high-value organic revenue. No repo kickoff file — pull context from the ClickUp roadmap/tasks."
+    },
+    "ritani": {
+      "name": "Ritani",
+      "domain": "ritani.com",
+      "platform": "headless-shopify-nextjs",
+      "reportType": "Monthly Organic Search Performance Report",
+      "gsc": {
+        "property": "https://www.ritani.com/",
+        "propertyType": "url-prefix",
+        "googleAccount": "fulfillment@allinadvertising.com",
+        "accountPathIndex": 1,
+        "note": "URL-prefix property https://www.ritani.com/ under the fulfillment@ account (opens at /u/1/). NOT ricardo@, NOT a domain property (sc-domain:ritani.com is not shared), and no Ahrefs GSC connection. Date params in the performance URL DO apply on load for this property. The Pages breakdown is heavy (1,300+ pages) and can leave the extension renderer briefly unresponsive; open the breakdown in a fresh tab and retry the screenshot."
+      },
+      "store": {
+        "type": "headless-shopify-nextjs",
+        "attribution": "unavailable-seo-only",
+        "attributionNote": "Organic revenue is NOT attributable for the monthly report. AIA has SEO-only access: the fulfillment@ Shopify account (Jordan Leavitt) does NOT include a Ritani store (confirmed Sep 2026 via the store switcher; 'ritani' returns no result), so there is no Shopify admin to pull Total-sales-by-referrer from. The storefront is a custom headless Next.js app (Shopify commerce backend + Cloudflare), and analytics are split across Heap and Merchant Center, so referrer/organic attribution is not reconciled. Do NOT report organic revenue until the Measurement Reconciliation brief (ClickUp 868m1ye92) establishes a trustworthy source. If the user provides a Heap/GA4/Shopify export, fold it in as clearly-labeled context."
+      },
+      "clickup": {
+        "listId": "901113097608",
+        "listName": "Ritani Task List",
+        "folder": "Ritani (90117589873)",
+        "space": "90110611369",
+        "note": "Monthly bundles are named for the production month, not the reporting month: the 'September 2026 SEO Tasks' parent (868m1ye6j) holds the SEO Monthly Report task (868m1ye6n) that reports on AUGUST performance. Draw the reporting month's delivered work from that month's closed tasks (filter_tasks date_closed), and the forward plan from the current bundle's subtasks."
+      },
+      "team": {
+        "note": "Roles for the report (roles, not names): SEO Specialist = Ricardo Zelaya (audits, specs, GSC); Account Manager = Nick Roberto (reviews SEO deliverables before they reach the client dev); Content Writer = Heidi Chilcott; Data Specialist = Snell Rojas (technical crawl, exports) and measurement (Laura Vergara); SEO Strategist = Karla Guzman (planning/roadmap/KWR). Client-side in-house developer = Andrea (agency is SEO-only and does not push code)."
+      },
+      "notes": "Ritani (ritani.com) is a large diamond / engagement-ring ecommerce brand. Headless: Shopify commerce backend + custom Next.js storefront behind Cloudflare; in-house dev team (Andrea) deploys all code. Engagement opened ~late July 2026; August 2026 = Month 1 (diagnosis/onboarding: technical + content audit, GSC coverage/pages audits, Merchant Center audit, keyword research across 30 collection URLs, content calendar, first onsites/metadata). Roadmap first-7-days P0s: Ref 01 Merchant Center minimum-price signals, Ref 02 diamonds collection schema pricing (verified clean, keep pricing out of ld+json), Ref 03 noindex utility paths (/account/*). Catalog is huge (185,204 diamonds). No src/lib/kickoff/ritani file; context lives in the ClickUp list and the local spec docs."
+    },
+    "pipingnow": {
+      "name": "Piping Now",
+      "domain": "pipingnow.com",
+      "platform": "shopify",
+      "reportType": "Monthly Organic Search Performance Report",
+      "gsc": {
+        "property": "sc-domain:pipingnow.com",
+        "propertyType": "domain",
+        "googleAccount": "fulfillment@allinadvertising.com",
+        "accountPathIndex": 1,
+        "note": "Domain property. Access is under the /u/1 AIA account (URLs open at /u/1/...). The default account ricardo@allinadvertising.com does NOT have access (confirmed Sep 2026). GSC URL date params were ignored on load — set the Aug-vs-Jul compare via the UI (date chip → More → Compare → Custom)."
+      },
+      "store": {
+        "type": "shopify",
+        "adminUrl": "https://admin.shopify.com/store/pipingnow",
+        "analytics": "Shopify Analytics report 'Total sales by referrer' (/analytics/reports/sales_by_referrer). Group by order_referrer_source + order_referrer_name; the 'search' rows are search-referred revenue by engine (google/bing/yahoo/duckduckgo). Set a Custom date range, then comparison = Previous period for MoM. Do NOT click 'Save as' (that writes a saved report to the client's store).",
+        "attribution": "blended-search",
+        "attributionNote": "Shopify's 'search' referrer blends ORGANIC and PAID search — PipingNow runs Google Ads, so search/google mixes Ads + organic. Do NOT report search-referrer revenue as clean organic. Report total store revenue as all-channel context and the search channel as organic+paid, and make the organic-vs-paid reconciliation across GSC / Merchant Center / GA4 / Google Ads / Shopify the P0 measurement action item. In-store / phone sales sit outside the Shopify figure."
+      },
+      "merchantCenter": { "accountId": "118194292", "feed": "Simprosys via Merchant API" },
+      "clickup": {
+        "listId": "901102227261",
+        "listName": "PipingNow Tasks",
+        "folder": "PipingNow (90111124942)",
+        "space": "Brandon's Clients (90110611324)"
+      },
+      "ahrefs": { "domainRating": null },
+      "notes": "Piping Now / Energy Pipe & Supply — industrial pipe, fittings, hangers, valves ecommerce; physical store in Metairie, LA. Migrated to Shopify (Plus) shortly before the engagement. Engagement started ~August 2026, so Aug 2026 = Month 1. The multi-page 'Deep SEO Analysis' at src/lib/reports/pipingnow/ (basePath /piping-now-seo-analysis, dated Aug 7 2026) is the onboarding audit + roadmap: P0 make measurement/Merchant Center trustworthy → P1 recover the category pages that lost commercial traffic → P2 grow into competitor gaps. Runs Google Ads (separate specialist). No src/lib/kickoff file — pull context from the Deep SEO Analysis dir and the ClickUp list."
+    },
+    "fossil-age-minerals": {
+      "name": "Fossil Age Minerals",
+      "domain": "fossilageminerals.com",
+      "platform": "shopify",
+      "reportType": "Monthly Organic Search Performance Report",
+      "gsc": {
+        "property": "https://www.fossilageminerals.com/",
+        "propertyType": "url-prefix",
+        "googleAccount": "fulfillment@allinadvertising.com",
+        "accountPathIndex": 1,
+        "note": "URL-prefix property (https://www). Access is under the /u/1 fulfillment@ (Jordan Leavitt) account; the default ricardo@allinadvertising.com does NOT have access (confirmed Sep 2026). Client watches average position closely and set a floor: it must not exceed 10 (not fall below rank 10). Explain impression-weighted position every cycle."
+      },
+      "store": {
+        "type": "shopify",
+        "adminUrl": "https://admin.shopify.com/store/fossil-age-minerals",
+        "analytics": "Shopify Analytics report 'Total sales by referrer' (/analytics/reports/sales_by_referrer). Set a Custom date range via the date picker (URL date params are ignored), then comparison = Previous period for MoM. Do NOT click 'Save as' (writes a saved report to the client's store).",
+        "attribution": "blended-search-untrusted",
+        "attributionNote": "Report revenue DIRECTIONAL only. A July 2026 theme change disturbed channel tracking and the GA4/GTM revenue audit is OPEN, so organic revenue cannot be isolated. Shopify's 'search' referrer also blends ORGANIC + PAID (store runs Google Ads; doubleclick/googlesyndication rows are paid). Large July revenue landed in an unattributed direct (None/None) bucket, so MoM channel comparisons are unreliable. Report total store sales as all-channel context; make closing the GA4/GTM audit the action item."
+      },
+      "merchantCenter": { "issue": "99 of 111 products disapproved (Sep 2026) — 81 'animal cruelty' (megalodon/shark/mako/otodus), 18 'live animals'; root cause = titles lead with the extant-animal noun. Fix = lead with Fossil/Fossilized + Extinct + scientific name; category Collectibles > Rocks, Fossils & Petrified Wood." },
+      "clickup": {
+        "listId": "901112841670",
+        "listName": "Fossil Age Minerals Task List",
+        "folder": "Fossil Age Minerals (90117463783)",
+        "space": "Brandon's Clients (90110611324)",
+        "monthlyBundleNote": "Monthly work sits under a '<Month> 2026 SEO Tasks' parent (Sep bundle = 868m1y361, contains the 'SEO Monthly Report' subtask 868m1y364). Draw completed/in-progress work from that bundle's subtasks. Older months used flat tasks, not monthly containers."
+      },
+      "roadmap": {
+        "deepAnalysisDoc": "https://docs.google.com/document/d/1X8ljNhfu6XtDJ4qeAAO3FRoWggFlMPEueT0tGIReMV4/edit (Deep SEO Analysis, audit date 2026-08-16, ref-numbered)",
+        "roadmapSheet": "https://docs.google.com/spreadsheets/d/1w3BcCaQ1WdgqgLx1mZsP2_E9JzVyhUXaSQ7uFCc5zq0/edit"
+      },
+      "notes": "DTC fossil/mineral/crystal specimen store (raw crystals, clusters, fossils; not jewelry). SEO start 2026-01-06, $2,000/mo. AM: Brandon Swain. Migrated from legacy greatsouth.net (Great South Gems & Minerals). Core diagnosis: site is healthier than headline numbers (shedding low-value informational blog reach while winning commercial collection positions). Onsite/meta voice = prehistoric wonder; content banned terms (client-imposed): no cheap/discount/discounted or rarity words (rare/common); only 'quality' and 'authentic' allowed. COMPETITOR SENSITIVITY: buriedtreasurefossils.com is in the competitor set AND is itself an AIA client (Greg Swain) — never state the AIA-client fact in a client-facing report. First report: fossil-age-minerals/august-2026."
+    }
+  }
+}

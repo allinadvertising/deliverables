@@ -20,7 +20,7 @@ export function KickoffV2Approval({ approval }: KickoffV2ApprovalProps) {
         {approval.gates.map((gate) => (
           <article
             className="grid gap-4 py-6 md:grid-cols-[150px_1fr]"
-            key={gate.timing}
+            key={`${gate.timing}-${gate.title}`}
           >
             <div>
               <p className="audit-mono text-[12px] font-black uppercase text-[#3e71b8]">

@@ -1,7 +1,7 @@
 export const meta = {
   name: 'seo-monthly-reports',
   description: 'Build (then, after approval, publish) monthly SEO performance reports for a batch of clients with the seo-report skill',
-  whenToUse: 'Monthly SEO reports for several clients at once. Run with args {"stage":"build","month":"YYYY-MM","clients":["slug",...]}, review, then run again with "stage":"publish" and the approved clients.',
+  whenToUse: 'Monthly SEO reports for several clients at once. Run with args {"stage":"build","month":"YYYY-MM","clients":["slug",...],"repo":"<deliverables clone>"}, review, then run again with "stage":"publish" and the approved clients.',
   phases: [
     { title: 'Preflight', detail: 'registry, ClickUp report task, existing reports, duplicates' },
     { title: 'Pull', detail: 'GSC, GA4 and ClickUp by API, per client in parallel' },
@@ -18,7 +18,7 @@ export const meta = {
 // seo-report skill repo (github.com/allinadvertising/seo-report), installed per person at
 // ~/.claude/skills/seo-report. Run this workflow from a `deliverables` clone.
 //
-// args: { stage: "build" | "publish", month: "YYYY-MM", clients: ["slug", ...], port?: 3001 }
+// args: { stage: "build" | "publish", month: "YYYY-MM", clients: ["slug", ...], repo?: "<path to a deliverables clone>", port?: 3001 }
 // ---------------------------------------------------------------------------------------------
 
 const A = args || {}
@@ -26,6 +26,7 @@ const STAGE = A.stage || 'build'
 const MONTH = A.month
 const CLIENTS = Array.isArray(A.clients) ? A.clients : []
 const PORT = A.port || 3001
+const REPO = A.repo || '.'
 if (!MONTH || !/^\d{4}-\d{2}$/.test(MONTH) || !CLIENTS.length) {
   throw new Error('args must be {"stage":"build"|"publish","month":"YYYY-MM","clients":["slug",...]}')
 }
@@ -33,7 +34,7 @@ if (!MONTH || !/^\d{4}-\d{2}$/.test(MONTH) || !CLIENTS.length) {
 const SKILL = '~/.claude/skills/seo-report'
 const COMMON = `You are working on All In Advertising monthly SEO reports with the seo-report skill.
 The skill is installed at ${SKILL} (a private repo). Read ${SKILL}/SKILL.md and follow it; ${SKILL}/references/ has the details.
-Work from the current directory, which is a clone of the deliverables repo. Commands use ${SKILL}/scripts/... and output/<slug>-<monthname>-<year>/.
+Work inside the deliverables clone at "${REPO}" (cd there first in every shell command; relative paths below are relative to it). Commands use ${SKILL}/scripts/... and output/<slug>-<monthname>-<year>/.
 Report month: ${MONTH}. Never deploy, commit, push, delete anything, or type passwords. Never write client or staff data into the deliverables repo outside src/lib/reports, src/app/reports and output/.
 If the skill folder is missing, stop and say so.`
 

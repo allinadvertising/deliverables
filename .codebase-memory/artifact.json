@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "9a0217c777907fd91360d25535d940eaf12d1a25",
-    "indexed_at": "2026-08-16T23:17:58Z",
+    "commit": "79ce52157ccbc580778ea22303a5c724ae417348",
+    "indexed_at": "2026-09-22T16:41:12Z",
     "project": "C-Users-snell-Documents-Allinadvertising-KWR-App-deliverables",
-    "nodes": 1554,
-    "edges": 3422,
-    "original_size": 6684672,
-    "compressed_size": 937340,
+    "nodes": 1585,
+    "edges": 3473,
+    "original_size": 6750208,
+    "compressed_size": 949614,
     "compression_level": 3
 }

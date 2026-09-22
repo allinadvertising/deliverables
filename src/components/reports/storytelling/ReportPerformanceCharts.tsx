@@ -39,21 +39,29 @@ function ChartBand({
 
 function GroupedColumnChart({
   ariaLabel,
+  currentLabel,
+  previousLabel,
   series,
 }: {
-  ariaLabel: string;
+  ariaLabel?: string;
+  currentLabel: string;
+  previousLabel: string;
   series: PerformanceComparison[];
 }) {
+  const resolvedLabel =
+    ariaLabel ??
+    `${series.map((item) => item.label).join(", ")}: ${previousLabel} versus ${currentLabel}.`;
+
   return (
-    <div aria-label={ariaLabel} role="img">
+    <div aria-label={resolvedLabel} role="img">
       <div className="mb-5 flex flex-wrap gap-5 text-xs font-bold text-slate-600">
         <span className="inline-flex items-center gap-2">
           <span className="h-3 w-3 bg-[#8a9aaa]" aria-hidden="true" />
-          May
+          {previousLabel}
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="h-3 w-3 bg-[#16803d]" aria-hidden="true" />
-          June
+          {currentLabel}
         </span>
         <span className="text-slate-400">Each metric uses its own scale.</span>
       </div>
@@ -93,7 +101,15 @@ function GroupedColumnChart({
   );
 }
 
-function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
+function WaterfallChart({
+  chart,
+  currentLabel,
+  previousLabel,
+}: {
+  chart: NonNullable<PerformanceChartSet["nonbrand"]>;
+  currentLabel: string;
+  previousLabel: string;
+}) {
   const contributionBars = chart.contributions.map((item, index) => {
     const priorChange = chart.contributions
       .slice(0, index)
@@ -110,7 +126,7 @@ function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
     {
       display: chart.baselineDisplay,
       end: chart.baseline,
-      label: "May baseline",
+      label: `${previousLabel} baseline`,
       start: 0,
       type: "baseline" as const,
       value: chart.baseline,
@@ -119,7 +135,7 @@ function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
     {
       display: chart.totalDisplay,
       end: chart.total,
-      label: "June total",
+      label: `${currentLabel} total`,
       start: 0,
       type: "total" as const,
       value: chart.total,
@@ -205,18 +221,26 @@ function WaterfallChart({ chart }: { chart: PerformanceChartSet["nonbrand"] }) {
 
 function DivergenceChart({
   ariaLabel,
+  currentLabel,
+  previousLabel,
   series,
 }: {
-  ariaLabel: string;
+  ariaLabel?: string;
+  currentLabel: string;
+  previousLabel: string;
   series: PerformanceComparison[];
 }) {
+  const resolvedLabel =
+    ariaLabel ??
+    `${series.map((item) => item.label).join(", ")}: ${previousLabel} versus ${currentLabel}.`;
+
   return (
-    <div role="img" aria-label={ariaLabel}>
+    <div role="img" aria-label={resolvedLabel}>
       <div className="hidden min-w-[690px] border-y border-slate-200 lg:block">
         <div className="grid grid-cols-[160px_1fr_1fr_110px] gap-5 border-b border-slate-200 py-3 text-[11px] font-black uppercase text-slate-400">
           <span>Metric</span>
-          <span>May</span>
-          <span>June</span>
+          <span>{previousLabel}</span>
+          <span>{currentLabel}</span>
           <span>Change</span>
         </div>
         {series.map((item) => {
@@ -262,14 +286,14 @@ function DivergenceChart({
               </div>
               <div className="space-y-3">
                 <div className="grid grid-cols-[42px_1fr_70px] items-center gap-3">
-                  <span className="text-xs font-bold text-slate-500">May</span>
+                  <span className="text-xs font-bold text-slate-500">{previousLabel}</span>
                   <div className="h-3 bg-slate-100">
                     <span className="block h-3 bg-[#8a9aaa]" style={{ width: previousWidth }} />
                   </div>
                   <span className="text-right text-xs font-bold text-slate-700">{item.previousDisplay}</span>
                 </div>
                 <div className="grid grid-cols-[42px_1fr_70px] items-center gap-3">
-                  <span className="text-xs font-bold text-slate-500">June</span>
+                  <span className="text-xs font-bold text-slate-500">{currentLabel}</span>
                   <div className="h-3 bg-slate-100">
                     <span className={`block h-3 ${statusColors[item.status]}`} style={{ width: currentWidth }} />
                   </div>
@@ -348,7 +372,15 @@ function RevenueRanking({
   );
 }
 
-function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["revenue"]> }) {
+function RevenueChart({
+  chart,
+  currentLabel,
+  previousLabel,
+}: {
+  chart: NonNullable<PerformanceChartSet["revenue"]>;
+  currentLabel: string;
+  previousLabel: string;
+}) {
   const customerMixLabel = chart.customerMix
     ? chart.customerMix
     .map(
@@ -361,7 +393,8 @@ function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["reven
   return (
     <div>
       <DivergenceChart
-        ariaLabel="Organic revenue May compared with June: gross revenue, orders, and average order value increased, while organic share of all orders decreased."
+        currentLabel={currentLabel}
+        previousLabel={previousLabel}
         series={chart.series}
       />
 
@@ -439,38 +472,45 @@ function RevenueChart({ chart }: { chart: NonNullable<PerformanceChartSet["reven
 }
 
 export function ReportPerformanceCharts({ charts }: { charts: PerformanceChartSet }) {
+  const labels = charts.periodLabels ?? { previous: "May", current: "June" };
+  let bandNumber = 0;
+  const nextNumber = () => String(++bandNumber).padStart(2, "0");
+
   return (
     <div>
       {charts.revenue ? (
-        <ChartBand number="01" title={charts.revenue.title} insight={charts.revenue.insight}>
-          <RevenueChart chart={charts.revenue} />
+        <ChartBand number={nextNumber()} title={charts.revenue.title} insight={charts.revenue.insight}>
+          <RevenueChart
+            chart={charts.revenue}
+            currentLabel={charts.revenue.currentLabel ?? labels.current}
+            previousLabel={charts.revenue.previousLabel ?? labels.previous}
+          />
         </ChartBand>
       ) : null}
 
-      <ChartBand number={charts.revenue ? "02" : "01"} title={charts.growth.title} insight={charts.growth.insight}>
-        <GroupedColumnChart
-          ariaLabel="May compared with June: organic clicks increased from 7,307 to 8,178; search appearances increased from 285,989 to 354,888."
-          series={charts.growth.series}
-        />
-      </ChartBand>
+      {charts.growth ? (
+        <ChartBand number={nextNumber()} title={charts.growth.title} insight={charts.growth.insight}>
+          <GroupedColumnChart currentLabel={charts.growth.currentLabel ?? labels.current} previousLabel={charts.growth.previousLabel ?? labels.previous} series={charts.growth.series} />
+        </ChartBand>
+      ) : null}
 
-      <ChartBand number={charts.revenue ? "03" : "02"} title={charts.nonbrand.title} insight={charts.nonbrand.insight}>
-        <WaterfallChart chart={charts.nonbrand} />
-      </ChartBand>
+      {charts.nonbrand ? (
+        <ChartBand number={nextNumber()} title={charts.nonbrand.title} insight={charts.nonbrand.insight}>
+          <WaterfallChart chart={charts.nonbrand} currentLabel={charts.nonbrand.currentLabel ?? labels.current} previousLabel={charts.nonbrand.previousLabel ?? labels.previous} />
+        </ChartBand>
+      ) : null}
 
-      <ChartBand number={charts.revenue ? "04" : "03"} title={charts.homepage.title} insight={charts.homepage.insight}>
-        <DivergenceChart
-          ariaLabel="Homepage May compared with June: search appearances increased, while organic clicks and click rate decreased."
-          series={charts.homepage.series}
-        />
-      </ChartBand>
+      {charts.homepage ? (
+        <ChartBand number={nextNumber()} title={charts.homepage.title} insight={charts.homepage.insight}>
+          <DivergenceChart currentLabel={charts.homepage.currentLabel ?? labels.current} previousLabel={charts.homepage.previousLabel ?? labels.previous} series={charts.homepage.series} />
+        </ChartBand>
+      ) : null}
 
-      <ChartBand number={charts.revenue ? "05" : "04"} title={charts.devices.title} insight={charts.devices.insight}>
-        <GroupedColumnChart
-          ariaLabel="Device clicks May compared with June: mobile increased from 5,678 to 6,500; all other devices combined increased from 1,629 to 1,678."
-          series={charts.devices.series}
-        />
-      </ChartBand>
+      {charts.devices ? (
+        <ChartBand number={nextNumber()} title={charts.devices.title} insight={charts.devices.insight}>
+          <GroupedColumnChart currentLabel={charts.devices.currentLabel ?? labels.current} previousLabel={charts.devices.previousLabel ?? labels.previous} series={charts.devices.series} />
+        </ChartBand>
+      ) : null}
     </div>
   );
 }

@@ -180,6 +180,8 @@ A third category of deliverable, separate from both LLM pipelines and the direct
 | Kickoff decks | `/kickoff/toico`, `/kickoff/toico/v2`, `/kickoff/sportsdisplays` | `src/lib/kickoff/*.ts`; V2 decks typed by `kickoff/v2-types.ts` | `components/kickoff/*`, `components/kickoff/v2/*` |
 | **Piping Now audit suite** | `/piping-now-seo-analysis` + 8 children | `src/lib/reports/pipingnow/*.ts` typed by `pipingnow/types.ts` | `components/reports/suite/*` |
 
+**Standalone HTML export** (added 2026-09-14): with the dev or prod server running, `node scripts/export-report-html.mjs <route> <output.html> [baseUrl]` saves any report route as one self-contained file (CSS inlined, Latin font subsets and local images as data URIs, Next.js scripts stripped, print/back-to-top buttons rewired with a small inline script). In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so the route is not rewritten into a Windows path.
+
 **Piping Now audit suite** (added 2026-08-07) is the first *multi-page* deliverable. Nine pages share one cover, one cross-page nav, and one footer via `SuiteShell`:
 
 ```

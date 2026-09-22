@@ -23,16 +23,15 @@ export function ReportCompletedWork({ items }: ReportCompletedWorkProps) {
       </p>
 
       <div className="border-y border-slate-200">
-        <div className="hidden grid-cols-[1.05fr_1.7fr_150px_110px] gap-6 bg-[#183b68] px-5 py-4 text-[11px] font-black uppercase text-white lg:grid">
+        <div className="hidden grid-cols-[1.05fr_1.7fr_110px] gap-6 bg-[#183b68] px-5 py-4 text-[11px] font-black uppercase text-white lg:grid">
           <span>Completed work</span>
           <span>Completion evidence</span>
-          <span>Owner</span>
           <span>Closed</span>
         </div>
 
         {items.map((item) => (
           <article
-            className="grid gap-5 border-b border-slate-200 px-5 py-6 last:border-b-0 lg:grid-cols-[1.05fr_1.7fr_150px_110px] lg:gap-6"
+            className="grid gap-5 border-b border-slate-200 px-5 py-6 last:border-b-0 lg:grid-cols-[1.05fr_1.7fr_110px] lg:gap-6"
             key={item.taskUrl}
           >
             <div>
@@ -58,12 +57,6 @@ export function ReportCompletedWork({ items }: ReportCompletedWorkProps) {
               <p className="mb-0 text-sm leading-relaxed text-slate-600">
                 {item.evidence}
               </p>
-            </div>
-            <div>
-              <p className="mb-2 text-[11px] font-black uppercase text-slate-500 lg:hidden">
-                Owner
-              </p>
-              <p className="mb-0 text-sm font-bold text-slate-700">{item.owner}</p>
             </div>
             <div>
               <p className="mb-2 text-[11px] font-black uppercase text-slate-500 lg:hidden">

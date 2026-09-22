@@ -27,7 +27,7 @@ export function ReportVisuals({
       aria-labelledby={`${sectionId}-title`}
     >
       <p className="mb-3 text-xs font-black uppercase tracking-[0.12em] text-[#2f65a7]">
-        {isRevenueSection ? "Revenue" : (visualSection?.eyebrow ?? "Visual direction")}
+        {isRevenueSection ? (visualSection?.eyebrow ?? "Revenue") : (visualSection?.eyebrow ?? "Visual direction")}
       </p>
       <h2 className="audit-section-title" id={`${sectionId}-title`}>
         {visualSection?.title ?? "Recommended chart briefs"}

@@ -84,23 +84,28 @@ export type PerformanceComparison = {
   status: "positive" | "watch";
 };
 
+type SectionPeriodLabels = {
+  currentLabel?: string;
+  previousLabel?: string;
+};
+
 export type PerformanceChartSet = {
-  devices: {
+  devices?: {
     insight: string;
     series: PerformanceComparison[];
     title: string;
-  };
-  growth: {
+  } & SectionPeriodLabels;
+  growth?: {
     insight: string;
     series: PerformanceComparison[];
     title: string;
-  };
-  homepage: {
+  } & SectionPeriodLabels;
+  homepage?: {
     insight: string;
     series: PerformanceComparison[];
     title: string;
-  };
-  nonbrand: {
+  } & SectionPeriodLabels;
+  nonbrand?: {
     baseline: number;
     baselineDisplay: string;
     contributions: Array<{
@@ -112,6 +117,10 @@ export type PerformanceChartSet = {
     title: string;
     total: number;
     totalDisplay: string;
+  } & SectionPeriodLabels;
+  periodLabels?: {
+    previous: string;
+    current: string;
   };
   revenue?: {
     channelContext?: string;
@@ -139,7 +148,7 @@ export type PerformanceChartSet = {
     }>;
     series: PerformanceComparison[];
     title: string;
-  };
+  } & SectionPeriodLabels;
 };
 
 export type Obstacle = {

@@ -3,7 +3,9 @@ import { type NextRequest, NextResponse } from "next/server";
 
 /**
  * Route protection proxy. Runs on protected routes and /login.
- * - Protected routes (/, /enhance): redirect to /login if no user.
+ * - Protected routes (/, /deliverables, /enhance): redirect to /login if no
+ *   user. /deliverables aggregates every client's links, so it is gated even
+ *   though the individual deliverables are public-but-noindex.
  * - /login: redirect to / if already authenticated.
  * - /audit, /api/*, static assets: passthrough (no auth check).
  *
@@ -63,5 +65,5 @@ export async function proxy(request: NextRequest) {
  * /audit, /api/*, _next/static, _next/image, favicon, etc. all pass through.
  */
 export const config = {
-  matcher: ["/", "/enhance", "/login"],
+  matcher: ["/", "/deliverables", "/enhance", "/login"],
 };

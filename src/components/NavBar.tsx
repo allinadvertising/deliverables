@@ -33,6 +33,9 @@ export function NavBar() {
           <Link className={linkClasses("/")} href="/">
             Dashboard
           </Link>
+          <Link className={linkClasses("/deliverables")} href="/deliverables">
+            Deliverables
+          </Link>
           <Link className={linkClasses("/enhance")} href="/enhance">
             Enhance
           </Link>
@@ -42,6 +45,9 @@ export function NavBar() {
           <nav className="flex items-center gap-1 sm:hidden">
             <Link className={linkClasses("/")} href="/">
               Dashboard
+            </Link>
+            <Link className={linkClasses("/deliverables")} href="/deliverables">
+              Files
             </Link>
             <Link className={linkClasses("/enhance")} href="/enhance">
               Enhance

@@ -53,9 +53,11 @@ If it never goes live: the push may not have reached `origin/main` (re-check `gi
 The Vercel link is the shareable preview; the **file the client receives is a single self-contained `.html`**. Produce it with the repo's export script while the dev server is running (it fetches the rendered route, inlines every stylesheet, font, and image as a data URI, strips the Next.js runtime, and rewires the Print / Back-to-top buttons with a tiny vanilla handler):
 ```
 node scripts/export-report.mjs \
-  "http://localhost:3000/reports/<slug>/<month>-<year>" \
-  "C:/Users/busta/iCloudDrive/All In Advertising/Claude Project Hub/<Client Folder>/<Client>-SEO-Report-<Month>-<Year>.html"
+  "/reports/<slug>/<month>-<year>" \
+  "public/<client-slug>/<year>/<month>/<client-slug>-seo-report-<month>-<year>.html"
 ```
-The output opens in any browser with no server (expect ~3-4 MB with fonts inlined). Match the house filename pattern (`EverWhite-SEO-Report-August-2026.html`, `VIM-Products-SEO-Report-August-2026.html`). It is a point-in-time snapshot, so re-run it after any edit to the report data. Hand the file to the user with `SendUserFile` and attach it to the ClickUp report task. A headless-Chrome `--print-to-pdf` of the same route can optionally accompany it, but the HTML is the deliverable of record.
+The export is **required, not optional** — a report without one is not delivered. Commit it under `public/` (the same convention as the audits already there): that is what makes it reachable from the internal deliverables dashboard and keeps the point-in-time snapshot in the repo. Copy the same file to the client folder for handoff.
+
+The output opens in any browser with no server (expect ~1 MB; non-Latin font subsets are dropped). Match the house filename pattern (`EverWhite-SEO-Report-August-2026.html`, `VIM-Products-SEO-Report-August-2026.html`). It is a point-in-time snapshot, so re-run it after any edit to the report data. Hand the file to the user with `SendUserFile` and attach it to the ClickUp report task. A headless-Chrome `--print-to-pdf` of the same route can optionally accompany it, but the HTML is the deliverable of record.
 
 Note on committing the skill: the report commit stays report-only (never `.claude/`). Publishing or updating the `seo-report` skill itself is a separate, deliberate commit of `.claude/skills/seo-report/**` (SKILL.md, references, `clients.json`, scripts) — do that only when asked to publish/update the skill, and keep it out of the report commit.

@@ -93,9 +93,10 @@ On the user's go-ahead: validate the build, commit (report + any shared-componen
 Then produce the **final deliverable**: export the live report to a single self-contained HTML file and hand it to the user. This HTML file is what the client receives (attached to the ClickUp report task); the Vercel link is the shareable preview.
 ```
 node scripts/export-report.mjs \
-  "http://localhost:3000/reports/<slug>/<month>-<year>" \
-  "C:/Users/busta/iCloudDrive/All In Advertising/Claude Project Hub/<Client Folder>/<Client>-SEO-Report-<Month>-<Year>.html"
+  "/reports/<slug>/<month>-<year>" \
+  "public/<client-slug>/<year>/<month>/<client-slug>-seo-report-<month>-<year>.html"
 ```
+Commit that file with the report: every kickoff deck and SEO report owes a self-contained HTML under `public/<client>/<year>/<month>/`, and a copy goes to the client folder for handoff.
 The dev server must be running for the export (it fetches the rendered route and inlines CSS/fonts/images as data URIs, strips the Next runtime, and rewires the Print/Back-to-top buttons). The file opens in any browser with no server. Name it to match the house pattern (e.g. `EverWhite-SEO-Report-August-2026.html`). Re-run the export after any report edit so the HTML matches what's live. A PDF (headless-Chrome `--print-to-pdf` of the same route) can optionally accompany it, but the HTML is the deliverable of record.
 
 ## Guardrails

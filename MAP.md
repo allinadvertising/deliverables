@@ -180,7 +180,16 @@ A third category of deliverable, separate from both LLM pipelines and the direct
 | Kickoff decks | `/kickoff/toico/v2`, `/kickoff/penelope/v2`, `/kickoff/intradyn/v2`, `/kickoff/race-parts-solutions/v2`, `/kickoff/88-gear/v2`, `/kickoff/nurtured-9/v2`, `/kickoff/awr-restoration/v2`, `/kickoff/atl-welding-supply/v2`, `/kickoff/original-clear-bra/v2`, `/kickoff/awards-atlanta/v2`, `/kickoff/raise-them-well/v2`, `/kickoff/mkm-pottery-tools/v2`, `/kickoff/big-dawg-bats/v2`, `/kickoff/rig-outfitters/v2`, `/kickoff/excell-red-light/v2`, `/kickoff/covertec-products/v2`, `/kickoff/sportsdisplays` | `src/lib/kickoff/*.ts`, all typed by `kickoff/v2-types.ts` (`toico.ts` holds the shared findings/roadmap data `toico-v2.ts` derives from) | `components/kickoff/v2/*` |
 | **Piping Now audit suite** | `/piping-now-seo-analysis` + 8 children | `src/lib/reports/pipingnow/*.ts` typed by `pipingnow/types.ts` | `components/reports/suite/*` |
 
-**Standalone HTML export** (added 2026-09-14): with the dev or prod server running, `node scripts/export-report-html.mjs <route> <output.html> [baseUrl]` saves any report route as one self-contained file (CSS inlined, Latin font subsets and local images as data URIs, Next.js scripts stripped, print/back-to-top buttons rewired with a small inline script). In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so the route is not rewritten into a Windows path.
+**Standalone HTML export** (required since 2026-09-22): every kickoff deck and SEO report ships a self-contained `.html` alongside the live route, committed under `public/<client>/<year>/<month>/` — the same place the audit deliverables already live. With the dev or prod server running:
+
+```
+node scripts/export-report.mjs <route|url> <output.html> [baseUrl]
+node scripts/export-report.mjs /reports/penelope/aug-2026 public/penelope/2026/august/penelope-seo-report-august-2026.html
+```
+
+One file holds everything: stylesheets inlined, Latin font subsets / images / favicon as data URIs, non-Latin `@font-face` rules dropped, `srcset` removed, the Next.js runtime stripped, and print / back-to-top rewired with a small inline script. Verified against a report, a kickoff deck, and a suite page (~1 MB each). A **suite page keeps its cross-page nav links relative**, so those links are dead in a single exported file — export each suite page separately, or treat the live route as the deliverable for suites. The output is a point-in-time snapshot: re-run it after any edit to the data module.
+
+In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so the route is not rewritten into a Windows path, and give the output as a Windows-style path (`C:/...`) or a repo-relative one — Node cannot write to a `/c/...` MSYS path.
 
 **Piping Now audit suite** (added 2026-08-07) is the first *multi-page* deliverable. Nine pages share one cover, one cross-page nav, and one footer via `SuiteShell`:
 

@@ -28,7 +28,7 @@ export type CompletedWorkItem = {
   completedOn: string;
   evidence: string;
   owner: string;
-  taskUrl: string;
+  taskUrl?: string;
   title: string;
 };
 
@@ -146,7 +146,10 @@ export type PerformanceChartSet = {
       }>;
       title: string;
     }>;
-    series: PerformanceComparison[];
+    // Two-period comparison bars. Omit for a first-month / baseline revenue
+    // section that has no trustworthy prior month — the rankings and context
+    // still render on their own.
+    series?: PerformanceComparison[];
     title: string;
   } & SectionPeriodLabels;
 };

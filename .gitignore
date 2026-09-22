@@ -45,3 +45,7 @@ next-env.d.ts
 
 # local dev
 dev-server.log
+
+# local working files (not deployed)
+/output/
+WHATIMDOING.md

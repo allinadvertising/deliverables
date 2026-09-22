@@ -92,7 +92,11 @@ export type KickoffV2Data = {
   };
   summary: {
     emphasis: string;
+    /** Optional bullets rendered under the emphasis line. */
+    emphasisBullets?: string[];
     lead: string;
+    /** Optional bullets rendered under the lead line. */
+    leadBullets?: string[];
     objective: string;
     objectiveLabel: string;
     title: string;

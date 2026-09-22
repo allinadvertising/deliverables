@@ -32,7 +32,7 @@ export function ReportCompletedWork({ items }: ReportCompletedWorkProps) {
         {items.map((item) => (
           <article
             className="grid gap-5 border-b border-slate-200 px-5 py-6 last:border-b-0 lg:grid-cols-[1.05fr_1.7fr_110px] lg:gap-6"
-            key={item.taskUrl}
+            key={item.title}
           >
             <div>
               <p className="mb-2 text-[11px] font-black uppercase text-[#16803d] lg:hidden">
@@ -41,14 +41,16 @@ export function ReportCompletedWork({ items }: ReportCompletedWorkProps) {
               <h3 className="mb-2 text-base font-black leading-snug text-slate-900">
                 {item.title}
               </h3>
-              <a
-                className="audit-no-print text-xs font-bold text-[#2f65a7] underline decoration-[#a8c4e8] underline-offset-4"
-                href={item.taskUrl}
-                rel="noreferrer"
-                target="_blank"
-              >
-                View ClickUp task
-              </a>
+              {item.taskUrl ? (
+                <a
+                  className="audit-no-print text-xs font-bold text-[#2f65a7] underline decoration-[#a8c4e8] underline-offset-4"
+                  href={item.taskUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  View ClickUp task
+                </a>
+              ) : null}
             </div>
             <div>
               <p className="mb-2 text-[11px] font-black uppercase text-slate-500 lg:hidden">

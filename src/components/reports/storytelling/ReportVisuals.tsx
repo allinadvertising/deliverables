@@ -7,13 +7,17 @@ import type {
 import { ReportPerformanceCharts } from "./ReportPerformanceCharts";
 
 type ReportVisualsProps = {
+  currentLabel: string;
   performanceCharts?: PerformanceChartSet;
+  previousLabel: string;
   visualSection?: ReportSectionCopy;
   visualDirections: VisualDirection[];
 };
 
 export function ReportVisuals({
+  currentLabel,
   performanceCharts,
+  previousLabel,
   visualSection,
   visualDirections,
 }: ReportVisualsProps) {
@@ -38,7 +42,11 @@ export function ReportVisuals({
       </p>
 
       {performanceCharts ? (
-        <ReportPerformanceCharts charts={performanceCharts} />
+        <ReportPerformanceCharts
+          charts={performanceCharts}
+          currentLabel={currentLabel}
+          previousLabel={previousLabel}
+        />
       ) : (
         <div className="grid gap-5 sm:grid-cols-2">
           {visualDirections.map((item, index) => (

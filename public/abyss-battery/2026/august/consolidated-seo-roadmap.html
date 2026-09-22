@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Abyss Battery - Consolidated SEO Roadmap | August 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-blue: #2f65a7;
+    --brand-blue-dark: #183b68;
+    --brand-blue-light: #eaf2fb;
+    --brand-gold: #f6b328;
+    --brand-gold-light: #fef7e8;
+    --brand-gold-dark: #d4950a;
+    --p0: #c62828; --p0-bg: #fff1f1; --p0-border: #ffc9c9;
+    --p1: #c75a12; --p1-bg: #fff5eb; --p1-border: #ffd9b7;
+    --p2: #9a6a00; --p2-bg: #fff9df; --p2-border: #f5df83;
+    --green: #16803d; --green-bg: #edf9f1;
+    --gray-50: #f8fafc; --gray-100: #f1f5f9; --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1; --gray-400: #94a3b8; --gray-500: #64748b;
+    --gray-600: #475569; --gray-700: #334155; --gray-800: #1e293b; --gray-900: #0f172a;
+    --white: #ffffff;
+    --ink: #172033;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 18px 42px rgba(15, 23, 42, 0.10);
+    --radius: 8px;
+    --page-width: 1160px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: #edf2f7; scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--ink);
+    background: linear-gradient(180deg, #eef5fc 0, #f7f9fc 420px, #edf2f7 100%);
+    line-height: 1.6;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: var(--page-width);
+    margin: 32px auto;
+    background: var(--white);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 60px 68px;
+    page-break-after: always;
+  }
+  .page.cover {
+    min-height: 640px;
+    background: linear-gradient(160deg, rgba(12, 24, 45, 0.98) 0%, rgba(24, 59, 104, 0.98) 48%, rgba(47, 101, 167, 0.95) 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 88px 72px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cover .logo-wrap img { height: 44px; filter: brightness(0) invert(1); }
+  .cover .eyebrow { font-size: 13px; text-transform: uppercase; letter-spacing: 3px; color: rgba(255,255,255,0.55); margin: 40px 0 26px; font-weight: 500; }
+  .cover .client-name { font-size: 64px; line-height: 1; font-weight: 900; margin-bottom: 12px; }
+  .cover .subtitle { font-size: 22px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  .cover .meta { margin-top: 26px; font-size: 14px; color: rgba(255,255,255,0.6); }
+  .cover .pill { display: inline-block; margin-top: 44px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 24px; padding: 8px 22px; font-size: 13px; }
+  .cover .pill strong { color: var(--brand-gold); font-weight: 700; }
+
+  h1, h2, h3 { color: var(--gray-900); }
+  h2 {
+    font-size: 30px; line-height: 1.16; font-weight: 850;
+    margin: 0 0 20px; padding-bottom: 16px;
+    border-bottom: 2px solid var(--gray-200);
+  }
+  h2::before { content: ''; display: block; width: 56px; height: 5px; background: var(--brand-gold); border-radius: 999px; margin-bottom: 14px; }
+  h3 { font-size: 21px; line-height: 1.25; font-weight: 800; margin: 30px 0 12px; }
+  p { margin-bottom: 14px; color: var(--gray-700); }
+  .lead { font-size: 19px; color: var(--gray-800); }
+  strong { color: var(--gray-900); font-weight: 700; }
+  ul { padding-left: 22px; color: var(--gray-700); }
+  li { margin-bottom: 8px; }
+  .section-label { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--brand-blue); font-weight: 700; margin: 0 0 8px; }
+
+  .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0 8px; }
+  .metric-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow-sm); }
+  .metric-card .value { font-size: 34px; font-weight: 900; color: var(--brand-blue-dark); line-height: 1.1; }
+  .metric-card .value.neg { color: var(--p0); }
+  .metric-card .value.pos { color: var(--green); }
+  .metric-card .label { font-size: 13px; color: var(--gray-500); margin-top: 6px; font-weight: 500; }
+
+  .badge { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+  .badge-p0 { background: var(--p0-bg); color: var(--p0); border: 1px solid var(--p0-border); }
+  .badge-p1 { background: var(--p1-bg); color: var(--p1); border: 1px solid var(--p1-border); }
+  .badge-p2 { background: var(--p2-bg); color: var(--p2); border: 1px solid var(--p2-border); }
+  .badge-aia { background: var(--brand-blue-light); color: var(--brand-blue); border: 1px solid #bfd6f0; }
+  .badge-client { background: var(--brand-gold-light); color: var(--brand-gold-dark); border: 1px solid #f5df83; }
+  .badge-gray { background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-300); }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid #b7e3c4; }
+
+  .exec-summary { background: var(--brand-blue-light); border-left: 5px solid var(--brand-blue); border-radius: var(--radius); padding: 22px 26px; margin: 20px 0 28px; }
+  .exec-summary p:last-child { margin-bottom: 0; }
+  .insight-box { background: var(--brand-gold-light); border: 1px solid #f5df83; border-left: 5px solid var(--brand-gold); border-radius: var(--radius); padding: 20px 24px; margin: 24px 0; }
+  .insight-box p:last-child { margin-bottom: 0; }
+
+  .severity-bar { display: flex; height: 16px; border-radius: 999px; overflow: hidden; margin: 18px 0 10px; background: var(--gray-100); }
+  .severity-bar .seg { height: 100%; }
+  .severity-legend { display: flex; gap: 22px; flex-wrap: wrap; font-size: 14px; color: var(--gray-600); margin-bottom: 24px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 18px 0 8px; font-size: 15px; }
+  th { background: var(--brand-blue-dark); color: var(--white); text-align: left; padding: 12px 14px; font-weight: 700; font-size: 13px; letter-spacing: 0.4px; text-transform: uppercase; }
+  td { padding: 13px 14px; border-bottom: 1px solid var(--gray-200); vertical-align: top; color: var(--gray-700); }
+  tr:nth-child(even) td { background: var(--gray-50); }
+  td.num { text-align: right; white-space: nowrap; font-weight: 700; color: var(--gray-900); }
+  .row-p0 td:first-child { border-left: 5px solid var(--p0); }
+  .row-p1 td:first-child { border-left: 5px solid var(--p1); }
+  .row-p2 td:first-child { border-left: 5px solid var(--p2); }
+
+  .phase { border: 1px solid var(--gray-200); border-radius: var(--radius); margin: 22px 0; overflow: hidden; box-shadow: var(--shadow-sm); }
+  .phase-header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 16px 22px; background: var(--brand-blue-dark); color: var(--white); }
+  .phase-header h3 { margin: 0; color: var(--white); font-size: 19px; }
+  .phase-header .when { font-size: 13px; color: var(--brand-gold); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .phase-header .hours { font-size: 14px; color: rgba(255,255,255,0.75); white-space: nowrap; }
+  .phase-body { padding: 6px 22px 16px; }
+  .phase-body p.goal { margin: 12px 0 8px; font-size: 15px; color: var(--gray-600); }
+  .phase-body table { margin-top: 8px; font-size: 14.5px; }
+  .phase-body th { font-size: 12px; padding: 9px 12px; background: var(--gray-100); color: var(--gray-700); }
+  .phase-body td { padding: 10px 12px; }
+
+  .finding-card { border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 22px 26px; margin: 18px 0; box-shadow: var(--shadow-sm); background: var(--white); }
+  .finding-card.p0 { border-left: 5px solid var(--p0); }
+  .finding-card.p1 { border-left: 5px solid var(--p1); }
+  .finding-card.p2 { border-left: 5px solid var(--p2); }
+  .finding-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .finding-header .ref { font-size: 13px; font-weight: 800; color: var(--gray-400); letter-spacing: 1px; }
+  .finding-title { font-size: 19px; font-weight: 800; margin: 0; color: var(--gray-900); flex: 1 1 auto; }
+  .finding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 26px; margin-top: 12px; }
+  .finding-grid .cell h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--brand-blue); font-weight: 800; margin-bottom: 4px; }
+  .finding-grid .cell p { font-size: 15px; margin-bottom: 0; }
+  .finding-grid .cell.full { grid-column: 1 / -1; }
+  .finding-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--gray-200); font-size: 13.5px; color: var(--gray-600); }
+  .finding-meta span strong { color: var(--gray-800); font-weight: 700; }
+
+  .needs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+  .need { background: var(--brand-gold-light); border: 1px solid #f5df83; border-radius: var(--radius); padding: 18px 20px; }
+  .need h4 { font-size: 16px; font-weight: 800; margin-bottom: 6px; color: var(--gray-900); }
+  .need p { font-size: 14.5px; margin-bottom: 0; }
+  .need .unlocks { display: block; margin-top: 8px; font-size: 12.5px; color: var(--brand-gold-dark); font-weight: 700; }
+
+  .legend { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 16px; }
+  .legend div { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; color: var(--gray-600); }
+  .legend div strong { display: block; margin-bottom: 4px; }
+
+  .footer { text-align: center; color: var(--gray-500); font-size: 13px; padding: 10px 0 40px; }
+  .footer img { height: 22px; opacity: 0.8; display: block; margin: 0 auto 10px; }
+
+  @media (max-width: 860px) {
+    .page { padding: 36px 24px; margin: 16px; }
+    .metrics, .finding-grid, .needs, .legend { grid-template-columns: 1fr; }
+    .cover .client-name { font-size: 44px; }
+    table { display: block; overflow-x: auto; }
+  }
+  @media print {
+    html, body { background: #fff; }
+    .page { box-shadow: none; border: none; margin: 0; padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="page cover">
+  <div class="logo-wrap"><img src="/all-in-advertising-logo.svg" alt="All In Advertising"></div>
+  <div class="eyebrow">Consolidated SEO Roadmap</div>
+  <div class="client-name">Abyss Battery</div>
+  <div class="subtitle">August 2026 &middot; Pre-replatform action plan</div>
+  <div class="meta">Prepared by Karla Guzman, SEO Strategist, All In Advertising &middot; 28 August 2026 &middot; Confidential</div>
+  <div class="pill"><strong>20 actions</strong> &middot; 122 estimated hours &middot; phased across the 90 days before the October replatform</div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="page">
+  <h2>Executive summary</h2>
+  <div class="exec-summary">
+    <p class="lead"><strong>Abyss is in an impression-led organic decline.</strong> Over the last three months Google showed the site 301,980 fewer times, a 26.0 per cent drop, while clicks held better at 4.7 per cent down because brand searches, the homepage and key product pages still offset the losses.</p>
+    <p>The root cause is fragmented URL signals: encoded slugs, http and https variants, www and non-www hosts, tracking parameters and duplicate pages are all splitting authority that should point to one address. A third-party replatform lands around October 2026. If those signals are consolidated first, the new site inherits a clean footprint. If they are not, the replatform compounds the decline.</p>
+  </div>
+
+  <div class="metrics">
+    <div class="metric-card"><div class="value neg">-301,980</div><div class="label">Impressions lost in three months (-26.0%)</div></div>
+    <div class="metric-card"><div class="value neg">7.01 &rarr; 9.40</div><div class="label">Average position, three-month window</div></div>
+    <div class="metric-card"><div class="value">334 / 1,540</div><div class="label">Pages indexed vs. not indexed</div></div>
+    <div class="metric-card"><div class="value neg">-610</div><div class="label">Clicks lost on the 36V and 24V trolling motor collections</div></div>
+    <div class="metric-card"><div class="value pos">111K</div><div class="label">AI-feature impressions, a bright spot to protect</div></div>
+    <div class="metric-card"><div class="value pos">~93 / wk</div><div class="label">Extra product clicks from 22 Merchant Center price suggestions</div></div>
+  </div>
+
+  <h3>Six things to know</h3>
+  <ul>
+    <li><strong>The decline is about visibility, not clicks yet.</strong> Impressions and average position fell hard. Clicks will follow unless the signal problems are fixed before the migration.</li>
+    <li><strong>URL fragmentation is the main technical risk before October.</strong> A 45-row redirect map, a duplicate sitemap root and a dozen parameter patterns are ready to fix now.</li>
+    <li><strong>The money cluster is 36V and 24V trolling motor batteries.</strong> Those two collections lost 610 clicks combined and carry the flagship B2C growth priority.</li>
+    <li><strong>AI visibility is real and worth keeping.</strong> Nine of the top ten AI-visible pages are blog guides. They should be refreshed in place, never moved.</li>
+    <li><strong>Merchant Center has a fast win.</strong> Twenty-two sale-price suggestions are worth about 93 clicks a week, pending your pricing approval.</li>
+    <li><strong>Dated phasing matters as much as the task list.</strong> The plan totals 122 estimated hours, so every item below has a window, an owner and a status.</li>
+  </ul>
+
+  <div class="insight-box">
+    <p class="section-label">Operating principle</p>
+    <p><strong>Consolidate before you create.</strong> Fix URL signals, blog overlap and measurement first, then build growth layers. That order is what lets the October replatform inherit cleaner signals instead of copying today's mistakes.</p>
+  </div>
+</div>
+
+<!-- PRIORITIES -->
+<div class="page">
+  <h2>How the work is prioritised</h2>
+  <p>Every action carries a priority. P0 protects the next 90 days and the migration. P1 turns consolidation into recovery. P2 is sequenced later, not worth less.</p>
+
+  <div class="severity-bar">
+    <div class="seg" style="width:41.8%;background:var(--p0);"></div>
+    <div class="seg" style="width:45.1%;background:var(--p1);"></div>
+    <div class="seg" style="width:13.1%;background:var(--brand-gold);"></div>
+  </div>
+  <div class="severity-legend">
+    <div><span class="badge badge-p0">P0</span> 10 actions &middot; 51 hrs</div>
+    <div><span class="badge badge-p1">P1</span> 8 actions &middot; 55 hrs</div>
+    <div><span class="badge badge-p2">P2</span> 2 actions &middot; 16 hrs</div>
+    <div><strong>Total</strong> 20 actions &middot; 122 hrs</div>
+  </div>
+
+  <table>
+    <thead><tr><th>Priority</th><th>What it covers</th><th>Why it sits here</th><th style="text-align:right">Hours</th></tr></thead>
+    <tbody>
+      <tr class="row-p0">
+        <td><span class="badge badge-p0">P0</span></td>
+        <td>Redirect map, sitemap root, parameter cleanup, indexation rules, renamed-SKU mapping, replatform playbook, Merchant Center price wins, AI-guide refresh, link-risk disavow, B2C reporting.</td>
+        <td>These protect signal consolidation, the fastest commercial win, migration readiness and reporting trust. Six hours on the redirect map addresses the root problem behind a 26 per cent impression collapse.</td>
+        <td class="num">51</td>
+      </tr>
+      <tr class="row-p1">
+        <td><span class="badge badge-p1">P1</span></td>
+        <td>Duplicate-intent verification, redirect and 404 cleanup, Merchant Center diagnosis and campaigns, blog consolidation, trolling collection rebuild, product modules on AI pages, dated client handoff.</td>
+        <td>These recover the money cluster and close open diagnostics. They work best once canonical targets and reporting rules are stable.</td>
+        <td class="num">55</td>
+      </tr>
+      <tr class="row-p2">
+        <td><span class="badge badge-p2">P2</span></td>
+        <td>Boating-media authority programme and two weeks of daily post-launch monitoring.</td>
+        <td>One is a growth programme that should follow link cleanup. The other waits on the October launch itself.</td>
+        <td class="num">16</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>The headline ratio</h3>
+  <p>Two estimated hours on Merchant Center price suggestions return about 93 product clicks per week. Six estimated hours on the 45-row redirect map address the root signal problem behind the impression collapse. Both sit in the first seven days.</p>
+  <p style="font-size:14px;color:var(--gray-500);">Hours are roadmap estimates for sequencing. No Developer Review with committed implementation hours has been produced yet, so figures will be confirmed at ticket creation. Work may route through AIA Dev, Shopify, the replatform team, analytics support or your team depending on access.</p>
+</div>
+
+<!-- PHASED PLAN -->
+<div class="page">
+  <h2>The plan, by window</h2>
+  <p>Four windows: the first week, the first month, the run-up to launch, and launch itself. Each window depends on the one before it being finished, not just started.</p>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div><div class="when">Days 0 to 7</div><h3>Stop the signal bleed and bank the quick win</h3></div>
+      <div class="hours">6 actions &middot; 27 hrs</div>
+    </div>
+    <div class="phase-body">
+      <p class="goal">Everything here can be done with current access and protects what still ranks. It also opens the one data request that blocks later work.</p>
+      <table>
+        <thead><tr><th>Ref</th><th>Action</th><th>Owner</th><th>Status</th><th style="text-align:right">Hrs</th></tr></thead>
+        <tbody>
+          <tr><td>01</td><td><span class="badge badge-p0">P0</span> Apply the 45-row redirect map</td><td>AIA SEO + Dev / replatform team</td><td>Open</td><td class="num">6</td></tr>
+          <tr><td>02</td><td><span class="badge badge-p0">P0</span> Consolidate the sitemap root to https://www</td><td>AIA SEO</td><td>Open</td><td class="num">2</td></tr>
+          <tr><td>09</td><td><span class="badge badge-p0">P0</span> Apply the 22 Merchant Center sale-price suggestions</td><td>AIA SEO/Paid + Client approval</td><td>Open</td><td class="num">2</td></tr>
+          <tr><td>13</td><td><span class="badge badge-p0">P0</span> Refresh the AI-visible charging and sizing guides in place</td><td>AIA SEO + Content</td><td>Open</td><td class="num">8</td></tr>
+          <tr><td>16</td><td><span class="badge badge-p0">P0</span> Build and file the PBN disavow</td><td>AIA SEO</td><td>Verify first</td><td class="num">3</td></tr>
+          <tr><td>18</td><td><span class="badge badge-p0">P0</span> Align one set of B2C-only reporting numbers</td><td>AIA SEO/Paid + Analytics</td><td>Confirm now</td><td class="num">4</td></tr>
+          <tr><td>07</td><td><span class="badge badge-p0">P0</span> Request the renamed-SKU handle pairs <em>(data request only)</em></td><td>AM + Client + replatform team</td><td>Blocked on client data</td><td class="num">3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div><div class="when">Days 7 to 30</div><h3>Clean the index and rebuild the money pages</h3></div>
+      <div class="hours">9 actions &middot; 60 hrs</div>
+    </div>
+    <div class="phase-body">
+      <p class="goal">With canonical targets stable, we resolve ambiguous duplicates, control parameters and robots rules, diagnose Merchant Center, consolidate the blog and rebuild the trolling motor collections.</p>
+      <table>
+        <thead><tr><th>Ref</th><th>Action</th><th>Owner</th><th>Status</th><th style="text-align:right">Hrs</th></tr></thead>
+        <tbody>
+          <tr><td>03</td><td><span class="badge badge-p1">P1</span> Verify duplicate-intent canonicals, then redirect</td><td>AIA SEO + Dev</td><td>Verify first</td><td class="num">4</td></tr>
+          <tr><td>04</td><td><span class="badge badge-p0">P0</span> Remove tracking and recommendation parameter URLs</td><td>AIA Dev (Shopify) + SEO</td><td>Open</td><td class="num">6</td></tr>
+          <tr><td>05</td><td><span class="badge badge-p0">P0</span> Audit noindex and robots rules at URL level</td><td>AIA SEO + Dev</td><td>Verify first</td><td class="num">5</td></tr>
+          <tr><td>06</td><td><span class="badge badge-p1">P1</span> Classify and clean redirect and 404 buckets</td><td>AIA SEO + Dev / replatform team</td><td>Open</td><td class="num">7</td></tr>
+          <tr><td>10</td><td><span class="badge badge-p1">P1</span> Diagnose Merchant Center product and feed status</td><td>AIA SEO/Paid</td><td>Confirm now</td><td class="num">5</td></tr>
+          <tr><td>11</td><td><span class="badge badge-p1">P1</span> Configure Merchant Center campaigns for 36V and reel batteries</td><td>AIA SEO/Paid</td><td>After ref 10</td><td class="num">5</td></tr>
+          <tr><td>12</td><td><span class="badge badge-p1">P1</span> Merge 21 and delete 1 overlapping blog URLs</td><td>AIA SEO + Content + Dev</td><td>Verify first</td><td class="num">10</td></tr>
+          <tr><td>14</td><td><span class="badge badge-p1">P1</span> Rebuild the 36V and 24V trolling motor collections</td><td>AIA SEO + Content</td><td>Open</td><td class="num">14</td></tr>
+          <tr><td>20</td><td><span class="badge badge-p1">P1</span> Brief the dated roadmap handoff</td><td>AM + AIA SEO</td><td>Before first report</td><td class="num">2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div><div class="when">Days 30 to 90</div><h3>Lock the migration plan and start earning authority</h3></div>
+      <div class="hours">3 actions &middot; 30 hrs</div>
+    </div>
+    <div class="phase-body">
+      <p class="goal">The replatform playbook pulls every earlier fix into one launch control document. Product modules extend AI visibility to commercial pages. Clean outreach begins only after the disavow is filed.</p>
+      <table>
+        <thead><tr><th>Ref</th><th>Action</th><th>Owner</th><th>Status</th><th style="text-align:right">Hrs</th></tr></thead>
+        <tbody>
+          <tr><td>08</td><td><span class="badge badge-p0">P0</span> Build the October replatform playbook</td><td>AIA SEO + Dev + replatform team</td><td>After refs 01, 02, 03, 07</td><td class="num">12</td></tr>
+          <tr><td>15</td><td><span class="badge badge-p1">P1</span> Add product and collection modules to AI-visible pages</td><td>AIA SEO + Content + Dev</td><td>After refs 13, 14</td><td class="num">8</td></tr>
+          <tr><td>17</td><td><span class="badge badge-p2">P2</span> Launch a boating-media authority programme</td><td>AIA SEO + Content</td><td>After ref 16</td><td class="num">10</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header">
+      <div><div class="when">October launch</div><h3>Watch the migration daily for two weeks</h3></div>
+      <div class="hours">1 action &middot; 6 hrs</div>
+    </div>
+    <div class="phase-body">
+      <p class="goal">A replatform can look clean on launch day and still lose indexation over the following fortnight. Daily checks catch redirect gaps and product submission failures while they are still fixable.</p>
+      <table>
+        <thead><tr><th>Ref</th><th>Action</th><th>Owner</th><th>Status</th><th style="text-align:right">Hrs</th></tr></thead>
+        <tbody>
+          <tr><td>19</td><td><span class="badge badge-p2">P2</span> Monitor indexation, 404s, sitemap and renamed-product submission daily</td><td>AIA SEO</td><td>Waits on launch</td><td class="num">6</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT WE NEED FROM YOU -->
+<div class="page">
+  <h2>What we need from your side</h2>
+  <p>Five inputs gate parts of this plan. None of them are large, but each one unblocks work that cannot start without it. Knowing them in advance keeps the timeline from slipping.</p>
+  <div class="needs">
+    <div class="need">
+      <h4>Old and new product handles for renamed models</h4>
+      <p>Exact URL handles for 24V75 to 2490, 3672 to 3675 and the two new 12V models. The source files do not contain them, and we will not guess redirects from product names.</p>
+      <span class="unlocks">Unlocks refs 07, 08 and 18</span>
+    </div>
+    <div class="need">
+      <h4>Pricing approval for the 22 sale-price suggestions</h4>
+      <p>Merchant Center estimates about 93 extra clicks a week. Sale prices affect margin, so we apply them only where you confirm stock and margin allow.</p>
+      <span class="unlocks">Unlocks ref 09</span>
+    </div>
+    <div class="need">
+      <h4>Merchant Center product and feed status access</h4>
+      <p>The product list, feed status and store-quality screens were not visible in our session. We need them to tell whether the organic product-click decline is ranking, eligibility or presentation.</p>
+      <span class="unlocks">Unlocks refs 10 and 11</span>
+    </div>
+    <div class="need">
+      <h4>A working line to the replatform team</h4>
+      <p>Redirect rules, sitemap generation, canonical handling and staging access all need to be agreed with the company building the new site before launch week.</p>
+      <span class="unlocks">Unlocks refs 01, 06, 08 and 19</span>
+    </div>
+    <div class="need">
+      <h4>Confirmation of the B2B exclusion rule</h4>
+      <p>Reporting across Shopify, GA4 and Google Ads stays B2B-excluded with a B2C ROAS goal around 7 to 8x. We will document one agreed number set before the first roadmap report.</p>
+      <span class="unlocks">Unlocks ref 18</span>
+    </div>
+    <div class="need">
+      <h4>Blog publish dates and CMS review</h4>
+      <p>Publish dates were not in the exports. A short CMS review confirms which overlapping blog posts are merged and which is preserved as the hub.</p>
+      <span class="unlocks">Unlocks ref 12</span>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP ITEMS: CRAWL AND INDEX -->
+<div class="page">
+  <h2>Every action in detail</h2>
+  <p>Twenty actions grouped by theme. Each one states what we found, what we will do, what you get, and who does it. Numbers marked confirmed come directly from the August audits.</p>
+
+  <h3 class="section-label" style="margin-top:34px;">Crawl and index health</h3>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 01</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Apply the 45-row redirect map</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Encoded trademark symbols, http and https variants, www and non-www hosts, parameter URLs and off-taxonomy paths split ranking signals. The URL audit produced a 45-row deterministic 301 map, including 29 encoded product, page and blog slugs.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Apply the 45 redirects in Shopify or at the replatform edge, then verify every source redirects once to a live https://www page. Ambiguous pairs stay out until direction is verified.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Duplicate URL signals consolidate before the new platform inherits the current search footprint.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + AIA Dev or replatform team</span><span><strong>Effort:</strong> 6 hrs</span><span><strong>Window:</strong> Days 0 to 7</span><span><strong>Status:</strong> Open. Do first. Blocks refs 03, 08 and 19.</span></div>
+  </div>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 02</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Consolidate the sitemap root</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Both the http and https sitemap roots are submitted in Search Console, and www and non-www homepage variants both carry search data. Forty CDN asset URLs still resolve over http.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Submit only the https://www sitemap root, remove the http submission and confirm every child sitemap serves over https. Historical variants are carried through redirects, not dropped.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Google receives one canonical sitemap root and one preferred host before the replatform, which also makes pre- and post-launch comparisons clean.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO</span><span><strong>Effort:</strong> 2 hrs</span><span><strong>Window:</strong> Days 0 to 7</span><span><strong>Status:</strong> Open. Do alongside ref 01.</span></div>
+  </div>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 03</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Verify duplicate-intent canonicals</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Pairs such as privacy policy page versus policy endpoint, return versus refund policy, and word-order or brand-prefix variants of the 12V 120Ah, 48V 105Ah, 24V 100Ah and 36V 60Ah products compete for the same queries with no verified winner.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Crawl and inspect each pair, choose the canonical target from GSC data, canonicals, internal links and live content, then append only verified 301s to the map.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Each product and policy intent resolves to one page before migration, so the new site does not carry two pages for one product.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + AIA Dev</span><span><strong>Effort:</strong> 4 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> Verify first. Waits on ref 01.</span></div>
+  </div>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 04</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Remove tracking parameter URLs</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Variant, country, currency, UTM, review-app and recommendation parameters generate non-canonical URLs that carry search data and consume crawl budget. Collections paginate to page 9 and the blog to page 32.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Strip, canonicalise or noindex tracking and recommendation parameters while keeping real products, collections and blogs crawlable. No pattern is blocked until samples confirm it is not the only reachable product state.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Google spends less time on generated variants and more on canonical product, collection and blog URLs, and the 1,540 not-indexed count starts to reflect the real site.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA Dev (Shopify) + AIA SEO</span><span><strong>Effort:</strong> 6 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> Open. After refs 01 and 02.</span></div>
+  </div>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 05</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Audit noindex and robots rules</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Search Console shows 240 pages excluded by noindex, 103 blocked by robots.txt and 5 indexed despite being blocked. With only 334 pages indexed, broad rules may be hiding useful content along with junk.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Export both URL lists, classify each as legitimate content, duplicate, parameter, tag, pagination or utility, and lift blocks only where true content is affected.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Useful pages become indexable while low-value variants stay controlled, and the new site does not copy stale rules.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + AIA Dev</span><span><strong>Effort:</strong> 5 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> Verify first. After refs 01, 02 and 04.</span></div>
+  </div>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 06</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Review redirect and 404 buckets</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Search Console reports 267 redirecting pages, 251 canonical alternates and 45 not-found URLs. Ahrefs corroborates with 278 redirects, 76 404s and 324 other 4XX responses across 1,276 crawled pages.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Classify each URL by value and source, remove internal links to dead or redirected addresses, and add specific 301s only where a live equivalent exists. No bulk redirect to the homepage.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>The replatform starts with cleaner redirects, fewer dead URLs and no internal links pointing at non-final addresses.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + AIA Dev or replatform team</span><span><strong>Effort:</strong> 7 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> Open. Informed by refs 01, 03 and 07.</span></div>
+  </div>
+</div>
+
+<!-- PRODUCT SURFACE -->
+<div class="page">
+  <h3 class="section-label" style="margin-top:0;">Product surface and Merchant Center</h3>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 07</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Request renamed-SKU handle pairs</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>24V75 was replaced by 2490, 3672 was renamed 3675 on a new URL, and two new 12V models arrived in August. None of the new handles appear in the source files, so no redirects can be built yet.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Collect the exact old and new handle pairs from your team or the replatform team, then append deterministic 301s and Merchant Center verification checks. We will not invent rows from product names.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Renamed products keep their indexing and Popular Products visibility through the migration instead of restarting from zero.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AM + Client + replatform team</span><span><strong>Effort:</strong> 3 hrs</span><span><strong>Window:</strong> Request in days 0 to 7</span><span><strong>Status:</strong> Blocked on client data. Blocks refs 08 and 18.</span></div>
+  </div>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 09</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Apply sale-price suggestions</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Merchant Center shows 3.04K product clicks in the last 28 days, down 6.6 per cent, and flags 22 sale-price suggestions with an estimated gain of about 93 clicks per week.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Review the 22 suggestions with you, apply them where margin and stock allow, and confirm click movement in Merchant Center afterwards.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>A near-term product-click gain that supports Popular Products and B2C growth while the deeper organic fixes are still in progress.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO/Paid + Client approval</span><span><strong>Effort:</strong> 2 hrs</span><span><strong>Window:</strong> Days 0 to 7</span><span><strong>Status:</strong> Open. Needs pricing approval.</span></div>
+  </div>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 10</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Diagnose Merchant Center feed status</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Organic product clicks are down 6.9 per cent while ad-driven clicks grew 29.4 per cent. The product status, feed status and store-quality screens were not visible in the captured session.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Open the product and data-source views, confirm approved, limited and disapproved counts, and inspect the 36V and 48V priority products first.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Merchant Center work tied to actual eligibility and feed issues rather than a top-line click number.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO/Paid</span><span><strong>Effort:</strong> 5 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> Confirm now. Needs feed-screen access.</span></div>
+  </div>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 11</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Configure Merchant Center campaigns</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Merchant Center shows no linked ad campaigns and five pending notifications, even though paid media has pivoted to 36V batteries and electric fishing reel batteries on a roughly 3K to 5K monthly budget.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Confirm or configure the Google Ads link for the 36V and reel-battery priorities, clear the pending notifications, and keep B2B traffic excluded from campaign reporting.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Paid product visibility that protects B2C revenue on the same product categories organic needs to recover.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO/Paid</span><span><strong>Effort:</strong> 5 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> After ref 10 and the reporting rules in ref 18.</span></div>
+  </div>
+</div>
+
+<!-- CONTENT AND DEMAND -->
+<div class="page">
+  <h3 class="section-label" style="margin-top:0;">Content and demand</h3>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 12</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Merge overlapping blog URLs</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Among 146 blog URLs there are 46 URL-query overlap pairs across 12 intent clusters. The 24 volt lithium trolling motor battery query alone maps to 20 blog posts. The blog lost 332 clicks and 199,715 impressions in three months.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Execute 21 merges and 1 deletion after checking inbound links and publish dates, and redirect each spoke to its cluster hub. The strongest URL is always the one preserved.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Blog authority concentrates on fewer pages that support product and collection rankings instead of competing with them.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + Content + AIA Dev</span><span><strong>Effort:</strong> 10 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> Verify first. Needs CMS publish dates.</span></div>
+  </div>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 13</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Refresh the AI-visible charging guides</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>The site earned 111K AI-feature impressions and nine of the top ten AI-visible pages are blog guides. The two top charging guides alone carry 8,390 and 6,769 AI impressions, yet they sit inside declining clusters.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Refresh the charging guide, mistakes-to-avoid guide and sizing guide with 2026 product specifics, 36V and 48V recommendations, FAQ blocks, internal links and product modules. URLs stay exactly as they are.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Pages AI features already cite become stronger paths to your products without risking the visibility they hold today.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + Content</span><span><strong>Effort:</strong> 8 hrs</span><span><strong>Window:</strong> Days 0 to 7</span><span><strong>Status:</strong> Open.</span></div>
+  </div>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 14</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Rebuild the priority trolling collections</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Collection pages lost 790 clicks and 89,017 impressions in three months. The 36V trolling motor collection lost 349 clicks and the 24V collection 261. The query trolling motor battery slid 15 positions and lithium boat batteries slid 16.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Rebuild the 36V and 24V collection pages and top products against the queries with the worst position losses, using copy, FAQs, specs, comparison tables and product modules, then link the refreshed blog hubs into them.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>The flagship collections regain relevance for the marine battery searches that drive B2C growth, and blog posts stop owning transactional intent.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + Content</span><span><strong>Effort:</strong> 14 hrs</span><span><strong>Window:</strong> Days 7 to 30</span><span><strong>Status:</strong> Open. Starts once ref 01 is underway.</span></div>
+  </div>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 15</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Add product modules to AI-visible pages</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>AI visibility is blog-led. Of the top ten AI-visible pages, the homepage is the only non-blog entry. No product, collection or charger page appears.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Add product and collection modules, structured specs, FAQs and schema to the top ten AI-visible posts, then extend the same structure to the 36V product and collection pages.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Informational AI visibility turns into shopping paths that point users and crawlers at the priority products.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + Content + AIA Dev</span><span><strong>Effort:</strong> 8 hrs</span><span><strong>Window:</strong> Days 30 to 90</span><span><strong>Status:</strong> After refs 13 and 14.</span></div>
+  </div>
+
+  <div class="finding-card p2">
+    <div class="finding-header"><span class="ref">REF 17</span><span class="badge badge-p2">P2</span><h4 class="finding-title">Build boating-media authority links</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Abyss holds a Domain Rating of 45 with 678 live referring domains and 423 organic keywords, while niche competitors hold 505 to 645 keywords. Existing earned links include PRNewswire, Discover Boating, IBEX, Florida Sportsman and Fish307.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Run a digital PR programme aimed at boating media, fishing guides, tournaments, charter sponsors and marine battery education. No generic link volume.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Authority that lifts 36V, 48V, charger and fishing-reel product rankings once the technical foundation is fixed.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + Content</span><span><strong>Effort:</strong> 10 hrs</span><span><strong>Window:</strong> Days 30 to 90</span><span><strong>Status:</strong> Open. Starts after the disavow in ref 16.</span></div>
+  </div>
+</div>
+
+<!-- RISK, GOVERNANCE, MONITORING -->
+<div class="page">
+  <h3 class="section-label" style="margin-top:0;">Account risk, governance and monitoring</h3>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 16</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Build the PBN disavow file</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Ahrefs flags 11 spam referring domains, a comment-spam cluster, and a live private blog network campaign with 29 referring domains and 44 dofollow links first seen between 4 and 13 August 2026.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Build and submit a disavow file covering the spam domains and both anchor clusters. Legitimate boating, fishing, sponsor, PR and directory links are left untouched.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>A clean link graph before the migration changes URL signals and before new outreach begins.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO</span><span><strong>Effort:</strong> 3 hrs</span><span><strong>Window:</strong> Days 0 to 7</span><span><strong>Status:</strong> Verify first. Before the ref 08 launch handoff.</span></div>
+  </div>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 08</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Build the October replatform playbook</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>A third-party replatform lands around October 2026 with AIA responsible for technical checks, URL mapping and migration recommendations. The next 90 days decide whether it repairs or compounds the 26 per cent impression decline.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Deliver a playbook with the full URL inventory, extended redirect map, pre-launch technical checklist, launch-day checks, ownership notes and a post-launch verification plan. URL mapping is never a launch-week task.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>A migration control plan in place before the separate build team goes live.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO + AIA Dev + replatform team</span><span><strong>Effort:</strong> 12 hrs</span><span><strong>Window:</strong> Days 30 to 90</span><span><strong>Status:</strong> After refs 01, 02, 03 and 07.</span></div>
+  </div>
+
+  <div class="finding-card p0">
+    <div class="finding-header"><span class="ref">REF 18</span><span class="badge badge-p0">P0</span><h4 class="finding-title">Align B2C reporting numbers</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>Reporting must stay B2B-excluded across Shopify, GA4 and Google Ads, with a B2C ROAS goal around 7 to 8x. Merchant Center currently shows two conflicting click deltas, plus 19.7 per cent and minus 6.6 per cent, for the same window.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Reconcile the Merchant Center figures, document the single number used for decisions, and keep every monthly report B2B-excluded. Organic performance is never mixed with paid or B2B revenue claims.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>One disciplined B2C performance story across SEO, paid and product surfaces.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO/Paid + Analytics support</span><span><strong>Effort:</strong> 4 hrs</span><span><strong>Window:</strong> Days 0 to 7</span><span><strong>Status:</strong> Confirm now. Before the first roadmap report.</span></div>
+  </div>
+
+  <div class="finding-card p1">
+    <div class="finding-header"><span class="ref">REF 20</span><span class="badge badge-p1">P1</span><h4 class="finding-title">Brief the dated roadmap handoff</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>On-schedule delivery is the explicit expectation for this engagement, and the next two months are being delivered as goodwill. Schedule discipline is part of the deliverable.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Send a dated handoff separating the four windows above and naming every item that waits on your input or the replatform team. No undated task lists.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>You see what will happen, when, and what is needed from your side.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AM + AIA SEO</span><span><strong>Effort:</strong> 2 hrs</span><span><strong>Window:</strong> Before the first report</span><span><strong>Status:</strong> Update once ref 08 is drafted.</span></div>
+  </div>
+
+  <div class="finding-card p2">
+    <div class="finding-header"><span class="ref">REF 19</span><span class="badge badge-p2">P2</span><h4 class="finding-title">Monitor post-launch indexation health</h4></div>
+    <div class="finding-grid">
+      <div class="cell"><h4>What we found</h4><p>The migration needs daily checks on indexation, 404s, sitemap health and renamed-product submission. The August baseline is 334 indexed pages, 1,540 not indexed and 45 not-found URLs.</p></div>
+      <div class="cell"><h4>What we will do</h4><p>Validate indexation, 404s, sitemap submission, redirect behaviour and Merchant Center product submission every day for the first two weeks after launch, against the August baseline.</p></div>
+      <div class="cell full"><h4>What you get</h4><p>Migration defects are found while they are still fresh and fixable, and the launch report shows exactly what moved.</p></div>
+    </div>
+    <div class="finding-meta"><span><strong>Owner:</strong> AIA SEO</span><span><strong>Effort:</strong> 6 hrs</span><span><strong>Window:</strong> October launch</span><span><strong>Status:</strong> Waits on refs 08 and 15 and the launch date.</span></div>
+  </div>
+</div>
+
+<!-- EVIDENCE AND SCOPE -->
+<div class="page">
+  <h2>How to read this roadmap</h2>
+  <p>This document is the consolidation, sequencing and handoff view. The Abyss Battery Deep SEO Analysis remains the evidence record, and every figure here is carried from the August 2026 source audits captured on 27 and 28 August. No independent live verification was performed while building the roadmap.</p>
+
+  <div class="legend">
+    <div><strong>Confirmed</strong>The source audit showed it directly. Every count and percentage in this document is confirmed unless noted.</div>
+    <div><strong>Inferred</strong>The source supported the pattern but did not prove causation. Applies to a few plain redirect targets and the blog query-to-URL linkage.</div>
+    <div><strong>Open</strong>The needed check or export was not available. Listed below so nothing is presented as settled when it is not.</div>
+  </div>
+
+  <h3>What is still open</h3>
+  <ul>
+    <li><strong>Renamed-SKU handle pairs.</strong> Confirmed as a problem, but the exact old and new handles are not in any source file.</li>
+    <li><strong>Merchant Center product and feed status.</strong> Overview metrics are confirmed. The product list, feed status and store-quality screens were not visible.</li>
+    <li><strong>Full Search Console URL exports per reason bucket.</strong> Bucket counts are confirmed. URL-level lists are exported inside refs 05 and 06.</li>
+    <li><strong>Canonical direction for ambiguous duplicate pairs.</strong> Settled by a crawl in ref 03, never by naming preference.</li>
+    <li><strong>Ahrefs organic estimates.</strong> Treated as directional because Ahrefs displayed a ranking-data disruption banner. Search Console is the source of truth for organic performance.</li>
+    <li><strong>Blog publish dates.</strong> Not in the exports. A CMS review precedes any merge or deletion.</li>
+  </ul>
+
+  <h3>What was deliberately left out</h3>
+  <ul>
+    <li><strong>Homepage and brand query growth</strong> is protected through redirects and monitoring rather than opened as a growth task, because it is the offset keeping clicks stable.</li>
+    <li><strong>The fishing-locations lifestyle post</strong>, despite 4,921 AI impressions, has weak purchase intent and is evaluated inside blog consolidation only.</li>
+    <li><strong>Broad Merchant Center feed fixes</strong> wait until the feed status screens are visible and diagnosed in ref 10.</li>
+    <li><strong>Trailing-slash normalisation</strong> was found only at root level and is covered by refs 01 and 02.</li>
+  </ul>
+
+  <h3>Comparison windows</h3>
+  <table>
+    <thead><tr><th>Source</th><th>Window</th></tr></thead>
+    <tbody>
+      <tr><td>Search Console, 28 days</td><td>28 July to 24 August 2026 versus 30 June to 27 July 2026</td></tr>
+      <tr><td>Search Console, three months</td><td>1 May to 31 July 2026 versus 1 February to 30 April 2026</td></tr>
+      <tr><td>AI visibility</td><td>26 May to 25 August 2026</td></tr>
+      <tr><td>Merchant Center</td><td>28 days ending 27 August 2026</td></tr>
+      <tr><td>Ahrefs</td><td>Captured 28 August 2026</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:28px;font-size:14px;color:var(--gray-500);">Engagement context: SEO service at USD 3,000 monthly and Google Ads at USD 2,000 monthly, both active since 17 November 2025. Client contacts: Mike Blount, Director of Marketing; Nick Vasilaros, Owner; Jason Malartsik, Director of Operations. Account Manager: Nick Roberto. Next step: Developer Review to commit implementation hours, then ticket creation using the ref numbers in this document.</p>
+</div>
+
+<div class="footer">
+  <img src="/all-in-advertising-logo.svg" alt="All In Advertising">
+  Prepared by All In Advertising &middot; Abyss Battery Consolidated SEO Roadmap &middot; August 2026
+</div>
+
+</body>
+</html>

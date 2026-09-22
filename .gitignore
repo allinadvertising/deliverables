@@ -49,3 +49,6 @@ dev-server.log
 # local working files (not deployed)
 /output/
 WHATIMDOING.md
+
+# codebase-memory index (machine-local, keyed to an absolute path)
+/.codebase-memory/

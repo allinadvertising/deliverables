@@ -46,3 +46,6 @@ next-env.d.ts
 # local working files (not deployed)
 /output/
 WHATIMDOING.md
+
+# pulled client data (GSC/GA4/ClickUp/store) - never publish
+/output/

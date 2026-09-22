@@ -28,9 +28,23 @@ export function KickoffV2Summary({ summary }: KickoffV2SummaryProps) {
           <p className="text-[18px] leading-[1.65] text-[#526068]">
             {summary.lead}
           </p>
+          {summary.leadBullets?.length ? (
+            <ul className="mt-3 list-disc space-y-2 pl-6 text-[17px] leading-[1.6] text-[#526068]">
+              {summary.leadBullets.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : null}
           <p className="mt-5 text-[18px] font-bold leading-[1.6] text-[#051920]">
             {summary.emphasis}
           </p>
+          {summary.emphasisBullets?.length ? (
+            <ul className="mt-3 list-disc space-y-2 pl-6 text-[17px] font-semibold leading-[1.6] text-[#051920]">
+              {summary.emphasisBullets.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </div>
     </section>

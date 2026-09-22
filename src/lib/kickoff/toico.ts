@@ -1,9 +1,3 @@
-export type KickoffMetric = {
-  label: string;
-  note: string;
-  value: string;
-};
-
 export type KickoffFinding = {
   evidence: string;
   response: string;
@@ -19,41 +13,6 @@ export type RoadmapMonth = {
   theme: string;
   work: string[];
 };
-
-export type MonthOneTask = {
-  doneWhen: string;
-  estimate: string;
-  owner: string;
-  task: string;
-};
-
-export const kickoffMetrics: KickoffMetric[] = [
-  {
-    value: "2,308",
-    label: "URLs with the newsletter H1",
-    note: "A single Stencil template correction addresses the broadest heading defect.",
-  },
-  {
-    value: "26,632",
-    label: "Near-duplicate relationships",
-    note: "1,163 indexable URLs need differentiation, consolidation, or exclusion.",
-  },
-  {
-    value: "473",
-    label: "Priority orphan URLs",
-    note: "These clean, indexable URLs appear in both Search Console and sitemap orphan data.",
-  },
-  {
-    value: "32%",
-    label: "Estimated organic traffic decline",
-    note: "Competitor analysis shows traffic falling from 544 to 368.",
-  },
-  {
-    value: "46",
-    label: "Mobile performance score",
-    note: "Mobile performance trails the strong desktop score of 89.",
-  },
-];
 
 export const kickoffFindings: KickoffFinding[] = [
   {
@@ -139,37 +98,6 @@ export const roadmapMonths: RoadmapMonth[] = [
   },
 ];
 
-export const monthOneTasks: MonthOneTask[] = [
-  {
-    task: "Repair sitewide heading templates",
-    owner: "Development + SEO",
-    estimate: "17h",
-    doneWhen:
-      "Newsletter, footer, review, and filter labels use appropriate elements; the homepage has one descriptive H1; template recrawl is clean.",
-  },
-  {
-    task: "Normalize malformed product URLs",
-    owner: "Development",
-    estimate: "10h",
-    doneWhen:
-      "Internal components stop emitting double-slash SKU or com_cvv variants and clean product URLs remain canonical.",
-  },
-  {
-    task: "Declare the active sitemap",
-    owner: "SEO",
-    estimate: "2h",
-    doneWhen:
-      "robots.txt references the live sitemap and the submitted endpoint contains preferred URLs.",
-  },
-];
-
-export const kickoffOutcomes = [
-  "One descriptive H1 on each representative template.",
-  "No crawlable double-slash SKU or com_cvv product links.",
-  "A ranked queue for the 473 strongest orphan opportunities.",
-  "Clear ownership and evidence for every monthly release.",
-];
-
 export const kickoffDecisions = [
   {
     label: "Approve Month 1 scope",
@@ -185,23 +113,5 @@ export const kickoffDecisions = [
     label: "Provide required access",
     detail:
       "BigCommerce admin, active Stencil theme code, robots.txt controls, Search Console, and the crawl environment.",
-  },
-];
-
-export const kickoffSources = [
-  {
-    label: "Technical and content SEO audit",
-    detail: "Executive summary and full audit workbook, July 2026",
-    href: "https://docs.google.com/spreadsheets/d/1xv5H9aL87OJICLqgFvS2A12dK9iFR1K5N4okjy0fxEM/edit?usp=sharing",
-  },
-  {
-    label: "Google Search Console audit",
-    detail: "Coverage, sitemap, canonical, and not-found analysis",
-    href: "https://deliverables-pearl.vercel.app/audit?token=5d1cb8a4-5558-4597-9f91-766dd89f8741",
-  },
-  {
-    label: "Competitor analysis",
-    detail: "Traffic contraction, content gaps, and search-demand opportunities",
-    href: "https://deliverables-pearl.vercel.app/audit?token=0e3b1dda-b764-456e-8d66-edf475d84a89",
   },
 ];

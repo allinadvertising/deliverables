@@ -177,7 +177,7 @@ A third category of deliverable, separate from both LLM pipelines and the direct
 |---|---|---|---|
 | Monthly SEO story reports | `/reports/{client}/{period}` | `src/lib/reports/*.ts` typed by `reports/types.ts` | `components/reports/storytelling/*` via `SeoStoryReport` |
 | Revenue reports | `/reports/sportsdisplays/may-jul-2026` | `reports/revenue-types.ts` | `components/reports/revenue/*` |
-| Kickoff decks | `/kickoff/toico/v2`, `/kickoff/penelope/v2`, `/kickoff/intradyn/v2`, `/kickoff/race-parts-solutions/v2`, `/kickoff/88-gear/v2`, `/kickoff/nurtured-9/v2`, `/kickoff/awr-restoration/v2`, `/kickoff/atl-welding-supply/v2`, `/kickoff/original-clear-bra/v2`, `/kickoff/awards-atlanta/v2`, `/kickoff/raise-them-well/v2`, `/kickoff/mkm-pottery-tools/v2`, `/kickoff/big-dawg-bats/v2`, `/kickoff/rig-outfitters/v2`, `/kickoff/excell-red-light/v2`, `/kickoff/covertec-products/v2`, `/kickoff/sportsdisplays` | `src/lib/kickoff/*.ts`, all typed by `kickoff/v2-types.ts` (`toico.ts` holds the shared findings/roadmap data `toico-v2.ts` derives from) | `components/kickoff/v2/*` |
+| Kickoff decks | `/kickoff/{client}/v2` — 20 of them; `/kickoff/sportsdisplays` is the one exception, serving v2 data from a non-`/v2` path because the link is already out with the client | `src/lib/kickoff/*.ts`, all typed by `kickoff/v2-types.ts` (`toico.ts` holds the shared findings/roadmap data `toico-v2.ts` derives from) | `components/kickoff/v2/*` |
 | **Piping Now audit suite** | `/piping-now-seo-analysis` + 8 children | `src/lib/reports/pipingnow/*.ts` typed by `pipingnow/types.ts` | `components/reports/suite/*` |
 
 **Standalone HTML export** (required since 2026-09-22): every kickoff deck and SEO report ships a self-contained `.html` alongside the live route, committed under `public/<client>/<year>/<month>/` — the same place the audit deliverables already live. With the dev or prod server running:
@@ -190,6 +190,18 @@ node scripts/export-report.mjs /reports/penelope/aug-2026 public/penelope/2026/a
 One file holds everything: stylesheets inlined, Latin font subsets / images / favicon as data URIs, non-Latin `@font-face` rules dropped, `srcset` removed, the Next.js runtime stripped, and print / back-to-top rewired with a small inline script. Verified against a report, a kickoff deck, and a suite page (~1 MB each). A **suite page keeps its cross-page nav links relative**, so those links are dead in a single exported file — export each suite page separately, or treat the live route as the deliverable for suites. The output is a point-in-time snapshot: re-run it after any edit to the data module.
 
 In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so the route is not rewritten into a Windows path, and give the output as a Windows-style path (`C:/...`) or a repo-relative one — Node cannot write to a `/c/...` MSYS path.
+
+**Deliverables registry and dashboard** (added 2026-09-22). `src/lib/deliverables/registry.ts` is the list of every deliverable above — the authoritative one, so prefer it to any route list written out in prose. Each entry imports the deliverable's own data module and reads the client, headline and period label out of it; only `href`, `periodEnd` (ISO, and the sort key — the period labels are free text) and `exportHref` are stated in the registry itself.
+
+| Piece | Path | Notes |
+|---|---|---|
+| Registry + types | `src/lib/deliverables/{registry,types}.ts` | 34 entries covering 42 routes; a suite's child pages roll up into its hub entry |
+| Dashboard | `/deliverables` — `src/app/deliverables/{page,DeliverablesList}.tsx` | Grouped by client, newest first, kind filter + search. Login-gated in `proxy.ts` because it aggregates every client's links |
+| Drift guard | `scripts/check-deliverables-registry.mjs` | `npm run check:deliverables`, and `prebuild` — so it runs on every build, including Vercel's |
+
+**Adding a deliverable** means three things, and the guard fails the build until all three are true: the route exists, it has a registry entry, and (since the export rule) that entry's `exportHref` resolves to a committed file under `public/`. The guard also rejects an entry pointing at a route that does not exist, a duplicate href, and a kickoff deck whose engagement-window meta label is none of `Period` / `Window` / `Quarter` — the registry reads those three, and a fourth would render an empty period rather than erroring.
+
+The 34 deliverables that predate the export rule are listed as a **closed snapshot** in the guard and are exempt; do not extend that list. A date test cannot replace it: a kickoff deck's `periodEnd` is the end of a *forward-looking* engagement window, so dating the rule would exempt nothing and flag every deck.
 
 **Piping Now audit suite** (added 2026-08-07) is the first *multi-page* deliverable. Nine pages share one cover, one cross-page nav, and one footer via `SuiteShell`:
 

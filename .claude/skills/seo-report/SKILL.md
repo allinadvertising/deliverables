@@ -88,9 +88,11 @@ Everything else is delivered and closed. The blockers are: <N> sign-offs, <N> ac
 ```
 
 ### 7. Deploy and deliver the HTML (only after explicit approval) → read `references/deploy.md`
-On the user's go-ahead: validate the build, commit (report + any shared-component change as separate commits), rebase onto `origin/main`, push, and poll the production URL until the new version is live. That reference has the exact git sequence and the known local-build caveat (the Supabase route fails locally; TypeScript compiling is the real signal).
+On the user's go-ahead: add the report's line to `src/lib/deliverables/registry.ts`, export the HTML, validate the build, commit (report + any shared-component change as separate commits), rebase onto `origin/main`, push, and poll the production URL until the new version is live. That reference has the exact git sequence and the known local-build caveat (the Supabase route fails locally; TypeScript compiling is the real signal).
 
-Then produce the **final deliverable**: export the live report to a single self-contained HTML file and hand it to the user. This HTML file is what the client receives (attached to the ClickUp report task); the Vercel link is the shareable preview.
+**Export before you build.** `npm run build` now starts with a registry guard that fails when the report has no registry entry, or when its `exportHref` names a file that is not committed under `public/`. Producing the export last will simply fail the build.
+
+The export is the **final deliverable**: a single self-contained HTML file. This is what the client receives (attached to the ClickUp report task); the Vercel link is the shareable preview.
 ```
 node scripts/export-report.mjs \
   "/reports/<slug>/<month>-<year>" \

@@ -4,12 +4,25 @@ The repo is connected to Vercel and auto-deploys `main` to production at **`http
 
 **Do not run any of this until the user has seen the local render and explicitly approved publishing.** Pushing to `main` publishes to a public, no-login URL — treat it as an outward-facing action.
 
-## 1. Validate the build won't break the deploy
+## 1. Register the report, then validate the build
 
-Run a production build to catch type errors before pushing:
+Every deliverable is listed in `src/lib/deliverables/registry.ts`, which backs the internal `/deliverables` dashboard. Add one line for the new report next to the others — the mapper reads the client, headline and period label out of the report's own data module, so all you state is the route, the ISO end date of the period, and the export you are about to produce (step 5):
+```ts
+  fromReport(<slug><Month><Year>Report, {
+    exportHref: "/<client-slug>/<year>/<month>/<client-slug>-seo-report-<month>-<year>.html",
+    href: "/reports/<slug>/<month>-<year>",
+    periodEnd: "<YYYY-MM-DD>",
+  }),
+```
+
+Then run a production build to catch type errors before pushing:
 ```
 npm run build
 ```
+The build starts with `prebuild`, the registry guard. If it stops there — "has no registry entry", or "points at a missing export" — that is **not** the known Supabase failure below: the report is missing its registry line or its exported HTML, and neither the build nor the deploy will proceed until both exist. `npm run check:deliverables` runs the same check on its own.
+
+**Order matters now:** the guard checks that the `exportHref` file exists, so produce the export (step 5) *before* this build, not after it. The export only needs the dev server, so it can be done at any point once the report renders locally.
+
 Expect it to **fail locally** at a Supabase-dependent route (`/html-audits/...`) with "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY" — those env vars exist on Vercel but not locally, so this failure is normal and unrelated to the report. What matters is the line above it: **"Running TypeScript … Finished TypeScript"** must pass. If TypeScript compiles and the report rendered in dev, the Vercel build will succeed. A TypeScript *error* (not the Supabase one) must be fixed before pushing.
 
 ## 2. Commit

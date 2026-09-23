@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/check-deliverables-registry.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:deliverables": "node scripts/check-deliverables-registry.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

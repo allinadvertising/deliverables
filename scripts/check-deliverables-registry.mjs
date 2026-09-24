@@ -203,19 +203,19 @@ for (const entry of entries) {
 for (const entry of entries) {
   if (entry.kind !== "kickoff") continue;
 
-  const module = moduleFor(source, entry.symbol);
-  if (!module || !existsSync(module)) {
+  const modulePath = moduleFor(source, entry.symbol);
+  if (!modulePath || !existsSync(modulePath)) {
     fail(`Could not find the data module imported as ${entry.symbol}.`);
     continue;
   }
 
-  const deck = readFileSync(module, "utf8");
+  const deck = readFileSync(modulePath, "utf8");
   const labels = [...deck.matchAll(/label:\s*"([^"]+)"/g)].map((m) =>
     m[1].toLowerCase(),
   );
   if (!labels.some((label) => WINDOW_LABELS.includes(label))) {
     fail(
-      `${entry.href} labels its engagement window with none of ${WINDOW_LABELS.join(", ")}, so the dashboard would show no period. Rename the meta label in ${module}, or teach fromKickoff the new one.`,
+      `${entry.href} labels its engagement window with none of ${WINDOW_LABELS.join(", ")}, so the dashboard would show no period. Rename the meta label in ${modulePath}, or teach fromKickoff the new one.`,
     );
   }
 }

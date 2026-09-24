@@ -32,19 +32,28 @@ import { sportsDisplaysKickoffV2 } from "@/lib/kickoff/sportsdisplays-v2";
 import { toicoKickoffV2 } from "@/lib/kickoff/toico-v2";
 import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 import { agDieselJunAug2026Report } from "@/lib/reports/ag-diesel-jun-aug-2026";
+import { bellaCoreAugust2026Report } from "@/lib/reports/bella-core-august-2026";
 import { buriedTreasureFossilsAugust2026Report } from "@/lib/reports/buried-treasure-fossils-august-2026";
 import { evChargeSolutionsAugust2026Report } from "@/lib/reports/ev-charge-solutions-august-2026";
 import { everwhiteAugust2026Report } from "@/lib/reports/everwhite-august-2026";
 import { fossilAgeMineralsAugust2026Report } from "@/lib/reports/fossil-age-minerals-august-2026";
+import { modernSlcAugust2026Report } from "@/lib/reports/modern-slc-august-2026";
+import { mossAcresAugust2026Report } from "@/lib/reports/moss-acres-august-2026";
+import { northlandVisionsAugust2026Report } from "@/lib/reports/northland-visions-august-2026";
+import { patientSafetyAugust2026Report } from "@/lib/reports/patient-safety-august-2026";
 import { penelopeAug2026Report } from "@/lib/reports/penelope-aug-2026";
 import { hubMeta } from "@/lib/reports/pipingnow/hub";
 import type { SuiteMeta } from "@/lib/reports/pipingnow/types";
 import { pipingNowAugust2026Report } from "@/lib/reports/pipingnow-august-2026";
+import { quadzillaAugust2026Report } from "@/lib/reports/quadzilla-august-2026";
+import { rigOutfittersAugust2026Report } from "@/lib/reports/rig-outfitters-august-2026";
 import { ritaniAugust2026Report } from "@/lib/reports/ritani-august-2026";
+import { seatBeltPlanetAugust2026Report } from "@/lib/reports/seat-belt-planet-august-2026";
 import { snowieJune2026Report } from "@/lib/reports/snowie-june-2026";
 import { sportsDisplaysMayJul2026Report } from "@/lib/reports/sportsdisplays-may-jul-2026";
 import { toicoJuly2026Report } from "@/lib/reports/toico-july-2026";
 import type { ReportMeta } from "@/lib/reports/types";
+import { vbeltguysAugust2026Report } from "@/lib/reports/vbeltguys-august-2026";
 import { vbeltGuysJuly2026Report } from "@/lib/reports/vbeltguys-july-2026";
 import { vimProductsAugust2026Report } from "@/lib/reports/vim-products-august-2026";
 
@@ -116,6 +125,11 @@ export const deliverables: DeliverableEntry[] = [
     href: "/reports/ag-diesel/jun-aug-2026",
     periodEnd: "2026-08-31",
   }),
+  fromReport(bellaCoreAugust2026Report, {
+    exportHref: "/bella-core/2026/august/bella-core-seo-report-august-2026.html",
+    href: "/reports/bella-core/august-2026",
+    periodEnd: "2026-08-31",
+  }),
   fromReport(buriedTreasureFossilsAugust2026Report, {
     href: "/reports/buried-treasure-fossils/august-2026",
     periodEnd: "2026-08-31",
@@ -132,6 +146,28 @@ export const deliverables: DeliverableEntry[] = [
     href: "/reports/fossil-age-minerals/august-2026",
     periodEnd: "2026-08-31",
   }),
+  fromReport(modernSlcAugust2026Report, {
+    exportHref: "/modern-slc/2026/august/modern-slc-seo-report-august-2026.html",
+    href: "/reports/modern-slc/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(mossAcresAugust2026Report, {
+    exportHref: "/moss-acres/2026/august/moss-acres-seo-report-august-2026.html",
+    href: "/reports/moss-acres/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(northlandVisionsAugust2026Report, {
+    exportHref:
+      "/northland-visions/2026/august/northland-visions-seo-report-august-2026.html",
+    href: "/reports/northland-visions/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(patientSafetyAugust2026Report, {
+    exportHref:
+      "/patient-safety/2026/august/patient-safety-seo-report-august-2026.html",
+    href: "/reports/patient-safety/august-2026",
+    periodEnd: "2026-08-31",
+  }),
   fromReport(penelopeAug2026Report, {
     href: "/reports/penelope/aug-2026",
     periodEnd: "2026-08-31",
@@ -140,8 +176,25 @@ export const deliverables: DeliverableEntry[] = [
     href: "/reports/pipingnow/august-2026",
     periodEnd: "2026-08-31",
   }),
+  fromReport(quadzillaAugust2026Report, {
+    exportHref: "/quadzilla/2026/august/quadzilla-seo-report-august-2026.html",
+    href: "/reports/quadzilla/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(rigOutfittersAugust2026Report, {
+    exportHref:
+      "/rig-outfitters/2026/august/rig-outfitters-seo-report-august-2026.html",
+    href: "/reports/rig-outfitters/august-2026",
+    periodEnd: "2026-08-31",
+  }),
   fromReport(ritaniAugust2026Report, {
     href: "/reports/ritani/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(seatBeltPlanetAugust2026Report, {
+    exportHref:
+      "/seat-belt-planet/2026/august/seat-belt-planet-seo-report-august-2026.html",
+    href: "/reports/seat-belt-planet/august-2026",
     periodEnd: "2026-08-31",
   }),
   fromReport(snowieJune2026Report, {
@@ -155,6 +208,11 @@ export const deliverables: DeliverableEntry[] = [
   fromReport(toicoJuly2026Report, {
     href: "/reports/toico/july-2026",
     periodEnd: "2026-07-26",
+  }),
+  fromReport(vbeltguysAugust2026Report, {
+    exportHref: "/vbeltguys/2026/august/vbeltguys-seo-report-august-2026.html",
+    href: "/reports/vbeltguys/august-2026",
+    periodEnd: "2026-08-31",
   }),
   fromReport(vbeltGuysJuly2026Report, {
     href: "/reports/vbeltguys/july-2026",

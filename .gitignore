@@ -47,8 +47,10 @@ next-env.d.ts
 dev-server.log
 
 # local working files (not deployed)
-/output/
 WHATIMDOING.md
 
 # codebase-memory index (machine-local, keyed to an absolute path)
 /.codebase-memory/
+
+# pulled client data (GSC/GA4/ClickUp/store) - never publish
+/output/

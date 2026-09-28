@@ -34,7 +34,7 @@ export const bellaCoreAugust2026Report: SeoStoryReportData = {
   },
 
   executiveSummary:
-    "August was a softer month for organic search, and the loss is concentrated. Clicks fell 10.2% to 616 and impressions fell 5.7% to 81,602, while average position improved slightly from 12.78 to 12.4. The poly surrounds category page alone lost 32 clicks (91 to 59); the homepage, the natural thin stone wall panels page and the white shiplap kit lost 40 more between them, and the shower and tub surrounds page gained 11. Brand searches edged up from 83 to 85 clicks. Most of the drop (64 of 70 clicks) came from searches Google does not show, which were 61.7% of all clicks; Google withholds those queries for privacy, so we cannot tell whether they were brand or product searches. Desktop took most of the loss (-53 clicks). The SEO work delivered in August was content and markup: new product copy went live on three product pages, copy for three more product pages was written, and schema markup was written and installed. Online store sales are very small: WooCommerce recorded 3 orders and $1,171 in net sales across all channels in August, against 6 orders and $1,768 in July, with a larger average order ($390 vs $295). At three orders a month, a month-to-month change of one or two orders means nothing, and the website traffic of 3,208 sessions is far larger than the checkout activity. That is expected here: much of the business is contractor and trade work that closes as a quoted job rather than an online order, and the products are expensive. That is the open measurement problem: until we know what a search visit is worth off the website, search cannot be judged on store sales. The WooCommerce revenue tracking audit, plus quote and call tracking, is the first measurement priority.",
+    "August was a softer month for organic search, and the loss is concentrated. Clicks fell 10.2% to 616 and impressions fell 5.7% to 81,602, while average position improved slightly from 12.78 to 12.4. The poly surrounds category page alone lost 32 clicks (91 to 59); the homepage, the natural thin stone wall panels page and the white shiplap kit lost 40 more between them, and the shower and tub surrounds page gained 11. Brand searches edged up from 83 to 85 clicks. Most of the drop (64 of 70 clicks) came from searches Google does not show, which were 61.7% of all clicks; Google withholds those queries for privacy, so we cannot tell whether they were brand or product searches. Desktop took most of the loss (-53 clicks). The SEO work delivered in August was content and markup: new product copy went live on three product pages, copy for three more product pages was written, and schema markup was written and installed. Online store sales are very small: WooCommerce recorded 3 orders and $1,171 in net sales across all channels in August, against 6 orders and $1,768 in July, with a larger average order ($390 vs $295). At three orders a month, a month-to-month change of one or two orders means nothing, and the website traffic of 3,208 sessions is far larger than the checkout activity. That is expected here: much of the business is contractor and trade work that closes as a quoted job rather than an online order, and the products are expensive. Off the website, lead tracking is already running: the site produced 41 leads in August across all channels, against 47 in July, but only 1 came from organic search (4 in July), while Google Ads produced 20. So the measurement gap is narrower than it looks. The leads are counted; what is missing is turning organic search into more of them, and tying a lead to the revenue it becomes. The WooCommerce revenue tracking audit, plus quote and call tracking, is the first measurement priority.",
 
   powerLines: [
     {
@@ -216,6 +216,24 @@ export const bellaCoreAugust2026Report: SeoStoryReportData = {
       status: "watch",
     },
     {
+      metric: "Leads from organic search (call and form tracking)",
+      previous: "4",
+      current: "1",
+      change: "-75.0%",
+      businessMeaning:
+        "Calls and form fills the tracking tool attributed to organic search. These are single-digit numbers, so one lead moves the percentage; the point is that organic is a small share of the leads the site produces, not that it collapsed.",
+      status: "watch",
+    },
+    {
+      metric: "Leads from all channels (call and form tracking)",
+      previous: "47",
+      current: "41",
+      change: "-12.8%",
+      businessMeaning:
+        "The site produces steady lead volume. In August, 20 leads came from Google Ads, 10 from people arriving directly, 8 from inside the site itself and 3 from search engines. Growing the organic share of this is the opportunity.",
+      status: "watch",
+    },
+    {
       metric: "Store net sales (WooCommerce, all channels)",
       previous: "$1,768",
       current: "$1,171",
@@ -249,9 +267,9 @@ export const bellaCoreAugust2026Report: SeoStoryReportData = {
   conversionPlan: {
     owner: "Head of SEO + Account Manager",
     sourcePriority:
-      "WooCommerce order records are the revenue source of truth. Complete the WooCommerce revenue tracking audit, check GA4 purchase tracking against WooCommerce orders, and separate organic from paid Google in order attribution.",
+      "WooCommerce order records are the revenue source of truth for online sales, and the call and form tracking is the source for leads. Complete the WooCommerce revenue tracking audit, check GA4 purchase tracking against WooCommerce orders, separate organic from paid Google in order attribution, and start recording quote and sales value on leads so organic can be measured in money, not just counts.",
     nextReportExpectation:
-      "The next report shows WooCommerce store sales the same way, as clearly labeled all-channel context, plus the reconciliation between GA4 and WooCommerce orders. Organic-attributed revenue appears once the tracking audit confirms paid and organic Google are separated, and once quote and call activity is measured, since most business does not close in the online checkout.",
+      "The next report shows WooCommerce store sales the same way, as clearly labeled all-channel context, plus the reconciliation between GA4 and WooCommerce orders. It also reports organic leads from the call and form tracking every month, since most business does not close in the online checkout. Organic-attributed revenue appears once the tracking audit confirms paid and organic Google are separated and leads carry the value they close at.",
   },
 
   performanceCharts: {
@@ -416,6 +434,7 @@ export const bellaCoreAugust2026Report: SeoStoryReportData = {
     "GA4 recorded 3 purchases ($1,186) across all channels in August and 5 ($1,978) in July, so GA4 and WooCommerce disagree on July orders (5 against 6) and on both months' totals. GA4 assigned 2 of the August purchases ($1,171) and 2 of the July purchases ($45) to Organic Search. With two or three orders a month and the two sources disagreeing, no organic revenue figure is stated in this report.",
     "Bella Core also runs Google Ads. WooCommerce order attribution and GA4 ecommerce tracking do not yet separate paid from organic Google reliably.",
     "The business objective, the priority products and the agreed measure of success come from the account intake on August 9, 2026: visibility, trade leads for quoted jobs and online store sales with minimal internal effort, measured as consistent growth in traffic and visibility rather than daily rankings. That intake also records that much of the revenue comes from contractor outreach and quoted jobs rather than the online checkout.",
+    "Leads: call and form tracking, pulled through its API on September 27, 2026. Organic search leads 1 vs 4; all channels 41 vs 47 (August: Google Ads 20, direct 10, links from inside the site 8, organic search 1, other search engines 2). Leads carry no quote or sales value because those fields are not filled in, so leads are reported as counts, not money.",
     "Completed work comes from ClickUp tasks closed in August 2026. Google Ads tasks and administrative items are excluded as outside SEO.",
   ],
 };

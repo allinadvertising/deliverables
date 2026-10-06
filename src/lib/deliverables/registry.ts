@@ -36,6 +36,7 @@ import { agDieselJunAug2026Report } from "@/lib/reports/ag-diesel-jun-aug-2026";
 import { bellaCoreAugust2026Report } from "@/lib/reports/bella-core-august-2026";
 import { customSportsProductsAugust2026Report } from "@/lib/reports/custom-sports-products-august-2026";
 import { jefcoAugust2026Report } from "@/lib/reports/jefco-august-2026";
+import { jefcoSeptember2026Report } from "@/lib/reports/jefco-september-2026";
 import { nurtured9August2026Report } from "@/lib/reports/nurtured-9-august-2026";
 import { buriedTreasureFossilsAugust2026Report } from "@/lib/reports/buried-treasure-fossils-august-2026";
 import { evChargeSolutionsAugust2026Report } from "@/lib/reports/ev-charge-solutions-august-2026";
@@ -143,6 +144,11 @@ export const deliverables: DeliverableEntry[] = [
     exportHref: "/jefco/2026/august/jefco-seo-report-august-2026.html",
     href: "/reports/jefco/august-2026",
     periodEnd: "2026-08-31",
+  }),
+  fromReport(jefcoSeptember2026Report, {
+    exportHref: "/jefco/2026/september/jefco-seo-report-september-2026.html",
+    href: "/reports/jefco/september-2026",
+    periodEnd: "2026-09-30",
   }),
   fromReport(nurtured9August2026Report, {
     exportHref: "/nurtured-9/2026/august/nurtured-9-seo-report-august-2026.html",

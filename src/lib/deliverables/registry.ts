@@ -22,6 +22,7 @@ import { electricMotorSportKickoffV2 } from "@/lib/kickoff/electric-motor-sport-
 import { excellRedLightKickoffV2 } from "@/lib/kickoff/excell-red-light-v2";
 import { intradynKickoffV2 } from "@/lib/kickoff/intradyn-v2";
 import { mkmPotteryToolsKickoffV2 } from "@/lib/kickoff/mkm-pottery-tools-v2";
+import { modernWickerKickoffV2 } from "@/lib/kickoff/modern-wicker-v2";
 import { nurtured9KickoffV2 } from "@/lib/kickoff/nurtured-9-v2";
 import { originalClearBraKickoffV2 } from "@/lib/kickoff/original-clear-bra-v2";
 import { penelopeKickoffV2 } from "@/lib/kickoff/penelope-v2";
@@ -33,6 +34,9 @@ import { toicoKickoffV2 } from "@/lib/kickoff/toico-v2";
 import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 import { agDieselJunAug2026Report } from "@/lib/reports/ag-diesel-jun-aug-2026";
 import { bellaCoreAugust2026Report } from "@/lib/reports/bella-core-august-2026";
+import { customSportsProductsAugust2026Report } from "@/lib/reports/custom-sports-products-august-2026";
+import { jefcoAugust2026Report } from "@/lib/reports/jefco-august-2026";
+import { nurtured9August2026Report } from "@/lib/reports/nurtured-9-august-2026";
 import { buriedTreasureFossilsAugust2026Report } from "@/lib/reports/buried-treasure-fossils-august-2026";
 import { evChargeSolutionsAugust2026Report } from "@/lib/reports/ev-charge-solutions-august-2026";
 import { everwhiteAugust2026Report } from "@/lib/reports/everwhite-august-2026";
@@ -128,6 +132,21 @@ export const deliverables: DeliverableEntry[] = [
   fromReport(bellaCoreAugust2026Report, {
     exportHref: "/bella-core/2026/august/bella-core-seo-report-august-2026.html",
     href: "/reports/bella-core/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(customSportsProductsAugust2026Report, {
+    exportHref: "/custom-sports-products/2026/august/custom-sports-products-seo-report-august-2026.html",
+    href: "/reports/custom-sports-products/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(jefcoAugust2026Report, {
+    exportHref: "/jefco/2026/august/jefco-seo-report-august-2026.html",
+    href: "/reports/jefco/august-2026",
+    periodEnd: "2026-08-31",
+  }),
+  fromReport(nurtured9August2026Report, {
+    exportHref: "/nurtured-9/2026/august/nurtured-9-seo-report-august-2026.html",
+    href: "/reports/nurtured-9/august-2026",
     periodEnd: "2026-08-31",
   }),
   fromReport(buriedTreasureFossilsAugust2026Report, {
@@ -271,6 +290,11 @@ export const deliverables: DeliverableEntry[] = [
   fromKickoff(mkmPotteryToolsKickoffV2, {
     href: "/kickoff/mkm-pottery-tools/v2",
     periodEnd: "2026-11-30",
+  }),
+  fromKickoff(modernWickerKickoffV2, {
+    href: "/kickoff/modern-wicker/v2",
+    exportHref: "/modern-wicker/2026/october/modern-wicker-seo-strategy-kickoff-october-2026.html",
+    periodEnd: "2026-12-31",
   }),
   fromKickoff(nurtured9KickoffV2, {
     href: "/kickoff/nurtured-9/v2",

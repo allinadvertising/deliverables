@@ -34,6 +34,7 @@ import { toicoKickoffV2 } from "@/lib/kickoff/toico-v2";
 import type { KickoffV2Data } from "@/lib/kickoff/v2-types";
 import { agDieselJunAug2026Report } from "@/lib/reports/ag-diesel-jun-aug-2026";
 import { bellaCoreAugust2026Report } from "@/lib/reports/bella-core-august-2026";
+import { bigDawgBatsSeptember2026Report } from "@/lib/reports/big-dawg-bats-september-2026";
 import { customSportsProductsAugust2026Report } from "@/lib/reports/custom-sports-products-august-2026";
 import { jefcoAugust2026Report } from "@/lib/reports/jefco-august-2026";
 import { jefcoSeptember2026Report } from "@/lib/reports/jefco-september-2026";
@@ -43,6 +44,7 @@ import { evChargeSolutionsAugust2026Report } from "@/lib/reports/ev-charge-solut
 import { everwhiteAugust2026Report } from "@/lib/reports/everwhite-august-2026";
 import { fossilAgeMineralsAugust2026Report } from "@/lib/reports/fossil-age-minerals-august-2026";
 import { modernSlcAugust2026Report } from "@/lib/reports/modern-slc-august-2026";
+import { oldChevyTrucksSeptember2026Report } from "@/lib/reports/old-chevy-trucks-september-2026";
 import { mossAcresAugust2026Report } from "@/lib/reports/moss-acres-august-2026";
 import { northlandVisionsAugust2026Report } from "@/lib/reports/northland-visions-august-2026";
 import { patientSafetyAugust2026Report } from "@/lib/reports/patient-safety-august-2026";
@@ -129,6 +131,16 @@ export const deliverables: DeliverableEntry[] = [
   fromReport(agDieselJunAug2026Report, {
     href: "/reports/ag-diesel/jun-aug-2026",
     periodEnd: "2026-08-31",
+  }),
+  fromReport(bigDawgBatsSeptember2026Report, {
+    exportHref: "/big-dawg-bats/2026/september/big-dawg-bats-seo-report-september-2026.html",
+    href: "/reports/big-dawg-bats/september-2026",
+    periodEnd: "2026-09-30",
+  }),
+  fromReport(oldChevyTrucksSeptember2026Report, {
+    exportHref: "/old-chevy-trucks/2026/september/old-chevy-trucks-seo-report-september-2026.html",
+    href: "/reports/old-chevy-trucks/september-2026",
+    periodEnd: "2026-09-30",
   }),
   fromReport(bellaCoreAugust2026Report, {
     exportHref: "/bella-core/2026/august/bella-core-seo-report-august-2026.html",
